@@ -17,6 +17,18 @@ struct DiagnosisResultView: View {
         ScrollView {
             if let r = diagnosis.result {
                 VStack(alignment: .leading, spacing: 0) {
+                    HStack {
+                        Text(plant.commonName).font(.brico(14, .bold))
+                        Spacer()
+                        Button { if let onDone { onDone() } else { dismiss() } } label: {
+                            Image(systemName: "xmark").font(.system(size: 14, weight: .bold)).foregroundStyle(Color.ink)
+                                .frame(width: 32, height: 32).background(Color.white, in: Circle())
+                        }
+                        .accessibilityLabel("Fermer")
+                    }
+                    .padding(.top, 18)
+                    .padding(.bottom, 12)
+
                     ZStack(alignment: .bottomTrailing) {
                         PlantIllustration(plant: plant, mood: mood(r))
                             .frame(width: 190, height: 190)
