@@ -89,55 +89,43 @@ struct PlantAI {
     // MARK: Fiche d'entretien
 
     func careProfile(commonName: String, scientificName: String, room: String? = nil, light: LightLevel? = nil) async throws -> CareProfile {
-        let seasonal: (String) -> [String: Any] = { desc in
-            [
-                "type": "object", "description": desc,
-                "required": ["spring", "summer", "autumn", "winter"],
-                "properties": ["spring": ["type": "number"], "summer": ["type": "number"], "autumn": ["type": "number"], "winter": ["type": "number"]],
-            ]
-        }
-        let months: [String: Any] = ["type": "array", "items": ["type": "integer", "minimum": 1, "maximum": 12]]
-        let schema: [String: Any] = [
-            "type": "object",
-            "required": ["common_name", "scientific_name", "archetype", "intro", "light", "watering", "repotting", "misting_days", "rotation_days", "fertilizing", "dormancy", "pruning"],
-            "properties": [
-                "common_name": ["type": "string", "description": "Nom courant français court."],
-                "scientific_name": ["type": "string"],
-                "archetype": [
-                    "type": "string", "enum": PlantArchetype.allCases.map(\.rawValue),
-                    "description": "Famille visuelle la plus proche pour l'illustration : " + PlantArchetype.allCases.map { "\($0.rawValue) = \($0.promptDescription)" }.joined(separator: " ; "),
-                ],
-                "intro": ["type": "string", "description": "La plante se présente à la 1re personne, tutoie l'utilisateur, 1 à 2 phrases, ton chaleureux et drôle mais adulte, avec le conseil clé pour la garder en forme. Un emoji maximum."],
-                "light": ["type": "string", "description": "Besoin de lumière en quelques mots (ex. « Vive, sans soleil direct »)."],
-                "watering": [
-                    "type": "object",
-                    "required": ["interval_days", "quantity", "method", "check_hint"],
-                    "properties": [
-                        "interval_days": seasonal("Intervalle typique entre deux arrosages, en jours, pour chaque saison, en intérieur chauffé. En dormance, mettre un grand intervalle (ex. 30)."),
-                        "quantity": ["type": "string", "description": "Quantité indicative, qualitative et courte (ex. « Généreuse, jusqu'à ce que ça coule », « Un verre, pas plus »)."],
-                        "method": ["type": "string", "description": "Comment arroser, une phrase courte (ex. « Par la soucoupe, garder 1 cm d'eau »)."],
-                        "water_type": ["type": "string", "description": "Type d'eau si important (ex. « déminéralisée ou de pluie »), sinon chaîne vide."],
-                        "check_hint": ["type": "string", "description": "Comment savoir s'il faut arroser (ex. « Les 2 premiers cm de terre sont secs »)."],
-                    ],
-                ],
-                "dormancy": [
-                    "type": "object", "required": ["months", "advice"],
-                    "description": "Repos végétatif. Liste vide si la plante n'a pas de vraie dormance.",
-                    "properties": ["months": months, "advice": ["type": "string", "description": "Conseil court pendant le repos."]],
-                ],
-                "misting_days": seasonal("Intervalle de brumisation en jours par saison. 0 si inutile (la plupart des plantes)."),
-                "rotation_days": ["type": "number", "description": "Tourner le pot d'un quart tous les N jours (0 si inutile)."],
-                "fertilizing": [
-                    "type": "object", "required": ["months", "interval_days", "advice"],
-                    "properties": ["months": months, "interval_days": ["type": "number"], "advice": ["type": "string"]],
-                ],
-                "repotting": [
-                    "type": "object", "required": ["every_years", "best_months", "advice"],
-                    "properties": ["every_years": ["type": "number"], "best_months": months, "advice": ["type": "string", "description": "Une phrase courte."]],
-                ],
-                "pruning": ["type": "string", "description": "Conseil de taille court, ou chaîne vide si inutile."],
+        // Schéma volontairement « à plat » : plus robuste quel que soit le modèle.
+        let num: (String) -> [String: Any] = { ["type": "number", "description": $0] }
+        let str: (String) -> [String: Any] = { ["type": "string", "description": $0] }
+        let months: (String) -> [String: Any] = { ["type": "array", "items": ["type": "integer", "minimum": 1, "maximum": 12], "description": $0] }
+        let props: [String: Any] = [
+            "common_name": str("Nom courant français court."),
+            "scientific_name": str("Nom scientifique."),
+            "archetype": [
+                "type": "string", "enum": PlantArchetype.allCases.map(\.rawValue),
+                "description": "Famille visuelle la plus proche pour l'illustration : " + PlantArchetype.allCases.map { "\($0.rawValue) = \($0.promptDescription)" }.joined(separator: " ; "),
             ],
+            "intro": str("La plante se présente à la 1re personne, tutoie l'utilisateur, 1 à 2 phrases, ton chaleureux et drôle mais adulte, avec le conseil clé pour la garder en forme. Un emoji maximum."),
+            "light": str("Besoin de lumière en quelques mots (ex. « Vive, sans soleil direct »)."),
+            "water_spring_days": num("Jours entre deux arrosages au printemps (intérieur chauffé)."),
+            "water_summer_days": num("Jours entre deux arrosages en été."),
+            "water_autumn_days": num("Jours entre deux arrosages en automne."),
+            "water_winter_days": num("Jours entre deux arrosages en hiver (grand intervalle si dormance, ex. 30)."),
+            "water_quantity": str("Quantité indicative, qualitative et courte (ex. « Généreuse, jusqu'à ce que ça coule », « Un verre, pas plus »)."),
+            "water_method": str("Comment arroser, une phrase courte (ex. « Par la soucoupe, garder 1 cm d'eau »)."),
+            "water_type": str("Type d'eau si important (ex. « déminéralisée ou de pluie »), sinon chaîne vide."),
+            "water_check_hint": str("Comment savoir qu'il faut arroser (ex. « Les 2 premiers cm de terre sont secs »)."),
+            "dormancy_months": months("Mois de repos végétatif (1-12). Liste vide si pas de vraie dormance."),
+            "dormancy_advice": str("Conseil court pendant le repos, ou chaîne vide."),
+            "mist_spring_days": num("Brumiser tous les N jours au printemps, 0 si inutile (la plupart des plantes)."),
+            "mist_summer_days": num("Idem en été, 0 si inutile."),
+            "mist_autumn_days": num("Idem en automne, 0 si inutile."),
+            "mist_winter_days": num("Idem en hiver, 0 si inutile."),
+            "rotation_days": num("Tourner le pot d'un quart tous les N jours, 0 si inutile."),
+            "fertilizing_months": months("Mois où donner de l'engrais, liste vide si jamais."),
+            "fertilizing_interval_days": num("Engrais tous les N jours pendant ces mois."),
+            "fertilizing_advice": str("Type d'engrais / dose, très court."),
+            "repotting_every_years": num("Rempoter tous les N ans."),
+            "repotting_best_months": months("Meilleurs mois pour rempoter."),
+            "repotting_advice": str("Une phrase courte."),
+            "pruning": str("Conseil de taille court, ou chaîne vide si inutile."),
         ]
+        let schema: [String: Any] = ["type": "object", "required": Array(props.keys), "properties": props]
         var where_ = ""
         if let room { where_ += " Elle est dans la pièce « \(room) »." }
         if let light { where_ += " Elle est \(light.prompt)." }
@@ -149,9 +137,7 @@ struct PlantAI {
             schema: schema, maxTokens: 2000
         )
         var profile: CareProfile
-        if let strict = try? Self.decoder.decode(CareProfile.self, from: data) {
-            profile = strict
-        } else if let loose = CareProfile.lenient(LenientJSON(data: data), fallbackName: commonName, fallbackScientific: scientificName) {
+        if let loose = CareProfile.lenient(LenientJSON(data: data), fallbackName: commonName, fallbackScientific: scientificName) {
             profile = loose
         } else {
             throw AIError.decoding(Self.snippet(data))

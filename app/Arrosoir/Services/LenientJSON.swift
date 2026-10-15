@@ -1,7 +1,7 @@
 import Foundation
 
 /// Lecture tolérante des réponses de Claude : nombres en texte, objets sérialisés en chaîne,
-/// clés en camelCase ou snake_case, champs manquants…
+/// clés en camelCase ou snake_case, champs rangés au mauvais niveau, champs manquants…
 nonisolated struct LenientJSON {
     let raw: Any?
 
@@ -9,7 +9,7 @@ nonisolated struct LenientJSON {
         // Un objet ou tableau sérialisé dans une chaîne → on le désérialise.
         if let s = raw as? String {
             let t = s.trimmingCharacters(in: .whitespacesAndNewlines)
-            if (t.hasPrefix("{") || t.hasPrefix("[")), let d = t.data(using: .utf8), let o = try? JSONSerialization.jsonObject(with: d) {
+            if t.hasPrefix("{") || t.hasPrefix("["), let d = t.data(using: .utf8), let o = try? JSONSerialization.jsonObject(with: d) {
                 self.raw = o
                 return
             }
@@ -19,11 +19,30 @@ nonisolated struct LenientJSON {
 
     init(data: Data) { self.init(try? JSONSerialization.jsonObject(with: data)) }
 
-    subscript(_ keys: String...) -> LenientJSON {
+    private static func variants(_ k: String) -> [String] { [k, camel(k), k.lowercased()] }
+
+    /// Clé directe (premier nom trouvé).
+    subscript(_ keys: String...) -> LenientJSON { child(keys) }
+
+    func child(_ keys: [String]) -> LenientJSON {
         guard let dict = raw as? [String: Any] else { return LenientJSON(nil) }
         for k in keys {
-            for variant in [k, Self.camel(k), k.lowercased()] {
-                if let v = dict[variant], !(v is NSNull) { return LenientJSON(v) }
+            for v in Self.variants(k) {
+                if let val = dict[v], !(val is NSNull) { return LenientJSON(val) }
+            }
+        }
+        return LenientJSON(nil)
+    }
+
+    /// Recherche en profondeur (la clé peut être rangée n'importe où).
+    func find(_ keys: String...) -> LenientJSON {
+        var queue: [Any] = [raw as Any]
+        while !queue.isEmpty {
+            let node = LenientJSON(queue.removeFirst())
+            let hit = node.child(keys)
+            if !hit.isNull { return hit }
+            if let dict = node.raw as? [String: Any] {
+                queue.append(contentsOf: dict.values.map { LenientJSON($0).raw as Any })
             }
         }
         return LenientJSON(nil)
@@ -42,8 +61,8 @@ nonisolated struct LenientJSON {
         case let n as NSNumber: return n.doubleValue
         case let s as String:
             let cleaned = s.replacingOccurrences(of: ",", with: ".")
-            let digits = cleaned.prefix { "0123456789.".contains($0) }
-            return Double(digits) ?? Double(cleaned.filter { "0123456789.".contains($0) })
+            let digits = cleaned.drop { !"0123456789".contains($0) }.prefix { "0123456789.".contains($0) }
+            return Double(digits)
         default: return nil
         }
     }
@@ -88,58 +107,65 @@ extension SeasonalDays {
         guard s != nil || su != nil || a != nil || w != nil else { return nil }
         self.init(spring: s, summer: su, autumn: a, winter: w)
     }
+
+    /// Comble les saisons manquantes avec les valeurs connues.
+    nonisolated func filled() -> SeasonalDays? {
+        let known = [spring, summer, autumn, winter].compactMap { $0 }.filter { $0 > 0 }
+        guard !known.isEmpty else { return nil }
+        let avg = known.reduce(0, +) / Double(known.count)
+        let sp = spring ?? avg
+        let au = autumn ?? avg
+        return SeasonalDays(spring: sp, summer: summer ?? sp, autumn: au, winter: winter ?? max(avg, au) * 1.4)
+    }
 }
 
 extension CareProfile {
-    /// Construit une fiche à partir d'une réponse imparfaite, avec des valeurs par défaut prudentes.
-    nonisolated static func lenient(_ input: LenientJSON, fallbackName: String, fallbackScientific: String) -> CareProfile? {
-        var j = input
-        // Réponse enveloppée ({"care_profile": {...}}) → on déballe.
-        if j["watering"].isNull, let dict = j.raw as? [String: Any], dict.count == 1, let inner = dict.values.first {
-            j = LenientJSON(inner)
+    /// Construit une fiche à partir d'une réponse (plate ou imbriquée, même imparfaite).
+    nonisolated static func lenient(_ j: LenientJSON, fallbackName: String, fallbackScientific: String) -> CareProfile? {
+        // --- Arrosage : format plat, sinon imbriqué, sinon n'importe où.
+        var flat = SeasonalDays(spring: j.find("water_spring_days").double, summer: j.find("water_summer_days").double,
+                                autumn: j.find("water_autumn_days").double, winter: j.find("water_winter_days").double)
+        if [flat.spring, flat.summer, flat.autumn, flat.winter].allSatisfy({ $0 == nil }) {
+            flat = SeasonalDays(lenient: j.find("interval_days", "watering_interval_days", "intervals", "watering_days")) ?? flat
         }
-        let w = j["watering"]
-        var intervals = SeasonalDays(lenient: w["interval_days", "intervals", "interval"]) ?? SeasonalDays(lenient: j["interval_days"])
-        // Saisons manquantes : on comble avec les valeurs présentes.
-        if var iv = intervals {
-            let known = Season.allCases.compactMap { iv.value(for: $0) }
-            guard let avg = known.isEmpty ? nil : known.reduce(0, +) / Double(known.count) else { return nil }
-            iv.spring = iv.spring ?? avg; iv.summer = iv.summer ?? (iv.spring ?? avg)
-            iv.autumn = iv.autumn ?? avg; iv.winter = iv.winter ?? max(avg, iv.autumn ?? avg) * 1.4
-            intervals = iv
-        }
-        guard let intervals else { return nil }
+        guard let intervals = flat.filled() else { return nil }
 
-        let archetypeRaw = j["archetype"].string?.lowercased() ?? ""
-        let archetype = PlantArchetype(rawValue: archetypeRaw)?.rawValue ?? PlantArchetype.upright.rawValue
+        let mist = SeasonalDays(spring: j.find("mist_spring_days").double, summer: j.find("mist_summer_days").double,
+                                autumn: j.find("mist_autumn_days").double, winter: j.find("mist_winter_days").double)
+        let mistNested = SeasonalDays(lenient: j.find("misting_days", "misting"))
+        let misting = [mist, mistNested].compactMap { $0 }.first { m in Season.allCases.contains { m.value(for: $0) != nil } }
 
-        let dormancyMonths = j["dormancy"]["months"].months
-        let fert = j["fertilizing", "fertilization"]
-        let fertMonths = fert["months"].months
-        let rep = j["repotting"]
-        let rotation = j["rotation_days", "rotation"].double
+        let archetypeRaw = j.find("archetype").string?.lowercased() ?? ""
+        let dormancyMonths = !j.find("dormancy_months").months.isEmpty ? j.find("dormancy_months").months : j.find("dormancy")["months"].months
+        let fertMonths = !j.find("fertilizing_months").months.isEmpty ? j.find("fertilizing_months").months : j.find("fertilizing", "fertilization")["months"].months
+        let repotMonths = !j.find("repotting_best_months").months.isEmpty ? j.find("repotting_best_months").months : j.find("repotting")["best_months", "months"].months
+        let rotation = j.find("rotation_days").double
 
         return CareProfile(
-            commonName: j["common_name", "name"].string ?? fallbackName,
-            scientificName: j["scientific_name"].string ?? fallbackScientific,
-            archetype: archetype,
-            intro: j["intro"].string ?? "Salut ! Je suis ravie d'emménager ici 🌿",
-            light: j["light"].string ?? "Lumineux, sans soleil brûlant",
+            commonName: j.find("common_name").string ?? fallbackName,
+            scientificName: j.find("scientific_name").string ?? fallbackScientific,
+            archetype: PlantArchetype(rawValue: archetypeRaw)?.rawValue ?? PlantArchetype.upright.rawValue,
+            intro: j.find("intro").string ?? "Salut ! Ravie d'emménager ici 🌿",
+            light: j.find("light").string ?? "Lumineux, sans soleil brûlant",
             watering: .init(
                 intervalDays: intervals,
-                quantity: w["quantity"].string ?? "Modérée",
-                method: w["method"].string ?? "Par le dessus, quand la terre est sèche.",
-                waterType: w["water_type"].string,
-                checkHint: w["check_hint"].string ?? "Les premiers centimètres de terre sont secs"
+                quantity: j.find("water_quantity", "quantity").string ?? "Modérée",
+                method: j.find("water_method", "method").string ?? "Par le dessus, quand la terre est sèche.",
+                waterType: j.find("water_type").string,
+                checkHint: j.find("water_check_hint", "check_hint").string ?? "Les premiers centimètres de terre sont secs"
             ),
-            dormancy: dormancyMonths.isEmpty ? nil : .init(months: dormancyMonths, advice: j["dormancy"]["advice"].string ?? "Arrose beaucoup moins."),
-            mistingDays: SeasonalDays(lenient: j["misting_days", "misting"]).flatMap { m in
-                Season.allCases.contains { m.value(for: $0) != nil } ? m : nil
-            },
+            dormancy: dormancyMonths.isEmpty ? nil : .init(months: dormancyMonths, advice: (j.find("dormancy_advice").string ?? j.find("dormancy")["advice"].string) ?? "Arrose beaucoup moins."),
+            mistingDays: misting,
             rotationDays: (rotation ?? 0) > 0 ? rotation : nil,
-            fertilizing: fertMonths.isEmpty ? nil : .init(months: fertMonths, intervalDays: fert["interval_days", "interval"].double ?? 30, advice: fert["advice"].string ?? ""),
-            repotting: .init(everyYears: rep["every_years", "years"].double ?? 2, bestMonths: rep["best_months", "months"].months.isEmpty ? [3, 4] : rep["best_months", "months"].months, advice: rep["advice"].string ?? ""),
-            pruning: j["pruning"].string
+            fertilizing: fertMonths.isEmpty ? nil : .init(
+                months: fertMonths,
+                intervalDays: j.find("fertilizing_interval_days").double ?? j.find("fertilizing")["interval_days", "interval"].double ?? 30,
+                advice: j.find("fertilizing_advice").string ?? j.find("fertilizing")["advice"].string ?? ""),
+            repotting: .init(
+                everyYears: j.find("repotting_every_years", "every_years").double ?? 2,
+                bestMonths: repotMonths.isEmpty ? [3, 4] : repotMonths,
+                advice: j.find("repotting_advice").string ?? j.find("repotting")["advice"].string ?? ""),
+            pruning: j.find("pruning").string
         )
     }
 }
