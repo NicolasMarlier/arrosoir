@@ -91,7 +91,7 @@ nonisolated enum Fmt {
         case ..<2: return "tous les jours"
         case 2...5: return "tous les \(n) j"
         case 6...10: return "chaque semaine"
-        case 10...24: return "toutes les ~\(Int((Double(n) / 7).rounded())) sem."
+        case 11...24: return "toutes les ~\(Int((Double(n) / 7).rounded())) sem."
         case 25...45: return "chaque mois"
         default: return "tous les ~\(Int((Double(n) / 30.4).rounded())) mois"
         }
