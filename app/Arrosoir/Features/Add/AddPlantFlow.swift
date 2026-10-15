@@ -8,7 +8,7 @@ struct AddPlantFlow: View {
         var label: String {
             switch self {
             case .today: "Aujourd'hui"
-            case .fewDays: "Il y a qq jours"
+            case .fewDays: "Qq jours"
             case .week: "+ 1 sem."
             case .unknown: "Aucune idée"
             }

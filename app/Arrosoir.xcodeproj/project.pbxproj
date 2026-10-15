@@ -14,6 +14,7 @@
 		2D2542AB7A3094495AFF3158 /* AnthropicClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62F8AAEB194E93C1F7179D6 /* AnthropicClient.swift */; };
 		2D5F580778FD5CE3215C9032 /* SafetyNet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BB667529B1ACA8F65F8FFA /* SafetyNet.swift */; };
 		3D8A61F5C4B384F24CDADF14 /* BricolageGrotesque-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 467AF11B0B6902B8F808DA62 /* BricolageGrotesque-Regular.ttf */; };
+		48ABB499502FBB9E25DEFA54 /* LenientJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = E648C763FC2320924E66F49E /* LenientJSON.swift */; };
 		4A1FF98E39A3D6A3557891B0 /* BricolageGrotesque-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4A51E5042F1736935F7E219F /* BricolageGrotesque-Bold.ttf */; };
 		4BE5C683330C754CC2EB66FC /* CareProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A6DC751A9AE07DBC1F60B8 /* CareProfile.swift */; };
 		5FB76D5A249050CF75F4F587 /* Fmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823F85D10BA4EB7642DCB148 /* Fmt.swift */; };
@@ -82,6 +83,7 @@
 		D267E5044CFBD47A4CF47547 /* PlantIllustration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIllustration.swift; sourceTree = "<group>"; };
 		DB1BD53AAD805400B0557248 /* PlantDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDetailView.swift; sourceTree = "<group>"; };
 		E4BB667529B1ACA8F65F8FFA /* SafetyNet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafetyNet.swift; sourceTree = "<group>"; };
+		E648C763FC2320924E66F49E /* LenientJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LenientJSON.swift; sourceTree = "<group>"; };
 		E7320FD77194792811511B68 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -221,6 +223,7 @@
 				A62F8AAEB194E93C1F7179D6 /* AnthropicClient.swift */,
 				241F72C6B79B5F7FE7F3B875 /* ImageUtils.swift */,
 				63969128D65AA1F1654A0956 /* Keychain.swift */,
+				E648C763FC2320924E66F49E /* LenientJSON.swift */,
 				97DB20F0A02AFA6E4A06F866 /* PlantAI.swift */,
 				E4BB667529B1ACA8F65F8FFA /* SafetyNet.swift */,
 			);
@@ -369,6 +372,7 @@
 				AA375F7FDCC9EDCDEBA044F3 /* IllustrationGallery.swift in Sources */,
 				0048EA9E690E1B9993E28863 /* ImageUtils.swift in Sources */,
 				DC8035969527AAB0A0A0F475 /* Keychain.swift in Sources */,
+				48ABB499502FBB9E25DEFA54 /* LenientJSON.swift in Sources */,
 				A86A8B770869A49509B27F9F /* Pickers.swift in Sources */,
 				AD53410D6CF11C7CD50ACF89 /* Plant.swift in Sources */,
 				0B11A70D36F422B8AA401D5F /* PlantAI.swift in Sources */,

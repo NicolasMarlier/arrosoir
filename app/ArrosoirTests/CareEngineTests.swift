@@ -116,3 +116,28 @@ struct CareEngineTests {
         #expect(p.mistingDays?.value(for: .summer) == nil)
     }
 }
+
+@MainActor
+struct LenientJSONTests {
+    @Test func messyProfileStillDecodes() throws {
+        let json = """
+        {"care_profile": {"commonName":"Rose du désert","scientific_name":"Adenium obesum","archetype":"Caudex",
+         "watering":"{\\"interval_days\\":{\\"spring\\":\\"10\\",\\"summer\\":7,\\"winter\\":\\"30 jours\\"},\\"quantity\\":\\"Un verre\\"}",
+         "dormancy":{"months":"10, 11, 12, 1, 2","advice":"Laisse-la dormir"},
+         "fertilizing":{"months":["5","6"],"interval_days":"21"},"rotation_days":"0","pruning":""}}
+        """
+        let p = try #require(CareProfile.lenient(LenientJSON(data: Data(json.utf8)), fallbackName: "X", fallbackScientific: "Y"))
+        #expect(p.commonName == "Rose du désert")
+        #expect(p.archetypeValue == .caudex)
+        #expect(p.watering.intervalDays.value(for: .winter) == 30)
+        #expect(p.watering.intervalDays.value(for: .autumn) != nil)
+        #expect(p.dormancy?.months == [10, 11, 12, 1, 2])
+        #expect(p.fertilizing?.intervalDays == 21)
+        #expect(p.rotationDays == nil)
+        #expect(p.watering.quantity == "Un verre")
+    }
+
+    @Test func missingWateringFails() {
+        #expect(CareProfile.lenient(LenientJSON(data: Data(#"{"intro":"hey"}"#.utf8)), fallbackName: "X", fallbackScientific: "Y") == nil)
+    }
+}

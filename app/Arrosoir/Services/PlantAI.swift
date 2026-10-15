@@ -76,7 +76,14 @@ struct PlantAI {
             toolDescription: "Renvoie l'identification de la plante.",
             schema: schema, maxTokens: 800
         )
-        do { return try Self.decoder.decode(Identification.self, from: data) } catch { throw AIError.decoding(error.localizedDescription) }
+        if let id = try? Self.decoder.decode(Identification.self, from: data) { return id }
+        let j = LenientJSON(data: data)
+        let candidates = j["candidates"].array.compactMap { c -> SpeciesCandidate? in
+            guard let name = c["common_name", "name"].string else { return nil }
+            return SpeciesCandidate(commonName: name, scientificName: c["scientific_name"].string ?? name, confidence: c["confidence"].double ?? 0.5)
+        }
+        guard !candidates.isEmpty || j["is_plant"].bool == false else { throw AIError.decoding(Self.snippet(data)) }
+        return Identification(isPlant: j["is_plant"].bool ?? !candidates.isEmpty, candidates: candidates)
     }
 
     // MARK: Fiche d'entretien
@@ -141,16 +148,23 @@ struct PlantAI {
             toolDescription: "Enregistre la fiche d'entretien de la plante.",
             schema: schema, maxTokens: 2000
         )
-        do {
-            var profile = try Self.decoder.decode(CareProfile.self, from: data)
-            if profile.watering.waterType?.isEmpty == true { profile.watering.waterType = nil }
-            if profile.dormancy?.months.isEmpty == true { profile.dormancy = nil }
-            if profile.fertilizing?.months.isEmpty == true { profile.fertilizing = nil }
-            if profile.pruning?.isEmpty == true { profile.pruning = nil }
-            return profile
-        } catch {
-            throw AIError.decoding(error.localizedDescription)
+        var profile: CareProfile
+        if let strict = try? Self.decoder.decode(CareProfile.self, from: data) {
+            profile = strict
+        } else if let loose = CareProfile.lenient(LenientJSON(data: data), fallbackName: commonName, fallbackScientific: scientificName) {
+            profile = loose
+        } else {
+            throw AIError.decoding(Self.snippet(data))
         }
+        if profile.watering.waterType?.isEmpty == true { profile.watering.waterType = nil }
+        if profile.dormancy?.months.isEmpty == true { profile.dormancy = nil }
+        if profile.fertilizing?.months.isEmpty == true { profile.fertilizing = nil }
+        if profile.pruning?.isEmpty == true { profile.pruning = nil }
+        return profile
+    }
+
+    private static func snippet(_ data: Data) -> String {
+        String((String(data: data, encoding: .utf8) ?? "").prefix(160))
     }
 
     // MARK: Épitaphe
