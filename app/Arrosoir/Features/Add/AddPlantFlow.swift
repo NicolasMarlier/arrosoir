@@ -171,27 +171,13 @@ struct AddPlantFlow: View {
                     Text("Reprends une photo, ou écris son nom.").font(.brico(14)).foregroundStyle(Color.muted)
                 } else if !(identification?.candidates.isEmpty ?? true) {
                     Text("Je pense que c'est…").font(.brico(24, .heavy)).padding(.top, 8)
+                    Text("Compare avec les photos de référence. Touche une photo pour l'agrandir.")
+                        .font(.brico(13)).foregroundStyle(Color.muted)
                     ForEach(identification?.candidates ?? []) { c in
-                        Button {
+                        CandidateRow(candidate: c, selected: selected == c) {
                             selected = c
                             showManual = false
-                        } label: {
-                            HStack(spacing: 12) {
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(c.commonName).font(.brico(17, .heavy))
-                                    Text("\(c.scientificName) · \(c.confidenceLabel)").font(.brico(12.5)).italic().foregroundStyle(Color.muted)
-                                }
-                                Spacer()
-                                Circle()
-                                    .strokeBorder(selected == c ? Color.vermillon : Color.ink, lineWidth: 2)
-                                    .background(Circle().fill(selected == c ? Color.vermillon : .clear).padding(5))
-                                    .frame(width: 24, height: 24)
-                            }
-                            .padding(14)
-                            .background(Color.white, in: RoundedRectangle(cornerRadius: 18))
-                            .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(selected == c ? Color.ink : .clear, lineWidth: 3))
                         }
-                        .buttonStyle(.plain)
                     }
                 }
 
@@ -422,5 +408,127 @@ struct CameraPicker: UIViewControllerRepresentable {
         }
 
         func imagePickerControllerDidCancel(_ picker: UIImagePickerController) { onPick(nil) }
+    }
+}
+
+/// Une espèce proposée, avec des photos de référence pour comparer.
+struct CandidateRow: View {
+    let candidate: SpeciesCandidate
+    let selected: Bool
+    var onSelect: () -> Void
+
+    @State private var photos: SpeciesPhotos?
+    @State private var loading = true
+    @State private var galleryIndex: Int?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Button(action: onSelect) {
+                HStack(spacing: 12) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(candidate.commonName).font(.brico(17, .heavy))
+                        Text("\(candidate.scientificName) · \(candidate.confidenceLabel)").font(.brico(12.5)).italic().foregroundStyle(Color.muted)
+                    }
+                    Spacer()
+                    Circle()
+                        .strokeBorder(selected ? Color.vermillon : Color.ink, lineWidth: 2)
+                        .background(Circle().fill(selected ? Color.vermillon : .clear).padding(5))
+                        .frame(width: 24, height: 24)
+                }
+                .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+
+            ScrollView(.horizontal) {
+                HStack(spacing: 6) {
+                    if let photos {
+                        ForEach(Array(photos.urls.enumerated()), id: \.offset) { i, url in
+                            Button { galleryIndex = i } label: {
+                                RemotePhoto(url: url).frame(width: 96, height: 96)
+                                    .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    } else if loading {
+                        ForEach(0..<3, id: \.self) { _ in
+                            RoundedRectangle(cornerRadius: 14).fill(Color.cream).frame(width: 96, height: 96)
+                                .overlay(ProgressView().tint(.muted))
+                        }
+                    } else {
+                        Text("Pas de photo de référence trouvée.").font(.brico(12.5)).foregroundStyle(Color.muted)
+                    }
+                }
+            }
+            .scrollIndicators(.hidden)
+        }
+        .padding(14)
+        .background(Color.white, in: RoundedRectangle(cornerRadius: 18))
+        .overlay(RoundedRectangle(cornerRadius: 18).strokeBorder(selected ? Color.ink : .clear, lineWidth: 3))
+        .task {
+            photos = await SpeciesPhotoService.shared.photos(scientificName: candidate.scientificName, commonName: candidate.commonName)
+            loading = false
+        }
+        .fullScreenCover(item: Binding(get: { galleryIndex.map { GalleryIndex(value: $0) } }, set: { galleryIndex = $0?.value })) { idx in
+            ReferenceGallery(title: candidate.commonName, photos: photos, start: idx.value) {
+                galleryIndex = nil
+                onSelect()
+            }
+        }
+    }
+}
+
+struct GalleryIndex: Identifiable { let value: Int; var id: Int { value } }
+
+struct RemotePhoto: View {
+    let url: URL
+    var fit = false
+    var body: some View {
+        AsyncImage(url: url) { phase in
+            switch phase {
+            case .success(let img):
+                if fit { img.resizable().scaledToFit() } else { img.resizable().scaledToFill() }
+            case .failure:
+                Color.cream.overlay(Image(systemName: "leaf").foregroundStyle(Color.muted))
+            default:
+                Color.cream.overlay(ProgressView().tint(.muted))
+            }
+        }
+    }
+}
+
+/// Photos de référence en grand, pour comparer avec sa plante.
+struct ReferenceGallery: View {
+    let title: String
+    let photos: SpeciesPhotos?
+    let start: Int
+    var onChoose: () -> Void
+    @Environment(\.dismiss) private var dismiss
+    @State private var page = 0
+
+    var body: some View {
+        VStack(spacing: 14) {
+            HStack {
+                Text(title).font(.brico(22, .heavy)).foregroundStyle(.white)
+                Spacer()
+                Button { dismiss() } label: {
+                    Image(systemName: "xmark").font(.system(size: 16, weight: .bold)).foregroundStyle(.white)
+                        .frame(width: 40, height: 40).background(.white.opacity(0.2), in: Circle())
+                }
+            }
+            .padding(.horizontal, 20)
+            TabView(selection: $page) {
+                ForEach(Array((photos?.urls ?? []).enumerated()), id: \.offset) { i, url in
+                    RemotePhoto(url: url, fit: true).tag(i).padding(.horizontal, 8)
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .always))
+            Text(photos?.credit ?? "").font(.brico(11)).foregroundStyle(.white.opacity(0.6))
+            Button("Choisir celle-ci", action: onChoose)
+                .buttonStyle(PillButtonStyle(kind: .fill))
+                .padding(.horizontal, 20)
+        }
+        .padding(.vertical, 16)
+        .background(Color.ink.ignoresSafeArea())
+        .onAppear { page = start }
     }
 }

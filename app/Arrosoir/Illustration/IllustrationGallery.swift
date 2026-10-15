@@ -21,3 +21,22 @@ struct IllustrationGallery: View {
         .background(Color.cream)
     }
 }
+
+/// Aperçu des propositions d'espèces avec photos (lancer avec -candidatesDemo).
+struct CandidatesDemo: View {
+    @State private var selected: SpeciesCandidate?
+    let list = [
+        SpeciesCandidate(commonName: "Rose du désert", scientificName: "Adenium obesum", confidence: 0.85),
+        SpeciesCandidate(commonName: "Frangipanier", scientificName: "Plumeria rubra", confidence: 0.1),
+        SpeciesCandidate(commonName: "Pachypodium", scientificName: "Pachypodium lamerei", confidence: 0.05),
+    ]
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 10) {
+                ForEach(list) { c in CandidateRow(candidate: c, selected: selected == c) { selected = c } }
+            }
+            .padding(20)
+        }
+        .background(Color.cream)
+    }
+}

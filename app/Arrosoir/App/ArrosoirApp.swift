@@ -23,6 +23,8 @@ struct ArrosoirApp: App {
         WindowGroup {
             if ProcessInfo.processInfo.arguments.contains("-gallery") {
                 IllustrationGallery()
+            } else if ProcessInfo.processInfo.arguments.contains("-candidatesDemo") {
+                CandidatesDemo()
             } else {
                 RootView()
                 .environment(AppSettings.shared)
