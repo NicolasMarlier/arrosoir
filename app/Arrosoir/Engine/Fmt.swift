@@ -71,6 +71,32 @@ nonisolated enum Fmt {
         }
     }
 
+    /// « Dans 3 j », « Dans ~2 sem. », « Dans ~1 mois » : de moins en moins précis avec la distance.
+    static func coarseIn(_ n: Int) -> String {
+        switch n {
+        case ..<1: return "Aujourd'hui"
+        case 1: return "Demain"
+        case 2...6: return "Dans \(n) j"
+        case 7...10: return "Dans ~1 sem."
+        case 11...24: return "Dans ~\(Int((Double(n) / 7).rounded())) sem."
+        case 25...45: return "Dans ~1 mois"
+        default: return "Dans ~\(Int((Double(n) / 30.4).rounded())) mois"
+        }
+    }
+
+    /// Fréquence lisible : « tous les 4 j », « chaque semaine », « toutes les ~2 sem. », « chaque mois ».
+    static func frequency(_ d: Double) -> String {
+        let n = Int(d.rounded())
+        switch n {
+        case ..<2: return "tous les jours"
+        case 2...5: return "tous les \(n) j"
+        case 6...9: return "chaque semaine"
+        case 10...24: return "toutes les ~\(Int((Double(n) / 7).rounded())) sem."
+        case 25...45: return "chaque mois"
+        default: return "tous les ~\(Int((Double(n) / 30.4).rounded())) mois"
+        }
+    }
+
     static func everyDays(_ d: Double) -> String {
         let n = Int(d.rounded())
         if n >= 28 { return "~ \(max(1, Int((d / 30.4).rounded()))) mois" }

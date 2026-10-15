@@ -84,31 +84,42 @@ struct PlantTile: View {
 
     var body: some View {
         let st = plant.snapshot().map { CareEngine.status($0, now: now) }
-        VStack(spacing: 2) {
+        let due = st?.watering.isDue == true
+        VStack(spacing: 3) {
             PlantIllustration(plant: plant, mood: st?.mood == .happy ? .ok : (st?.mood ?? .ok))
-                .frame(height: 84)
+                .frame(height: 78)
             Text(plant.commonName)
-                .font(.brico(14, .heavy)).lineLimit(2).multilineTextAlignment(.center)
-                .minimumScaleFactor(0.8)
-            Text(statusLabel(st))
-                .font(.brico(11.5, st?.watering.isDue == true ? .heavy : .regular))
-                .foregroundStyle(st?.watering.isDue == true ? Color.vermillon : Color.ink.opacity(0.7))
+                .font(.brico(14, .heavy))
+                .lineLimit(2, reservesSpace: true)
+                .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.75)
+            Text(nextLabel(st))
+                .font(.brico(12, due ? .heavy : .semibold))
+                .foregroundStyle(due ? Color.vermillon : Color.ink)
+                .lineLimit(1).minimumScaleFactor(0.8)
+            if let st {
+                Text("💧 \(Fmt.frequency(st.interval))")
+                    .font(.brico(11))
+                    .foregroundStyle(Color.ink.opacity(0.65))
+                    .lineLimit(1).minimumScaleFactor(0.75)
+            }
         }
         .padding(.horizontal, 6)
         .padding(.top, 8)
         .padding(.bottom, 10)
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: .infinity, alignment: .top)
         .background(plant.potStyle.tintColor, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .accessibilityElement(children: .combine)
     }
 
-    private func statusLabel(_ st: CareStatus?) -> String {
+    private func nextLabel(_ st: CareStatus?) -> String {
         guard let st else { return "" }
         switch st.watering {
-        case .water: return "J'ai soif"
+        case .water: return "J'ai soif !"
         case .check: return "À vérifier"
         case .soon(let d), .later(let d):
-            if st.dormantUntil != nil && d > 2 { return "💤 Dodo" }
-            return Fmt.inDays(d).capitalizedFirst
+            let when = Fmt.coarseIn(d)
+            return st.dormantUntil != nil ? "💤 \(when)" : when
         }
     }
 }

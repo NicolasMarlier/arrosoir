@@ -39,6 +39,7 @@ struct PlantDetailView: View {
                     KeyValueRow(key: "Dernier arrosage", value: plant.lastWateredAt.map { Fmt.ago($0, now: now) } ?? "pas encore noté")
                         .padding(.top, 6)
                     KeyValueRow(key: "Prochaine vérif.", value: st.watering.isDue ? "maintenant" : Fmt.shortDay(st.wateringDue, now: now))
+                    KeyValueRow(key: "Rythme en ce moment", value: "\(Fmt.frequency(st.interval)) (\(st.season.label.lowercased()))")
                     KeyValueRow(key: "Quantité", value: profile.watering.quantity)
 
                     Text(methodText(profile))
