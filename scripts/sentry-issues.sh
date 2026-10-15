@@ -22,7 +22,7 @@ if [ $# -eq 0 ]; then
 import json, sys
 for i in json.load(sys.stdin):
     t = i.get("metadata", {}).get("value") or i["title"]
-    print(f"{i[\"id\"]:>12}  {i[\"level\"]:<7} x{i[\"count\"]:<4} {i[\"lastSeen\"][:16]}  [{i.get(\"culprit\") or \"\"}] {t}")'
+    print("%12s  %-7s x%-4s %s  [%s] %s" % (i["id"], i["level"], i["count"], i["lastSeen"][:16], i.get("culprit") or "", t))'
   exit 0
 fi
 
