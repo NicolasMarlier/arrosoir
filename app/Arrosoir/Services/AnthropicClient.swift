@@ -79,21 +79,39 @@ struct AnthropicClient {
     }
 
     /// Appel avec un outil imposé : renvoie l'objet JSON de `tool_use.input`.
+    /// Certains modèles refusent un outil imposé : on bascule alors en mode « auto ».
+    nonisolated(unsafe) private static var forcedToolUnsupported: Set<String> = []
+
     func callTool(system: String, content: [Content], toolName: String, toolDescription: String, schema: [String: Any], maxTokens: Int = 2048) async throws -> Data {
-        let body: [String: Any] = [
+        let forced = !Self.forcedToolUnsupported.contains(model)
+        var body: [String: Any] = [
             "model": model,
-            "max_tokens": maxTokens,
-            "system": system,
+            "max_tokens": forced ? maxTokens : maxTokens + 4000,
+            "system": system + (forced ? "" : "\n\nTu DOIS répondre en appelant l'outil « \(toolName) », sans autre texte."),
             "messages": [["role": "user", "content": content.map(\.json)]],
             "tools": [["name": toolName, "description": toolDescription, "input_schema": schema]],
-            "tool_choice": ["type": "tool", "name": toolName],
+            "tool_choice": forced ? ["type": "tool", "name": toolName] : ["type": "auto"],
         ]
-        let data = try await send(request("messages", method: "POST", body: try JSONSerialization.data(withJSONObject: body)))
+        let data: Data
+        do {
+            data = try await send(request("messages", method: "POST", body: try JSONSerialization.data(withJSONObject: body)))
+        } catch AIError.http(400, let msg) where forced && msg.contains("tool_choice") {
+            Self.forcedToolUnsupported.insert(model)
+            return try await callTool(system: system, content: content, toolName: toolName, toolDescription: toolDescription, schema: schema, maxTokens: maxTokens)
+        }
+        body = [:]
         guard let obj = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-              let blocks = obj["content"] as? [[String: Any]],
-              let tool = blocks.first(where: { $0["type"] as? String == "tool_use" }),
-              let input = tool["input"] else { throw AIError.noToolOutput }
-        return try JSONSerialization.data(withJSONObject: input)
+              let blocks = obj["content"] as? [[String: Any]] else { throw AIError.noToolOutput }
+        if let tool = blocks.first(where: { $0["type"] as? String == "tool_use" }), let input = tool["input"] {
+            return try JSONSerialization.data(withJSONObject: input)
+        }
+        // Dernier recours : un objet JSON dans le texte.
+        let text = blocks.compactMap { $0["text"] as? String }.joined()
+        if let start = text.firstIndex(of: "{"), let end = text.lastIndex(of: "}") {
+            let json = Data(text[start...end].utf8)
+            if (try? JSONSerialization.jsonObject(with: json)) != nil { return json }
+        }
+        throw AIError.noToolOutput
     }
 
     func callText(system: String, prompt: String, maxTokens: Int = 200) async throws -> String {
