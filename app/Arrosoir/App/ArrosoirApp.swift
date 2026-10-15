@@ -36,9 +36,30 @@ struct ArrosoirApp: App {
 
 enum AppTab { case today, plants }
 
+/// Les écrans de détail masquent la barre d'onglets (ils ont déjà un bouton retour).
+@Observable
+final class TabBarVisibility {
+    var hiders = 0
+    var isHidden: Bool { hiders > 0 }
+}
+
+extension View {
+    func hidesTabBar() -> some View { modifier(HidesTabBar()) }
+}
+
+struct HidesTabBar: ViewModifier {
+    @Environment(TabBarVisibility.self) private var visibility
+    func body(content: Content) -> some View {
+        content
+            .onAppear { withAnimation(.snappy) { visibility.hiders += 1 } }
+            .onDisappear { withAnimation(.snappy) { visibility.hiders = max(0, visibility.hiders - 1) } }
+    }
+}
+
 struct RootView: View {
     @State private var tab: AppTab = ProcessInfo.processInfo.arguments.contains("-plantsTab") ? .plants : .today
     @State private var showAdd = false
+    @State private var tabBar = TabBarVisibility()
     @State private var plantsPath: [UUID] = []
     @State private var debugDiagnosis: Plant?
     @State private var debugResult: Diagnosis?
@@ -58,8 +79,12 @@ struct RootView: View {
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.cream.ignoresSafeArea())
-            TabBar(tab: $tab, onAdd: { showAdd = true })
+            if !tabBar.isHidden {
+                TabBar(tab: $tab, onAdd: { showAdd = true })
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+            }
         }
+        .environment(tabBar)
         .background(Color.cream.ignoresSafeArea())
         .tint(.ink)
         .fullScreenCover(isPresented: $showAdd) {

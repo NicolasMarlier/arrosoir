@@ -93,6 +93,7 @@ struct PlantDetailView: View {
         .scrollIndicators(.hidden)
         .background(Color.cream.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
+        .hidesTabBar()
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
