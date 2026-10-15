@@ -3,14 +3,13 @@
 #   scripts/sentry-issues.sh                → liste des issues non résolues
 #   scripts/sentry-issues.sh <issue-id>     → dernier événement complet + pièces jointes (réponse brute de Claude…)
 # Config : SENTRY_AUTH_TOKEN, SENTRY_ORG, SENTRY_PROJECT (env, ou lus dans app/Config/Secrets.xcconfig / ~/.sentryclirc).
-# Région UE : SENTRY_URL=https://de.sentry.io
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-cfg() { grep -E "^\s*$1\s*=" app/Config/Secrets.xcconfig 2>/dev/null | head -1 | sed -E 's/^[^=]*=\s*//; s/\s+$//'; }
+cfg() { grep -E "^\s*$1\s*=" app/Config/Secrets.xcconfig 2>/dev/null | head -1 | sed -E 's/^[^=]*=\s*//; s/\s+$//; s/\$\(\)//g'; }
 SENTRY_ORG="${SENTRY_ORG:-$(cfg SENTRY_ORG)}"
 SENTRY_PROJECT="${SENTRY_PROJECT:-$(cfg SENTRY_PROJECT)}"
-SENTRY_URL="${SENTRY_URL:-https://sentry.io}"
+SENTRY_URL="${SENTRY_URL:-$(cfg SENTRY_URL)}"; SENTRY_URL="${SENTRY_URL:-https://sentry.io}"
 if [ -z "${SENTRY_AUTH_TOKEN:-}" ] && [ -f ~/.sentryclirc ]; then
   SENTRY_AUTH_TOKEN="$(grep -E '^token' ~/.sentryclirc | sed -E 's/^token\s*=\s*//')"
 fi

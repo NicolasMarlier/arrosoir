@@ -35,7 +35,7 @@ targets:
         script: |
           # Symbolication des crashs. Nécessite sentry-cli (brew install getsentry/tools/sentry-cli)
           # et un jeton (SENTRY_AUTH_TOKEN dans ~/.sentryclirc ou l'environnement). Sinon : ignoré.
-          export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+          export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH" SENTRY_URL
           [ -z "$SENTRY_ORG" ] && exit 0
           [ "$PLATFORM_NAME" = "iphonesimulator" ] && exit 0
           command -v sentry-cli >/dev/null || { echo "warning: sentry-cli absent, dSYM non envoyés"; exit 0; }

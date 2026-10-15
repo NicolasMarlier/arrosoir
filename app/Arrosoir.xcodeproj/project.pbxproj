@@ -427,7 +427,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Symbolication des crashs. Nécessite sentry-cli (brew install getsentry/tools/sentry-cli)\n# et un jeton (SENTRY_AUTH_TOKEN dans ~/.sentryclirc ou l'environnement). Sinon : ignoré.\nexport PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\"\n[ -z \"$SENTRY_ORG\" ] && exit 0\n[ \"$PLATFORM_NAME\" = \"iphonesimulator\" ] && exit 0\ncommand -v sentry-cli >/dev/null || { echo \"warning: sentry-cli absent, dSYM non envoyés\"; exit 0; }\nsentry-cli --org \"$SENTRY_ORG\" debug-files upload --include-sources --project \"$SENTRY_PROJECT\" \"$DWARF_DSYM_FOLDER_PATH\" || echo \"warning: envoi des dSYM raté\"\n";
+			shellScript = "# Symbolication des crashs. Nécessite sentry-cli (brew install getsentry/tools/sentry-cli)\n# et un jeton (SENTRY_AUTH_TOKEN dans ~/.sentryclirc ou l'environnement). Sinon : ignoré.\nexport PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\" SENTRY_URL\n[ -z \"$SENTRY_ORG\" ] && exit 0\n[ \"$PLATFORM_NAME\" = \"iphonesimulator\" ] && exit 0\ncommand -v sentry-cli >/dev/null || { echo \"warning: sentry-cli absent, dSYM non envoyés\"; exit 0; }\nsentry-cli --org \"$SENTRY_ORG\" debug-files upload --include-sources --project \"$SENTRY_PROJECT\" \"$DWARF_DSYM_FOLDER_PATH\" || echo \"warning: envoi des dSYM raté\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
