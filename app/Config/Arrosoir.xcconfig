@@ -1,0 +1,5 @@
+// Réglages communs. Les secrets (DSN Sentry…) vont dans Secrets.xcconfig, non versionné.
+SENTRY_DSN =
+SENTRY_ORG =
+SENTRY_PROJECT =
+#include? "Secrets.xcconfig"

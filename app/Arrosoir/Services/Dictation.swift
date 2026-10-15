@@ -60,6 +60,7 @@ final class Dictation {
             state = .recording
             startTask()
         } catch {
+            Telemetry.capture(error, feature: "dictation")
             teardown()
             state = .unavailable
         }
@@ -154,6 +155,10 @@ final class Dictation {
             let text = result?.bestTranscription.formattedString
             let final = result?.isFinal ?? false
             let failed = error != nil && result == nil
+            if failed, let error {
+                let ns = error as NSError
+                Telemetry.breadcrumb("Reconnaissance vocale interrompue", category: "dictation", data: ["domain": ns.domain, "code": ns.code], level: .warning)
+            }
             Task { @MainActor in owner.handle(text: text, final: final, failed: failed, generation: generation) }
         }
     }

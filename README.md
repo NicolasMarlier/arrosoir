@@ -50,3 +50,17 @@ app/Arrosoir/
 - « Encore humide » : repousse de ~25 % de l'intervalle (1 à 10 j) et allonge le rythme de 12 %.
 - « Arrosé » sans report préalable : resserre le rythme de 3 % (l'app explore doucement, tes « encore humide » la recalent).
 - Brumisation, rotation, engrais (en saison) apparaissent dans « À faire » ; rempotage et taille restent « À l'horizon » sur la fiche.
+
+## Suivi des bugs (Sentry)
+
+L'app remonte à Sentry : crashs, blocages, erreurs réseau / HTTP de Claude, réponses illisibles ou tronquées (avec la **réponse brute de Claude en pièce jointe**), échecs de dictée, et le fil des dernières actions. Jamais de photo ni de clé API. Réglages → « Un souci ? » envoie un retour rattaché au dernier événement.
+
+Mise en route :
+1. Créer un projet **Apple iOS** sur sentry.io, copier son DSN.
+2. `cp app/Config/Secrets.example.xcconfig app/Config/Secrets.xcconfig` et remplir (DSN écrit `https:/$()/…`).
+3. `cd app && xcodegen generate`. Sans DSN, Sentry reste inerte (et les lancements `-inMemory` / tests n'envoient rien).
+4. Optionnel, pour symboliquer les crashs : `brew install getsentry/tools/sentry-cli && sentry-cli login` (les dSYM partent à chaque build sur iPhone).
+
+Lire les bugs depuis le terminal : `scripts/sentry-issues.sh` (liste) puis `scripts/sentry-issues.sh <id>` (détail, fil d'Ariane, réponse brute). Jeton : `SENTRY_AUTH_TOKEN` (scopes `event:read`, `project:read`, `org:read`).
+
+Autofix (Seer) : pousser le repo sur GitHub, puis Sentry → Settings → Integrations → GitHub, lier le repo au projet ; « Fix with Seer » propose alors une PR depuis chaque issue.

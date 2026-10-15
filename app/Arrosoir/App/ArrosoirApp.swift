@@ -6,6 +6,7 @@ struct ArrosoirApp: App {
     let container: ModelContainer
 
     init() {
+        Telemetry.start()
         let inMemory = ProcessInfo.processInfo.arguments.contains("-inMemory")
         do {
             container = try ModelContainer(for: Plant.self, CareEvent.self, Diagnosis.self,

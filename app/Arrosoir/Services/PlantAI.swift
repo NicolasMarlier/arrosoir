@@ -69,20 +69,22 @@ struct PlantAI {
                 ],
             ],
         ]
-        let data = try await client().callTool(
+        let out = try await client().callTool(
             system: "Tu es un botaniste expert en plantes d'intérieur. \(context) Identifie l'espèce de la plante en photo.",
             content: [.jpeg(jpeg), .text("Quelle est cette plante ?")],
             toolName: "report_identification",
             toolDescription: "Renvoie l'identification de la plante.",
             schema: schema, maxTokens: 800
         )
+        let data = out.data
         if let id = try? Self.decoder.decode(Identification.self, from: data) { return id }
+        Telemetry.breadcrumb("Identification : décodage strict raté, lecture tolérante", category: "decode", level: .warning)
         let j = LenientJSON(data: data)
         let candidates = j["candidates"].array.compactMap { c -> SpeciesCandidate? in
             guard let name = c["common_name", "name"].string else { return nil }
             return SpeciesCandidate(commonName: name, scientificName: c["scientific_name"].string ?? name, confidence: c["confidence"].double ?? 0.5)
         }
-        guard !candidates.isEmpty || j["is_plant"].bool == false else { throw AIError.decoding(Self.snippet(data)) }
+        guard !candidates.isEmpty || j["is_plant"].bool == false else { throw report(.decoding(Self.snippet(data)), feature: "identify", out) }
         return Identification(isPlant: j["is_plant"].bool ?? !candidates.isEmpty, candidates: candidates)
     }
 
@@ -129,7 +131,7 @@ struct PlantAI {
         var where_ = ""
         if let room { where_ += " Elle est dans la pièce « \(room) »." }
         if let light { where_ += " Elle est \(light.prompt)." }
-        let data = try await client().callTool(
+        let out = try await client().callTool(
             system: "Tu es un jardinier expert et bienveillant. \(context) Tu rédiges en français des fiches d'entretien fiables, concrètes et concises.",
             content: [.text("Fiche d'entretien pour : \(commonName) (\(scientificName)).\(where_)")],
             toolName: "save_care_profile",
@@ -137,10 +139,10 @@ struct PlantAI {
             schema: schema, maxTokens: 2000
         )
         var profile: CareProfile
-        if let loose = CareProfile.lenient(LenientJSON(data: data), fallbackName: commonName, fallbackScientific: scientificName) {
+        if let loose = CareProfile.lenient(LenientJSON(data: out.data), fallbackName: commonName, fallbackScientific: scientificName) {
             profile = loose
         } else {
-            throw AIError.decoding(Self.snippet(data))
+            throw report(.decoding(Self.snippet(out.data)), feature: "care_profile", out, extra: ["species": "\(commonName) (\(scientificName))"])
         }
         if profile.watering.waterType?.isEmpty == true { profile.watering.waterType = nil }
         if profile.dormancy?.months.isEmpty == true { profile.dormancy = nil }
@@ -151,6 +153,15 @@ struct PlantAI {
 
     private static func snippet(_ data: Data) -> String {
         String((String(data: data, encoding: .utf8) ?? "").prefix(160))
+    }
+
+    /// Remonte une réponse illisible à Sentry avec la réponse brute complète, puis renvoie l'erreur à lancer.
+    private func report(_ error: AIError, feature: String, _ out: AnthropicClient.ToolOutput, extra: [String: Any] = [:]) -> AIError {
+        Telemetry.capture(error, feature: feature,
+                          extra: extra.merging(["model": settings.model, "stop_reason": out.stopReason ?? "?"]) { a, _ in a },
+                          attachments: [.init(name: "claude-response.json", text: out.raw),
+                                        .init(name: "tool-input.json", text: String(data: out.data, encoding: .utf8) ?? "")])
+        return error
     }
 
     // MARK: Diagnostic
@@ -177,15 +188,17 @@ struct PlantAI {
         Ce que l'utilisateur dit :
         \(note.isEmpty ? "(rien de plus, regarde les photos)" : note)
         """))
-        let data = try await client().callTool(
+        let out = try await client().callTool(
             system: "Tu es « le docteur des plantes » : phytopathologiste et jardinier expert des plantes d'intérieur, bienveillant et précis. \(context) L'utilisateur peut te signaler un souci (tu poses alors un diagnostic) ou simplement te poser une question (tu y réponds). Appuie-toi sur les photos, ce qu'il dit (transcription vocale, parfois imparfaite) et l'historique de soins. Réponds en français, sans jargon inutile.",
             content: content,
             toolName: "report_diagnosis",
             toolDescription: "Renvoie le diagnostic de la plante.",
             schema: schema, maxTokens: 1800
         )
-        let j = LenientJSON(data: data)
-        guard let summary = j.find("summary").string else { throw AIError.decoding(Self.snippet(data)) }
+        let j = LenientJSON(data: out.data)
+        guard let summary = j.find("summary").string else {
+            throw report(.decoding(Self.snippet(out.data)), feature: "diagnose", out, extra: ["photos": photos.count, "note_chars": note.count])
+        }
         return DiagnosisResult(
             title: j.find("title").string ?? "Diagnostic",
             severity: DiagnosisResult.Severity(rawValue: j.find("severity").string?.lowercased() ?? "") ?? .watch,

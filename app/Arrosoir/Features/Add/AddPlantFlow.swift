@@ -321,6 +321,7 @@ struct AddPlantFlow: View {
                 showManual = !id.isPlant || id.candidates.isEmpty
                 step = .candidates
             } catch {
+                Telemetry.breadcrumb("Erreur affichée : \(error.localizedDescription)", category: "ui", level: .error)
                 self.error = error.localizedDescription
             }
         }
@@ -364,6 +365,7 @@ struct AddPlantFlow: View {
                 step = .welcome
                 UINotificationFeedbackGenerator().notificationOccurred(.success)
             } catch {
+                Telemetry.breadcrumb("Erreur affichée : \(error.localizedDescription)", category: "ui", level: .error)
                 self.error = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
                 // Relance au prochain essai.
                 confirmSpeciesRetry()

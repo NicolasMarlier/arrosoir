@@ -12,6 +12,8 @@ struct SettingsView: View {
     @State private var keyStatus: String?
     @State private var checking = false
     @State private var demoLoaded = false
+    @State private var bugReport = ""
+    @State private var bugSent = false
 
     var body: some View {
         @Bindable var settings = settings
@@ -78,6 +80,25 @@ struct SettingsView: View {
                 .buttonStyle(PillButtonStyle(kind: .outline))
                 .disabled(demoLoaded)
                 .padding(.top, 12)
+
+                if Telemetry.isEnabled {
+                    SectionTitle(text: "Un souci ?")
+                    VStack(alignment: .leading, spacing: 10) {
+                        TextField("Ce qui s'est passé (réponse illisible, écran bizarre…)", text: $bugReport, axis: .vertical)
+                            .lineLimit(3...6)
+                            .font(.brico(15)).padding(12).background(Color.cream, in: RoundedRectangle(cornerRadius: 12))
+                        Button(bugSent ? "Envoyé, merci ✓" : "Signaler un problème") {
+                            Telemetry.feedback(bugReport.trimmingCharacters(in: .whitespacesAndNewlines))
+                            bugReport = ""
+                            bugSent = true
+                        }
+                        .buttonStyle(PillButtonStyle(kind: .dark, compact: true))
+                        .disabled(bugReport.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        Text("Part avec les dernières actions et erreurs de l'app (jamais tes photos ni ta clé).")
+                            .font(.brico(12)).foregroundStyle(Color.muted)
+                    }
+                    .card()
+                }
 
                 Text("Arrosoir \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "") · fait maison 🪴")
                     .font(.brico(12)).foregroundStyle(Color.muted)

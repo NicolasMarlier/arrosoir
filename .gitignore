@@ -3,3 +3,5 @@ app/build/
 app/DerivedData/
 *.xcuserstate
 xcuserdata/
+app/Config/Secrets.xcconfig
+.sentryclirc

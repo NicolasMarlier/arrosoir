@@ -294,6 +294,7 @@ struct DoctorSheet: View {
                 phase = .result
                 UINotificationFeedbackGenerator().notificationOccurred(.success)
             } catch {
+                Telemetry.breadcrumb("Erreur affichée : \(error.localizedDescription)", category: "ui", level: .error)
                 self.error = (error as? LocalizedError)?.errorDescription ?? error.localizedDescription
                 typed = full
                 phase = .listening

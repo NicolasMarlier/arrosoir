@@ -275,6 +275,7 @@ struct PlantDetailView: View {
                 plant.profile = try await PlantAI(settings: settings).careProfile(commonName: plant.commonName, scientificName: plant.scientificName, room: plant.room, light: plant.light)
                 try? ctx.save()
             } catch {
+                Telemetry.breadcrumb("Erreur affichée : \(error.localizedDescription)", category: "ui", level: .error)
                 self.error = error.localizedDescription
             }
         }
