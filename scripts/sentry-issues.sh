@@ -6,12 +6,12 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-cfg() { grep -E "^\s*$1\s*=" app/Config/Secrets.xcconfig 2>/dev/null | head -1 | sed -E 's/^[^=]*=\s*//; s/\s+$//; s/\$\(\)//g'; }
+cfg() { grep -E "^[[:space:]]*$1[[:space:]]*=" app/Config/Secrets.xcconfig 2>/dev/null | head -1 | sed -E 's/^[^=]*=[[:space:]]*//; s/[[:space:]]+$//; s/\$\(\)//g'; }
 SENTRY_ORG="${SENTRY_ORG:-$(cfg SENTRY_ORG)}"
 SENTRY_PROJECT="${SENTRY_PROJECT:-$(cfg SENTRY_PROJECT)}"
 SENTRY_URL="${SENTRY_URL:-$(cfg SENTRY_URL)}"; SENTRY_URL="${SENTRY_URL:-https://sentry.io}"
 if [ -z "${SENTRY_AUTH_TOKEN:-}" ] && [ -f ~/.sentryclirc ]; then
-  SENTRY_AUTH_TOKEN="$(grep -E '^token' ~/.sentryclirc | sed -E 's/^token\s*=\s*//')"
+  SENTRY_AUTH_TOKEN="$(grep -E '^token' ~/.sentryclirc | sed -E 's/^token[[:space:]]*=[[:space:]]*//')"
 fi
 : "${SENTRY_AUTH_TOKEN:?SENTRY_AUTH_TOKEN manquant}" "${SENTRY_ORG:?SENTRY_ORG manquant}" "${SENTRY_PROJECT:?SENTRY_PROJECT manquant}"
 
