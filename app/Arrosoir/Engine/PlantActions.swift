@@ -90,3 +90,30 @@ extension Plant {
         return counts.firstIndex(of: minCount) ?? 0
     }
 }
+
+extension Plant {
+    /// Résumé de la plante et de son historique, envoyé à Claude pour un diagnostic.
+    func diagnosisContext(now: Date = Date()) -> String {
+        var lines: [String] = ["Plante : \(commonName) (\(scientificName))."]
+        if let room { lines.append("Pièce : \(room).") }
+        if let light { lines.append("Exposition : \(light.prompt).") }
+        lines.append("Saison actuelle : \(Season.of(now).label.lowercased()). Adoptée dans l'app \(Fmt.ago(createdAt, now: now)).")
+        if let p = profile, let s = snapshot() {
+            let st = CareEngine.status(s, now: now)
+            lines.append("Rythme d'arrosage actuel : environ tous les \(Int(st.interval.rounded())) jours. Méthode conseillée : \(p.watering.method)")
+            if st.dormantUntil != nil { lines.append("Elle est censée être en repos végétatif en ce moment.") }
+        }
+        lines.append("Dernier arrosage : \(lastWateredAt.map { Fmt.ago($0, now: now) } ?? "inconnu").")
+        let cutoff = Calendar.current.date(byAdding: .day, value: -60, to: now) ?? now
+        let recent = events.filter { $0.date >= cutoff }
+        let waterings = recent.filter { $0.kind == .watering }.count
+        let wet = recent.filter { $0.kind == .stillWet }.count
+        lines.append("Sur les 60 derniers jours : \(waterings) arrosage(s), \(wet) fois « terre encore humide » au moment de vérifier.")
+        if let r = lastDone(.repotting) { lines.append("Dernier rempotage : \(Fmt.ago(r, now: now)).") }
+        if let f = lastDone(.fertilizing) { lines.append("Dernier engrais : \(Fmt.ago(f, now: now)).") }
+        if let last = diagnoses.max(by: { $0.date < $1.date }), let r = last.result {
+            lines.append("Diagnostic précédent (\(Fmt.ago(last.date, now: now))) : \(r.title). \(r.summary)")
+        }
+        return lines.joined(separator: "\n")
+    }
+}

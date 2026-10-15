@@ -30,6 +30,9 @@ final class Plant {
     @Relationship(deleteRule: .cascade, inverse: \CareEvent.plant)
     var events: [CareEvent] = []
 
+    @Relationship(deleteRule: .cascade, inverse: \Diagnosis.plant)
+    var diagnoses: [Diagnosis] = []
+
     init(profile: CareProfile, photo: Data?, room: String?, light: LightLevel?, potStyleIndex: Int, lastWateredAt: Date?, now: Date = Date()) {
         self.id = UUID()
         self.createdAt = now
@@ -101,4 +104,39 @@ final class CareEvent {
     }
 
     var kind: CareKind { CareKind(rawValue: kindRaw) ?? .watering }
+}
+
+/// Un diagnostic fait par Claude (photo + description).
+@Model
+final class Diagnosis {
+    var id: UUID = UUID()
+    var date: Date = Date()
+    var note: String = ""
+    @Attribute(.externalStorage) var photo: Data?
+    var resultData: Data = Data()
+    var plant: Plant?
+
+    init(note: String, photo: Data?, result: DiagnosisResult, date: Date = Date()) {
+        self.id = UUID()
+        self.date = date
+        self.note = note
+        self.photo = photo
+        self.resultData = (try? JSONEncoder().encode(result)) ?? Data()
+    }
+
+    var result: DiagnosisResult? { try? JSONDecoder().decode(DiagnosisResult.self, from: resultData) }
+}
+
+nonisolated struct DiagnosisResult: Codable, Sendable, Equatable {
+    enum Severity: String, Codable, Sendable { case ok, watch, urgent }
+    enum WateringAdjustment: String, Codable, Sendable { case none, more, less }
+
+    var title: String
+    var severity: Severity
+    var plantSays: String
+    var summary: String
+    var causes: [String]
+    var actions: [String]
+    var wateringAdjustment: WateringAdjustment
+    var followUpDays: Int?
 }

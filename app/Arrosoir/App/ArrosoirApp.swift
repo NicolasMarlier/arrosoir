@@ -8,7 +8,7 @@ struct ArrosoirApp: App {
     init() {
         let inMemory = ProcessInfo.processInfo.arguments.contains("-inMemory")
         do {
-            container = try ModelContainer(for: Plant.self, CareEvent.self,
+            container = try ModelContainer(for: Plant.self, CareEvent.self, Diagnosis.self,
                                            configurations: ModelConfiguration(isStoredInMemoryOnly: inMemory))
         } catch {
             fatalError("Impossible d'ouvrir la base : \(error)")
@@ -40,6 +40,9 @@ struct RootView: View {
     @State private var tab: AppTab = ProcessInfo.processInfo.arguments.contains("-plantsTab") ? .plants : .today
     @State private var showAdd = false
     @State private var plantsPath: [UUID] = []
+    @State private var debugDiagnosis: Plant?
+    @State private var debugResult: Diagnosis?
+    @Environment(\.modelContext) private var ctx
     @Environment(\.scenePhase) private var scenePhase
     @Environment(AppSettings.self) private var settings
     @Query(filter: #Predicate<Plant> { $0.archivedAt == nil }) private var plants: [Plant]
@@ -60,6 +63,8 @@ struct RootView: View {
         .fullScreenCover(isPresented: $showAdd) {
             AddPlantFlow()
         }
+        .fullScreenCover(item: $debugDiagnosis) { p in DiagnosisFlow(plant: p) }
+        .sheet(item: $debugResult) { d in if let p = d.plant { DiagnosisResultView(plant: p, diagnosis: d) } }
         .onAppear {
             // Raccourci de debug : -open <NomDeLaPlante>
             let args = ProcessInfo.processInfo.arguments
@@ -69,6 +74,17 @@ struct RootView: View {
                 plantsPath = [p.id]
             }
             if args.contains("-add") { showAdd = true }
+            if args.contains("-diagnose") { debugDiagnosis = plants.first }
+            if args.contains("-diagnosisResult"), let p = plants.first {
+                let d = Diagnosis(note: "Les feuilles du bas jaunissent depuis 2 semaines, et la terre reste humide longtemps.", photo: nil, result: DiagnosisResult(
+                    title: "Excès d'eau probable", severity: .watch, plantSays: "J'ai les pieds dans l'eau, au secours 🫠",
+                    summary: "Le jaunissement des feuilles basses avec une terre qui reste humide évoque un arrosage trop fréquent pour la saison. Rien d'irréversible.",
+                    causes: ["Arrosage trop fréquent en automne", "Soucoupe qui garde l'eau", "Lumière en baisse"],
+                    actions: ["Laisse sécher les 3 premiers cm avant d'arroser", "Vide la soucoupe 15 min après l'arrosage", "Retire les feuilles jaunes"],
+                    wateringAdjustment: .less, followUpDays: 14))
+                ctx.insert(d); d.plant = p
+                debugResult = d
+            }
         }
         .onChange(of: scenePhase) { _, phase in
             if phase == .background { SafetyNet.reschedule(plants: plants, enabled: settings.safetyNet) }

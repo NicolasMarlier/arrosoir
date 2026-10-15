@@ -28,6 +28,12 @@ App iOS perso (SwiftUI) pour savoir quand arroser / soigner ses plantes d'intér
 - **Direction artistique** : « Papiers découpés » (aplats sans contour, crème / nuit / vermillon / moutarde / cobalt / vert / rose, Bricolage Grotesque) + **visages sur les pots** (inspirés de « La Coloc »). Pas de mode sombre.
 - « Mes plantes » groupé par pièce.
 
+## Ajouts après la V1
+- Photos de référence (iNaturalist / Wikipédia) sous chaque espèce proposée à l'identification.
+- « Mes plantes » : tuiles égales, prochaine échéance de moins en moins précise avec la distance, fréquence de la saison en cours.
+- « À faire » : plus de liste « Prochainement ».
+- **Diagnostic** depuis la fiche : jusqu'à 4 photos + note vocale (transcrite sur l'iPhone) ou texte → Claude (avec l'historique de soins) → verdict, causes, actions, ajustement du rythme en un tap. Historique des diagnostics sur la fiche.
+
 ## V2
 - Photos de suivi analysées par Claude (lumière, santé, conseils), historique photo.
 - Mode vacances.

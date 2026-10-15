@@ -153,6 +153,52 @@ struct PlantAI {
         String((String(data: data, encoding: .utf8) ?? "").prefix(160))
     }
 
+    // MARK: Diagnostic
+
+    func diagnose(context plantContext: String, note: String, photos: [Data]) async throws -> DiagnosisResult {
+        let str: (String) -> [String: Any] = { ["type": "string", "description": $0] }
+        let list: (String) -> [String: Any] = { ["type": "array", "items": ["type": "string"], "description": $0] }
+        let props: [String: Any] = [
+            "title": str("Le diagnostic en 3 à 6 mots (ex. « Excès d'eau probable », « En pleine forme »)."),
+            "severity": ["type": "string", "enum": ["ok", "watch", "urgent"], "description": "ok = rien d'inquiétant, watch = à surveiller / corriger, urgent = agir vite."],
+            "plant_says": str("Une phrase courte, drôle et tendre, dite par la plante à la 1re personne (tutoiement)."),
+            "summary": str("Explication claire en 2 à 4 phrases : ce que tu observes et ce que tu en conclus. Dis-le si tu as un doute."),
+            "causes": list("Causes probables, de la plus à la moins probable (1 à 4)."),
+            "actions": list("Actions concrètes à faire, dans l'ordre (1 à 5), courtes et précises."),
+            "watering_adjustment": ["type": "string", "enum": ["none", "more", "less"], "description": "Faut-il arroser plus souvent (more), moins souvent (less), ou ne rien changer (none) ?"],
+            "follow_up_days": ["type": "integer", "description": "Dans combien de jours refaire un point (0 si inutile)."],
+        ]
+        let schema: [String: Any] = ["type": "object", "required": Array(props.keys), "properties": props]
+        var content: [AnthropicClient.Content] = photos.prefix(4).map { .jpeg($0) }
+        content.append(.text("""
+        \(plantContext)
+
+        Ce que l'utilisateur observe / raconte :
+        \(note.isEmpty ? "(rien de plus, regarde les photos)" : note)
+
+        Fais un diagnostic.
+        """))
+        let data = try await client().callTool(
+            system: "Tu es un phytopathologiste et jardinier expert des plantes d'intérieur, bienveillant et précis. \(context) Tu poses un diagnostic à partir des photos, de la description et de l'historique de soins. Tu réponds en français, sans jargon inutile.",
+            content: content,
+            toolName: "report_diagnosis",
+            toolDescription: "Renvoie le diagnostic de la plante.",
+            schema: schema, maxTokens: 1800
+        )
+        let j = LenientJSON(data: data)
+        guard let summary = j.find("summary").string else { throw AIError.decoding(Self.snippet(data)) }
+        return DiagnosisResult(
+            title: j.find("title").string ?? "Diagnostic",
+            severity: DiagnosisResult.Severity(rawValue: j.find("severity").string?.lowercased() ?? "") ?? .watch,
+            plantSays: j.find("plant_says").string ?? "Merci de t'occuper de moi 🌿",
+            summary: summary,
+            causes: j.find("causes").array.compactMap(\.string),
+            actions: j.find("actions").array.compactMap(\.string),
+            wateringAdjustment: DiagnosisResult.WateringAdjustment(rawValue: j.find("watering_adjustment").string?.lowercased() ?? "") ?? .none,
+            followUpDays: j.find("follow_up_days").double.map { Int($0) }
+        )
+    }
+
     // MARK: Épitaphe
 
     func epitaph(name: String, reason: ArchiveReason, since: Date) async -> String {

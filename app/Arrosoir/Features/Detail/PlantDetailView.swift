@@ -11,6 +11,8 @@ struct PlantDetailView: View {
 
     @State private var now = Date()
     @State private var showLog = false
+    @State private var showDiagnosis = false
+    @State private var openedDiagnosis: Diagnosis?
     @State private var showEdit = false
     @State private var showPhoto = false
     @State private var askArchive = false
@@ -35,6 +37,10 @@ struct PlantDetailView: View {
                     .padding(.top, 8)
 
                     stateCard(st, profile).padding(.top, 14)
+
+                    Button("🩺 Diagnostic") { showDiagnosis = true }
+                        .buttonStyle(PillButtonStyle(kind: .dark))
+                        .padding(.top, 10)
 
                     KeyValueRow(key: "Dernier arrosage", value: plant.lastWateredAt.map { Fmt.ago($0, now: now) } ?? "pas encore noté")
                         .padding(.top, 6)
@@ -67,6 +73,14 @@ struct PlantDetailView: View {
 
                     rhythm(profile)
 
+                    if !plant.diagnoses.isEmpty {
+                        SectionTitle(text: "Diagnostics")
+                        ForEach(plant.diagnoses.sorted { $0.date > $1.date }) { d in
+                            Button { openedDiagnosis = d } label: { diagnosisRow(d) }
+                                .buttonStyle(.plain)
+                        }
+                    }
+
                     Button("✍️ Noter un soin") { showLog = true }
                         .buttonStyle(PillButtonStyle(kind: .outline))
                         .padding(.top, 20)
@@ -92,6 +106,8 @@ struct PlantDetailView: View {
             }
         }
         .overlay { if let working { WorkingOverlay(text: working) } }
+        .fullScreenCover(isPresented: $showDiagnosis) { DiagnosisFlow(plant: plant) }
+        .sheet(item: $openedDiagnosis) { d in DiagnosisResultView(plant: plant, diagnosis: d).presentationDragIndicator(.visible) }
         .sheet(isPresented: $showLog) { LogCareSheet(plant: plant).presentationDetents([.medium, .large]) }
         .sheet(isPresented: $showEdit) { EditPlantSheet(plant: plant, rooms: Array(Set(allPlants.compactMap(\.room)))).presentationDetents([.large]) }
         .fullScreenCover(isPresented: $showPhoto) { PhotoViewer(data: plant.photo) }
@@ -184,6 +200,31 @@ struct PlantDetailView: View {
             }
             .font(.brico(12)).foregroundStyle(Color.muted)
         }
+    }
+
+    private func diagnosisRow(_ d: Diagnosis) -> some View {
+        HStack(spacing: 12) {
+            Group {
+                if let data = d.photo, let img = UIImage(data: data) {
+                    Image(uiImage: img).resizable().scaledToFill()
+                } else {
+                    Color.cream.overlay(Text("🩺"))
+                }
+            }
+            .frame(width: 48, height: 48)
+            .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+            VStack(alignment: .leading, spacing: 2) {
+                Text(d.result?.title ?? "Diagnostic").font(.brico(15, .heavy)).lineLimit(1)
+                Text(Fmt.ago(d.date, now: now).capitalizedFirst).font(.brico(12)).foregroundStyle(Color.muted)
+            }
+            Spacer()
+            Circle().fill(d.result.map { $0.severity == .ok ? Color.leafGreen : $0.severity == .watch ? Color.mustard : Color.vermillon } ?? .muted)
+                .frame(width: 10, height: 10)
+            Image(systemName: "chevron.right").font(.system(size: 13, weight: .bold)).foregroundStyle(Color.muted)
+        }
+        .padding(10)
+        .background(Color.white, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .padding(.top, 6)
     }
 
     // MARK: Textes

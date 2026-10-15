@@ -259,35 +259,12 @@ struct AllGoodView: View {
                 }
             }
             .frame(height: 250)
-            .padding(.top, 10)
+            .padding(.top, 70)
 
             Text("Tout le monde va bien").font(.brico(26, .heavy)).padding(.top, 4)
             Text(Voice.pick(Voice.allGood, seed: plants.first?.id ?? UUID(), date: now)).font(.brico(15)).foregroundStyle(Color.muted)
 
-            SectionTitle(text: "Prochainement")
-            ForEach(upcoming, id: \.0) { _, label, date in
-                KeyValueRow(key: label, value: date)
-            }
         }
-    }
-
-    private var upcoming: [(String, String, String)] {
-        var items: [(Date, String, String)] = []
-        var sleeping: [String] = []
-        for p in plants {
-            guard let s = p.snapshot() else { continue }
-            let st = CareEngine.status(s, now: now)
-            for u in CareEngine.upcoming(s, now: now) {
-                if u.kind == .watering, st.dormantUntil != nil, !(st.watering == .soon(days: 1) || st.watering == .soon(days: 2)) {
-                    sleeping.append(p.commonName); continue
-                }
-                let label = u.kind == .watering ? p.commonName : "\(p.commonName) · \(u.kind.actionLabel.lowercased())"
-                items.append((u.date, "\(u.kind.emoji) \(label)", "\(p.id)-\(u.kind.rawValue)"))
-            }
-        }
-        var out = items.sorted { $0.0 < $1.0 }.prefix(6).map { ($0.2, $0.1, Fmt.shortDay($0.0, now: now)) }
-        if !sleeping.isEmpty { out.append(("sleep", "💤 " + sleeping.joined(separator: ", "), "au repos")) }
-        return out
     }
 }
 

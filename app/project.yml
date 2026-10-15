@@ -38,6 +38,8 @@ targets:
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
         INFOPLIST_KEY_UIUserInterfaceStyle: Light
         INFOPLIST_KEY_NSCameraUsageDescription: "Pour photographier tes plantes et les reconnaître."
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: "Pour décrire ta plante à voix haute lors d'un diagnostic."
+        INFOPLIST_KEY_NSSpeechRecognitionUsageDescription: "Pour transcrire ta description sur ton iPhone."
         INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "Pour choisir une photo de ta plante."
         INFOPLIST_KEY_CFBundleDevelopmentRegion: fr
   ArrosoirTests:
