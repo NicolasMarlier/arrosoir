@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Arrosoir — Diagnostic v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#fff4e2; --ink:#1c1b3a; --muted:#7a7488; --red:#ff5a36; --mustard:#ffb627; --cobalt:#2b59c3; --green:#1f8a4c; --pink:#ff7eb6;
+          --sage:#c9e6c4; --sand:#ffd88a; --blush:#ffc4dc; --sky:#c8d8ff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Bricolage Grotesque', sans-serif; background: var(--bg); color: var(--ink); padding: 40px 30px 120px; }
+  .wrap { max-width: 1400px; margin: 0 auto; }
+  h1 { font-size: 56px; font-weight: 800; letter-spacing: -2px; line-height: 1; }
+  .lead { font-size: 17px; margin-top: 12px; max-width: 800px; line-height: 1.5; }
+  h2 { font-size: 30px; font-weight: 800; letter-spacing: -1px; margin: 60px 0 6px; }
+  .h2sub { color: var(--muted); font-size: 15px; max-width: 820px; line-height: 1.5; }
+  .row { display: flex; gap: 30px; flex-wrap: wrap; margin-top: 22px; align-items: flex-start; }
+  .screen { width: 310px; }
+  .slabel { font-weight: 800; font-size: 15px; margin-bottom: 10px; }
+  .slabel i { font-style: normal; background: var(--ink); color: white; border-radius: 10px; padding: 1px 8px; font-size: 12px; margin-right: 6px; }
+  .note { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.45; }
+  .note b { color: var(--ink); }
+  .q { color: #b05a00; }
+
+  /* ---------- téléphone ---------- */
+  .phone { width: 310px; height: 660px; border-radius: 44px; border: 10px solid #111; overflow: hidden; background: var(--bg); position: relative; box-shadow: 0 20px 40px rgba(28,27,58,.16); }
+  .status { height: 34px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; font-size: 12px; font-weight: 700; position: relative; z-index: 5; }
+  .scr { padding: 4px 16px 0; }
+  .navbtns { display: flex; justify-content: space-between; }
+  .navbtns span { width: 34px; height: 34px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+  .photo { height: 190px; border-radius: 24px; margin-top: 10px; position: relative; overflow: hidden;
+           background: linear-gradient(180deg, #e9e2d3 0%, #d8cfbd 58%, #3f6047 58.5%, #2f4a37 100%); }
+  .photo .stem { position: absolute; left: 50%; bottom: 52px; width: 8px; height: 110px; background: #8a7a5c; border-radius: 4px; transform: translateX(-50%) rotate(4deg); }
+  .photo .leaf { position: absolute; width: 34px; height: 16px; background: #4f7d4a; border-radius: 50% 50% 50% 0; }
+  .photo .pot { position: absolute; left: 50%; bottom: -20px; transform: translateX(-50%); width: 170px; height: 80px; border-radius: 50%; background: #2f6a6a; }
+  .photo .vign { position: absolute; right: 10px; bottom: 10px; width: 66px; height: 66px; border-radius: 16px; border: 3px solid white; background: var(--sand); }
+  .pname { font-size: 26px; font-weight: 800; letter-spacing: -.6px; margin-top: 10px; }
+  .sci { font-size: 12.5px; color: var(--muted); }
+  .chips { display: flex; gap: 6px; margin-top: 6px; }
+  .chip { font-size: 11px; font-weight: 700; background: white; border-radius: 20px; padding: 3px 9px; }
+  .statecard { background: var(--cobalt); color: white; border-radius: 20px; padding: 10px 12px; margin-top: 10px; }
+  .statecard b { font-size: 14px; display: block; }
+  .statecard span { font-size: 11.5px; opacity: .9; }
+  .kv { display: flex; justify-content: space-between; font-size: 12px; padding: 8px 0; border-bottom: 1.5px dashed #ead9bd; }
+  .kv span:first-child { color: var(--muted); }
+  .kv span:last-child { font-weight: 700; }
+
+  /* ---------- bouton diagnostic : variantes ---------- */
+  .diagA { margin-top: 10px; background: var(--red); color: white; border-radius: 24px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; position: relative; overflow: hidden; cursor: pointer; }
+  .diagA .mic { width: 50px; height: 50px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; flex: none; position: relative; }
+  .diagA .mic::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 3px solid rgba(255,255,255,.5); animation: ring 2s ease-out infinite; }
+  .diagA b { font-size: 16px; white-space: nowrap; font-weight: 800; display: block; line-height: 1.1; }
+  .diagA small { font-size: 12px; opacity: .92; }
+  .diagA .blob { position: absolute; right: -30px; top: -40px; width: 70px; height: 70px; background: var(--mustard); border-radius: 60% 40% 55% 45%; opacity: .9; }
+  .diagA .blob2 { position: absolute; right: 30px; bottom: -30px; width: 50px; height: 50px; background: var(--pink); border-radius: 45% 55% 40% 60%; opacity: .9; }
+
+  .diagB { margin-top: 12px; display: flex; align-items: center; gap: 12px; background: white; border-radius: 26px; padding: 10px 12px 10px 10px; cursor: pointer; }
+  .diagB .mic { width: 58px; height: 58px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; flex: none; position: relative; }
+  .diagB .mic::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 3px solid var(--red); opacity: .4; animation: ring 2s ease-out infinite; }
+  .diagB b { font-size: 17px; font-weight: 800; display: block; }
+  .diagB small { font-size: 12px; color: var(--muted); }
+  .diagB .arrow { margin-left: auto; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+
+  .diagC { position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; background: var(--ink); color: white; border-radius: 40px; padding: 8px 18px 8px 8px; box-shadow: 0 10px 24px rgba(28,27,58,.3); z-index: 4; cursor: pointer; white-space: nowrap; }
+  .diagC .mic { width: 46px; height: 46px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; position: relative; }
+  .diagC .mic::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 3px solid var(--red); opacity: .5; animation: ring 2s ease-out infinite; }
+  .diagC b { font-size: 16px; font-weight: 800; }
+
+  @keyframes ring { 0% { transform: scale(.9); opacity: .7; } 100% { transform: scale(1.35); opacity: 0; } }
+
+  /* ---------- overlay ---------- */
+  .dim { position: absolute; inset: 0; background: rgba(28,27,58,.55); z-index: 6; }
+  .sheet { position: absolute; left: 0; right: 0; bottom: 0; top: 70px; background: var(--bg); border-radius: 32px 32px 0 0; z-index: 7; padding: 10px 18px 18px; display: flex; flex-direction: column; }
+  .grab { width: 40px; height: 5px; border-radius: 3px; background: #d9cdb6; margin: 0 auto 8px; }
+  .sheet-top { display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 700; }
+  .sheet-top .x { width: 30px; height: 30px; border-radius: 50%; background: white; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+  .listener { display: flex; align-items: center; justify-content: center; position: relative; height: 130px; margin-top: 2px; }
+  .listener .plant { width: 120px; height: 120px; position: relative; z-index: 2; }
+  .listener .halo { position: absolute; width: 150px; height: 130px; background: var(--sand); border-radius: 60% 40% 55% 45%; animation: wob 6s ease-in-out infinite; }
+  .waves { position: absolute; right: 38px; top: 20px; z-index: 3; }
+  .waves i { position: absolute; border: 3px solid var(--cobalt); border-left: none; border-bottom: none; border-top: none; border-radius: 0 50% 50% 0; animation: sw 1.2s ease-in-out infinite; }
+  .waves i:nth-child(1) { width: 10px; height: 20px; left: 0; top: 10px; }
+  .waves i:nth-child(2) { width: 18px; height: 34px; left: 0; top: 3px; animation-delay: .15s; }
+  .waves i:nth-child(3) { width: 26px; height: 48px; left: 0; top: -4px; animation-delay: .3s; }
+  @keyframes sw { 0%,100% { opacity: .2; } 50% { opacity: 1; } }
+  @keyframes wob { 0%,100% { border-radius: 60% 40% 55% 45%; transform: rotate(0); } 50% { border-radius: 45% 55% 40% 60%; transform: rotate(8deg); } }
+  .prompt { text-align: center; font-size: 19px; font-weight: 800; margin-top: 4px; }
+  .hint { text-align: center; font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .eq { display: flex; align-items: center; justify-content: center; gap: 4px; height: 54px; margin: 10px 0 4px; }
+  .eq i { width: 7px; border-radius: 4px; height: 10px; animation: eq 1s ease-in-out infinite; }
+  .eq.paused i { animation: none; height: 6px !important; opacity: .4; }
+  @keyframes eq { 0%,100% { height: 8px; } 50% { height: var(--h); } }
+
+  .transcript { flex: 1; background: white; border-radius: 20px; padding: 12px 14px; font-size: 15px; line-height: 1.45; overflow: hidden; position: relative; }
+  .transcript .ph { color: #b9b2c4; }
+  .transcript .live { color: var(--muted); }
+  .transcript .caret { display: inline-block; width: 2px; height: 16px; background: var(--red); vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .transcript .edit { display: block; text-align: right; margin-top: 6px; font-size: 11px; color: var(--muted); }
+
+  .thumbs { display: flex; gap: 6px; margin-bottom: 8px; }
+  .thumbs div { width: 52px; height: 52px; border-radius: 12px; background: linear-gradient(160deg, #6a8a5f, #2f4a37); position: relative; }
+  .thumbs div:nth-child(2) { background: linear-gradient(200deg, #c9b98f, #5d7a4c); }
+  .thumbs div::after { content: '×'; position: absolute; top: -6px; right: -6px; width: 18px; height: 18px; border-radius: 50%; background: var(--ink); color: white; font-size: 12px; display: flex; align-items: center; justify-content: center; font-weight: 800; }
+
+  .controls { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+  .ghost { font-size: 13px; font-weight: 800; padding: 9px 14px; border-radius: 30px; border: 2px solid var(--ink); background: transparent; display: flex; gap: 6px; align-items: center; cursor: pointer; }
+  .bigmic { width: 66px; height: 66px; border-radius: 50%; background: var(--red); display: flex; align-items: center; justify-content: center; position: relative; cursor: pointer; }
+  .bigmic.rec::before, .bigmic.rec::after { content: ''; position: absolute; inset: -8px; border-radius: 50%; border: 3px solid var(--red); opacity: .5; animation: ring 1.6s ease-out infinite; }
+  .bigmic.rec::after { animation-delay: .8s; }
+  .bigmic .sq { width: 20px; height: 20px; border-radius: 5px; background: white; }
+  .spacer { width: 96px; text-align: right; font-size: 12px; color: var(--muted); font-weight: 600; }
+  .ask { margin-top: 12px; background: var(--ink); color: white; border-radius: 30px; text-align: center; padding: 14px 0; font-size: 16px; font-weight: 800; cursor: pointer; }
+  .ask.off { opacity: .35; }
+
+  /* ---------- loaders ---------- */
+  .loader { position: absolute; inset: 0; background: var(--bg); z-index: 8; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; overflow: hidden; }
+  .stage { width: 240px; height: 240px; position: relative; }
+  .stage .bg { position: absolute; inset: 10px; background: var(--sage); border-radius: 60% 40% 55% 45%; animation: wob 5s ease-in-out infinite; }
+  .stage .plant { position: absolute; left: 30px; top: 30px; width: 180px; height: 180px; animation: bob 1.6s ease-in-out infinite; transform-origin: 50% 100%; }
+  @keyframes bob { 0%,100% { transform: scaleY(1) translateY(0); } 50% { transform: scaleY(.97) translateY(2px); } }
+  .loupe { position: absolute; width: 96px; height: 96px; left: 70px; top: 40px; animation: loupe 3.2s ease-in-out infinite; z-index: 3; }
+  @keyframes loupe {
+    0% { transform: translate(-50px, -10px) rotate(-10deg); }
+    25% { transform: translate(40px, -30px) rotate(10deg); }
+    50% { transform: translate(50px, 30px) rotate(20deg); }
+    75% { transform: translate(-40px, 40px) rotate(-5deg); }
+    100% { transform: translate(-50px, -10px) rotate(-10deg); } }
+  .pupil { animation: look 3.2s ease-in-out infinite; }
+  @keyframes look {
+    0%,100% { transform: translate(-1.4px, -1.2px); } 25% { transform: translate(1.4px, -1.6px); }
+    50% { transform: translate(1.6px, 1px); } 75% { transform: translate(-1.2px, 1.4px); } }
+  .lmsg { font-size: 19px; font-weight: 800; text-align: center; margin-top: 18px; min-height: 52px; }
+  .lmsg span { display: inline-block; animation: pop .45s ease-out; }
+  @keyframes pop { 0% { transform: translateY(8px) rotate(-2deg); opacity: 0; } 100% { transform: none; opacity: 1; } }
+  .leafbar { display: flex; gap: 6px; margin-top: 10px; }
+  .leafbar i { width: 16px; height: 16px; border-radius: 50% 0 50% 0; background: #e3d6bd; transition: background .3s; transform: rotate(45deg); }
+  .leafbar i.on { background: var(--green); }
+
+  .ecg { width: 260px; height: 70px; margin-top: 6px; }
+  .ecg path { fill: none; stroke: var(--red); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 420; stroke-dashoffset: 420; animation: ecg 1.6s linear infinite; }
+  @keyframes ecg { 0% { stroke-dashoffset: 420; } 70% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: 0; opacity: 0; } }
+  .steth { position: absolute; z-index: 3; left: 0; top: 0; width: 240px; height: 240px; pointer-events: none; }
+  .steth .chest { animation: press 1.6s ease-in-out infinite; transform-origin: 150px 170px; }
+  @keyframes press { 0%,60%,100% { transform: scale(1); } 30% { transform: scale(.9); } }
+  .heart { position: absolute; font-size: 18px; animation: heart 1.6s ease-out infinite; opacity: 0; }
+  @keyframes heart { 0% { transform: translateY(0) scale(.6); opacity: 0; } 25% { opacity: 1; } 100% { transform: translateY(-60px) scale(1.1); opacity: 0; } }
+
+  /* ---------- résultat ---------- */
+  .res-hero { background: var(--sand); border-radius: 26px; height: 150px; display: flex; align-items: center; justify-content: center; position: relative; }
+  .res-hero svg { width: 130px; height: 130px; }
+  .sticker { display: inline-block; font-size: 13px; font-weight: 800; padding: 6px 12px; border-radius: 14px; background: var(--mustard); transform: rotate(-2.5deg); margin-top: 10px; }
+  .verdict { background: var(--cobalt); color: white; border-radius: 22px; padding: 12px 14px; margin-top: 10px; }
+  .verdict small { font-size: 10.5px; letter-spacing: 1px; font-weight: 800; opacity: .85; }
+  .verdict b { display: block; font-size: 19px; font-weight: 800; margin: 2px 0 4px; }
+  .verdict p { font-size: 12.5px; line-height: 1.4; }
+  .sect { font-size: 10.5px; letter-spacing: 1.3px; text-transform: uppercase; color: var(--muted); margin: 12px 0 4px; font-weight: 800; }
+  .todo { background: white; border-radius: 18px; padding: 10px 12px; font-size: 12.5px; line-height: 1.6; }
+  .todo div::before { content: '✓  '; color: var(--green); font-weight: 800; }
+
+  /* ---------- prototype ---------- */
+  .proto { display: flex; gap: 40px; align-items: flex-start; flex-wrap: wrap; margin-top: 22px; }
+  .proto .side { max-width: 460px; }
+  .proto .side p { font-size: 15px; line-height: 1.55; margin-bottom: 12px; }
+  .replay { font-family: inherit; font-size: 15px; font-weight: 800; background: var(--ink); color: white; border: none; border-radius: 30px; padding: 12px 20px; cursor: pointer; }
+  .qs { background: white; border-radius: 26px; padding: 24px 30px; margin-top: 60px; }
+  .qs h2 { margin: 0 0 10px; font-size: 26px; }
+  .qs li { margin: 8px 0 8px 20px; line-height: 1.5; font-size: 15px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Diagnostic · v1</h1>
+  <p class="lead">Nouveau parcours : le bouton ouvre un <b>panneau qui écoute tout de suite</b>. On voit que ça capte, le texte s'écrit en direct, la photo reste possible mais secondaire, puis <b>« Demander le diagnostic »</b> lance un chargement rigolo, et le verdict s'affiche.</p>
+
+  <h2>▶︎ Prototype cliquable</h2>
+  <div class="proto">
+    <div id="proto"></div>
+    <div class="side">
+      <p><b>Clique sur le bouton rouge</b> de la fiche : le panneau monte et l'écoute démarre aussitôt. Le texte s'écrit en direct (simulé ici).</p>
+      <p>Tu peux toucher <b>« 📷 Photo »</b> pour ajouter une photo, ou le <b>carré</b> pour arrêter l'écoute. Ensuite, <b>« Demander le diagnostic »</b>.</p>
+      <p>Le chargement dure environ 5 secondes avec des messages qui défilent, puis le résultat s'affiche.</p>
+      <button class="replay" onclick="proto.reset()">↺ Rejouer depuis le début</button>
+    </div>
+  </div>
+
+  <h2>1 · Le bouton sur la fiche</h2>
+  <p class="h2sub">Plus gros, plus visible, avec le micro qui « respire » pour montrer qu'on peut parler. Trois options :</p>
+  <div class="row" id="buttons"></div>
+
+  <h2>2 · L'écoute</h2>
+  <p class="h2sub">Le panneau s'ouvre <b>déjà en écoute</b>. La plante « tend l'oreille » (petites ondes bleues), et une barre de son en papier découpé suit ta voix.</p>
+  <div class="row" id="listen"></div>
+
+  <h2>3 · Le chargement</h2>
+  <p class="h2sub">Deux idées de chargement personnalisé. Les messages changent toutes les ~1,2 s et les petites feuilles se remplissent pour montrer la progression.</p>
+  <div class="row" id="loaders"></div>
+
+  <h2>4 · Le verdict</h2>
+  <p class="h2sub">Le résultat reste dans le panneau (on peut le fermer pour revenir à la fiche). Il est aussi enregistré dans l'historique de la plante.</p>
+  <div class="row" id="result"></div>
+
+  <div class="qs">
+    <h2>❓ À toi</h2>
+    <ol>
+      <li><b>Bouton</b> : A (grande carte rouge), B (carte blanche avec gros micro) ou C (bulle flottante toujours visible en bas) ?</li>
+      <li><b>Écoute</b> : la barre de son colorée + les ondes autour de la plante, ça te va ? Le texte en direct sur fond blanc, OK ?</li>
+      <li><b>Photo</b> : bouton « 📷 Photo » discret à gauche du micro, ça te va comme niveau d'importance ?</li>
+      <li><b>Chargement</b> : A (la loupe qui inspecte) ou B (le stéthoscope avec le cœur qui bat) ?</li>
+      <li>Les messages de chargement : ton OK ? D'autres idées à ajouter ?</li>
+      <li>Si on arrête de parler quelques secondes, faut-il <b>couper l'écoute tout seul</b> ou attendre que tu touches le carré ?</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+/* ===================== Plante (papier découpé + yeux B) ===================== */
+const HEART = "M0 14 C -14 6, -16 -10, -6 -14 C -2 -15, 0 -12, 0 -10 C 0 -12, 2 -15, 6 -14 C 16 -10, 14 6, 0 14 Z";
+const g = (x,y,s,r,inner) => `<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})">${inner}</g>`;
+function caudex(leaf='#1f8a4c') {
+  let o = `<path d="M47 46 L36 26 M50 44 L51 18 M53 46 L66 27" fill="none" stroke="#c9732f" stroke-width="4.5" stroke-linecap="round"/>`
+    + `<path d="M38 68 C 30 60, 37 47, 46 44 L 54 44 C 63 47, 70 60, 62 68 Z" fill="#c9732f"/>`;
+  [[36,26],[51,18],[66,27]].forEach(([x,y]) => {
+    o += g(x,y,1,0,`<ellipse cx="-5" cy="-1" rx="5" ry="2.4" transform="rotate(-30)" fill="${leaf}"/><ellipse cx="5" cy="-1" rx="5" ry="2.4" transform="rotate(30)" fill="${leaf}"/>`);
+  });
+  return o;
+}
+/* mood: listen | ok | think | happy | worried */
+function plantSVG(mood='ok', opts={}) {
+  const ink = '#fff4e2';
+  let o = `<path d="M30 70 L70 70 L65.5 96 L34.5 96 Z" fill="#2b59c3"/><rect x="27" y="64" width="46" height="9" rx="3" fill="#ffb627"/>` + caudex();
+  const ex = [43.5,56.5], ey = 80.5;
+  if (mood === 'happy') {
+    o += ex.map(x=>`<path d="M${x-3} ${ey+1.5} Q${x} ${ey-2.5} ${x+3} ${ey+1.5}" fill="none" stroke="${ink}" stroke-width="1.9" stroke-linecap="round"/>`).join('');
+    o += `<path d="M45.5 87 Q50 93.5 54.5 87 Z" fill="${ink}"/>`;
+  } else {
+    const px = mood==='listen' ? 1.4 : 0, py = mood==='listen' ? -0.6 : mood==='worried' ? -1.4 : 0.4;
+    o += ex.map(x=>`<circle cx="${x}" cy="${ey}" r="4.6" fill="#fff"/><g class="${opts.pupilClass||''}"><circle cx="${x+px}" cy="${ey+py}" r="2.2" fill="#1c1b3a"/></g>`).join('');
+    if (mood==='worried') o += `<path d="M38.5 74 L46 75.8 M61.5 74 L54 75.8" stroke="${ink}" stroke-width="1.8" stroke-linecap="round"/>`;
+    o += mood==='listen' ? `<ellipse cx="50" cy="88.5" rx="2.4" ry="1.8" fill="${ink}"/>`
+       : mood==='think' ? `<path d="M47 88.5 L53 87.5" stroke="${ink}" stroke-width="1.9" stroke-linecap="round"/>`
+       : mood==='worried' ? `<path d="M46.5 89.5 Q50 86.5 53.5 89.5" fill="none" stroke="${ink}" stroke-width="1.9" stroke-linecap="round"/>`
+       : `<path d="M46.5 87.5 Q50 91 53.5 87.5" fill="none" stroke="${ink}" stroke-width="1.9" stroke-linecap="round"/>`;
+  }
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">${o}</svg>`;
+}
+const MIC = (c='#ff5a36', s=22) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="13" rx="4" fill="${c}"/><path d="M5 11a7 7 0 0 0 14 0" fill="none" stroke="${c}" stroke-width="2.4" stroke-linecap="round"/><path d="M12 18v3" stroke="${c}" stroke-width="2.4" stroke-linecap="round"/></svg>`;
+
+/* ===================== Morceaux d'écran ===================== */
+const status = `<div class="status"><span>9:41</span><span>●●● ▮</span></div>`;
+const vign = `<div class="vign">${plantSVG('ok')}</div>`;
+const photo = `<div class="photo"><div class="stem"></div><div class="leaf" style="left:150px;top:22px;transform:rotate(-20deg)"></div><div class="leaf" style="left:122px;top:30px;transform:rotate(200deg)"></div><div class="leaf" style="left:160px;top:48px"></div><div class="pot"></div>${vign}</div>`;
+const ficheTop = (btn) => `<div class="scr"><div class="navbtns"><span>‹</span><span>•••</span></div>${photo}
+  <div class="pname">Rose du désert</div><div class="sci">Adenium obesum</div>
+  <div class="chips"><span class="chip">🏠 Salon</span><span class="chip">🌤️ Lumineux</span></div>
+  <div class="statecard"><b>💤 Au repos jusqu'à fin mars</b><span>Un petit verre par mois au maximum.</span></div>
+  ${btn}
+  <div class="kv"><span>Dernier arrosage</span><span>il y a 18 j</span></div>
+  <div class="kv"><span>Prochaine vérif.</span><span>~ 2 sem.</span></div></div>`;
+
+const BTN = {
+  A: `<div class="diagA" data-open><div class="blob"></div><div class="blob2"></div><div class="mic">${MIC()}</div><div style="position:relative"><b>Quelque chose cloche ?</b><small>Parle-moi d'elle, je l'examine 🩺</small></div></div>`,
+  B: `<div class="diagB" data-open><div class="mic">${MIC('#fff',26)}</div><div><b>Diagnostic</b><small>Raconte ce que tu vois, à voix haute</small></div><div class="arrow">›</div></div>`,
+  C: `<div class="diagC" data-open><div class="mic">${MIC('#fff',22)}</div><b>Un souci ? Parle-moi</b></div>`,
+};
+
+const EQ_COLORS = ['#ff5a36','#ffb627','#2b59c3','#1f8a4c','#ff7eb6'];
+function eq(paused=false) {
+  let o = `<div class="eq ${paused?'paused':''}">`;
+  for (let i=0;i<22;i++) {
+    const h = 14 + Math.round(Math.abs(Math.sin(i*1.7))*34 + (i%3)*4);
+    o += `<i style="background:${EQ_COLORS[i%5]};--h:${h}px;animation-delay:${(i*0.07).toFixed(2)}s;animation-duration:${(0.7+(i%4)*0.15).toFixed(2)}s"></i>`;
+  }
+  return o + `</div>`;
+}
+
+function sheet({ state='listen', text='', live='', photos=0, prompt, hint }) {
+  const rec = state === 'listen';
+  const txt = (text || live) ? `${text}<span class="live">${live}</span>${rec?'<span class="caret"></span>':''}${!rec?'<span class="edit">✎ modifiable</span>':''}` : `<span class="ph">Je t'écoute… Dis-moi ce que tu remarques, depuis quand, ce qui a changé.</span>${rec?'<span class="caret"></span>':''}`;
+  return `<div class="dim"></div><div class="sheet">
+    <div class="grab"></div>
+    <div class="sheet-top"><span>Diagnostic · Rose du désert</span><span class="x">✕</span></div>
+    <div class="listener"><div class="halo"></div><div class="plant">${plantSVG(rec?'listen':'ok')}</div>${rec?'<div class="waves"><i></i><i></i><i></i></div>':''}</div>
+    <div class="prompt">${prompt || (rec ? 'Je t\'écoute 👂' : 'C\'est noté !')}</div>
+    <div class="hint">${hint || (rec ? 'Parle normalement, je transcris en direct' : 'Touche le micro pour ajouter quelque chose')}</div>
+    ${eq(!rec)}
+    ${photos ? `<div class="thumbs">${'<div></div>'.repeat(photos)}</div>` : ''}
+    <div class="transcript">${txt}</div>
+    <div class="controls">
+      <div class="ghost" data-photo>📷 Photo</div>
+      <div class="bigmic ${rec?'rec':''}" data-mic>${rec ? '<div class="sq"></div>' : MIC('#fff',28)}</div>
+      <div class="spacer">${rec ? '0:14' : ''}</div>
+    </div>
+    <div class="ask ${(text||live)?'':'off'}" data-ask>Demander le diagnostic</div>
+  </div>`;
+}
+
+const MSGS = ["J'ausculte les feuilles… 🔍", "Je compte les taches…", "Je renifle la terre… 👃", "Je consulte mes collègues cactus 🌵", "Je relis son carnet de santé 📖", "Je rédige l'ordonnance ✍️"];
+
+function loaderA(msgIdx=0, filled=2) {
+  return `<div class="loader">
+    <div class="stage"><div class="bg"></div><div class="plant">${plantSVG('think',{pupilClass:'pupil'})}</div>
+      <svg class="loupe" viewBox="0 0 100 100"><circle cx="38" cy="38" r="26" fill="rgba(255,255,255,.35)" stroke="#2b59c3" stroke-width="9"/><path d="M58 58 L86 86" stroke="#1c1b3a" stroke-width="12" stroke-linecap="round"/><path d="M26 26 Q32 20 40 20" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
+    </div>
+    <div class="lmsg"><span>${MSGS[msgIdx]}</span></div>
+    <div class="leafbar">${[0,1,2,3,4,5].map(i=>`<i class="${i<filled?'on':''}"></i>`).join('')}</div>
+  </div>`;
+}
+
+function loaderB(msgIdx=3, filled=4) {
+  return `<div class="loader">
+    <div class="stage"><div class="bg" style="background:var(--blush)"></div><div class="plant">${plantSVG('think')}</div>
+      <svg class="steth" viewBox="0 0 240 240">
+        <path d="M70 40 C 60 90, 90 120, 120 120 C 150 120, 150 160, 150 170" fill="none" stroke="#1c1b3a" stroke-width="5" stroke-linecap="round"/>
+        <path d="M70 40 L60 30 M70 40 L82 32" stroke="#1c1b3a" stroke-width="5" stroke-linecap="round"/>
+        <g class="chest"><circle cx="150" cy="176" r="14" fill="#ffb627"/><circle cx="150" cy="176" r="7" fill="#ff5a36"/></g>
+      </svg>
+      <span class="heart" style="left:176px;top:120px">❤️</span>
+      <span class="heart" style="left:196px;top:140px;animation-delay:.5s">💚</span>
+    </div>
+    <svg class="ecg" viewBox="0 0 260 70"><path d="M0 40 L70 40 L82 40 L92 14 L104 62 L116 26 L124 40 L170 40 L180 40 L188 22 L198 56 L206 40 L260 40"/></svg>
+    <div class="lmsg" style="margin-top:8px"><span>${MSGS[msgIdx]}</span></div>
+    <div class="leafbar">${[0,1,2,3,4,5].map(i=>`<i class="${i<filled?'on':''}"></i>`).join('')}</div>
+  </div>`;
+}
+
+function resultSheet() {
+  return `<div class="dim"></div><div class="sheet" style="overflow:hidden">
+    <div class="grab"></div>
+    <div class="sheet-top"><span>Diagnostic · Rose du désert</span><span class="x">✕</span></div>
+    <div class="res-hero" style="margin-top:8px">${plantSVG('worried')}</div>
+    <div class="sticker">J'ai les pieds dans l'eau 🫠</div>
+    <div class="verdict"><small>À SURVEILLER</small><b>Trop d'eau pour la saison</b><p>Les feuilles qui jaunissent et tombent en automne, avec une terre encore humide, indiquent surtout un arrosage trop fréquent pendant son repos.</p></div>
+    <div class="sect">À faire</div>
+    <div class="todo"><div>Ne plus arroser avant mi-novembre</div><div>Vide la soucoupe</div><div>Rapproche-la de la fenêtre</div></div>
+    <div class="ask" style="margin-top:10px;background:var(--red)">Merci docteur !</div>
+  </div>`;
+}
+
+/* ===================== Écrans statiques ===================== */
+const phone = (inner, extra='') => `<div class="phone" ${extra}>${status}${inner}</div>`;
+const screen = (n, label, inner, note) => `<div class="screen"><div class="slabel"><i>${n}</i>${label}</div>${inner}<div class="note">${note}</div></div>`;
+
+document.getElementById('buttons').innerHTML =
+  screen('A','Grande carte rouge', phone(ficheTop(BTN.A)), '<b>La plus visible.</b> Carte vermillon avec des formes découpées, micro blanc qui « respire ». Juste sous l\'état de la plante.')
++ screen('B','Carte blanche, gros micro', phone(ficheTop(BTN.B)), '<b>Plus sobre</b>, cohérente avec les autres cartes de la fiche. Le gros micro rouge attire l\'œil sans crier.')
++ screen('C','Bulle flottante', phone(ficheTop('') + BTN.C), '<b>Toujours à portée de pouce</b>, même en faisant défiler la fiche. Pratique, mais cache un peu le bas de l\'écran.');
+
+document.getElementById('listen').innerHTML =
+  screen('L1','Ouverture : déjà en écoute', phone(ficheTop(BTN.A) + sheet({})), 'Le panneau monte et l\'écoute démarre sans autre action. La plante tend l\'oreille, la barre de son bouge.')
++ screen('L2','Texte en direct', phone(ficheTop(BTN.A) + sheet({ text:'Depuis une semaine les feuilles du haut jaunissent et ', live:'tombent quand je les touche, je l\'arrose' })), 'Les mots déjà validés sont en noir, ceux en cours de reconnaissance en gris. Le chrono indique depuis combien de temps tu parles.')
++ screen('L3','Pause + photos', phone(ficheTop(BTN.A) + sheet({ state:'pause', photos:2, text:'Depuis une semaine les feuilles du haut jaunissent et tombent quand je les touche, je l\'arrose tous les 10 jours environ.' })), 'Quand tu arrêtes, le texte reste <b>modifiable</b>. Les photos ajoutées s\'affichent en vignettes au-dessus. Le micro permet de compléter.');
+
+document.getElementById('loaders').innerHTML =
+  screen('A','La loupe', phone(loaderA(0,2)), 'Une grosse loupe tourne autour de la plante, qui la <b>suit des yeux</b>. Le fond « respire ».')
++ screen('B','Le stéthoscope', phone(loaderB(3,4)), 'Un stéthoscope posé sur le pot, un <b>électrocardiogramme</b> qui se dessine en rythme, de petits cœurs qui s\'envolent.');
+
+document.getElementById('result').innerHTML =
+  screen('R','Le verdict', phone(ficheTop(BTN.A) + resultSheet()), 'Même contenu que dans l\'app actuelle (causes, actions, ajustement du rythme), présenté dans le panneau.');
+
+/* animer les messages des loaders statiques */
+document.querySelectorAll('#loaders .lmsg').forEach((el, k) => {
+  let i = k*3;
+  setInterval(() => { i = (i+1) % MSGS.length; el.innerHTML = `<span>${MSGS[i]}</span>`; }, 1300);
+});
+
+/* ===================== Prototype ===================== */
+const FULL = "Depuis une semaine les feuilles du haut jaunissent et tombent quand je les touche. Je l'arrose à peu près tous les dix jours et elle est près de la fenêtre du salon. La terre reste humide longtemps.";
+const proto = {
+  el: document.getElementById('proto'),
+  timers: [],
+  clear() { this.timers.forEach(t => { clearInterval(t); clearTimeout(t); }); this.timers = []; },
+  reset() { this.clear(); this.photos = 0; this.text = ''; this.render('fiche'); },
+  render(state) {
+    this.state = state;
+    let inner = ficheTop(BTN.A);
+    if (state === 'listen' || state === 'pause') {
+      const done = this.text;
+      inner += sheet({ state, text: state==='pause' ? done : '', live: state==='listen' ? done : '', photos: this.photos });
+    }
+    if (state === 'loading') inner += loaderA(0, 0);
+    if (state === 'result') inner += resultSheet();
+    this.el.innerHTML = phone(inner);
+    this.bind();
+  },
+  bind() {
+    const q = s => this.el.querySelector(s);
+    q('[data-open]')?.addEventListener('click', () => this.startListening());
+    q('[data-mic]')?.addEventListener('click', () => this.state === 'listen' ? this.pause() : this.startListening(true));
+    q('[data-photo]')?.addEventListener('click', () => { this.photos = Math.min(4, this.photos + 1); this.render(this.state); if (this.state==='listen') this.typeOn(); });
+    q('[data-ask]')?.addEventListener('click', () => { if (this.text) this.load(); });
+    this.el.querySelectorAll('.x').forEach(x => x.addEventListener('click', () => { this.clear(); this.render('fiche'); }));
+  },
+  startListening(resume=false) {
+    this.clear();
+    if (!resume) { this.text = ''; this.photos = this.photos || 0; }
+    this.render('listen');
+    this.typeOn();
+  },
+  typeOn() {
+    this.clear();
+    const words = FULL.split(' ');
+    let i = this.text ? this.text.split(' ').length : 0;
+    const t = setInterval(() => {
+      if (i >= words.length) { clearInterval(t); return; }
+      this.text = words.slice(0, ++i).join(' ') + ' ';
+      const tr = this.el.querySelector('.transcript');
+      if (tr) {
+        const all = this.text.split(' ');
+        const firm = all.slice(0, Math.max(0, all.length - 4)).join(' ');
+        const live = all.slice(Math.max(0, all.length - 4)).join(' ');
+        tr.innerHTML = `${firm} <span class="live">${live}</span><span class="caret"></span>`;
+        const ask = this.el.querySelector('[data-ask]'); ask && ask.classList.remove('off');
+        const sp = this.el.querySelector('.spacer'); if (sp) sp.textContent = `0:${String(Math.min(59, i)).padStart(2,'0')}`;
+      }
+    }, 260);
+    this.timers.push(t);
+  },
+  pause() { this.clear(); this.render('pause'); },
+  load() {
+    this.clear();
+    this.render('loading');
+    let m = 0, f = 0;
+    const t = setInterval(() => {
+      m = (m+1) % MSGS.length; f = Math.min(6, f+1);
+      const lm = this.el.querySelector('.lmsg'); if (lm) lm.innerHTML = `<span>${MSGS[m]}</span>`;
+      this.el.querySelectorAll('.leafbar i').forEach((x,k) => x.classList.toggle('on', k < f));
+    }, 900);
+    this.timers.push(t);
+    this.timers.push(setTimeout(() => { this.clear(); this.render('result'); }, 5600));
+  },
+};
+proto.reset();
+</script>
+</body>
+</html>
