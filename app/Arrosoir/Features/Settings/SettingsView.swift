@@ -87,8 +87,9 @@ struct SettingsView: View {
             .padding(.horizontal, 16)
             .padding(.bottom, 30)
         }
+        .frame(maxWidth: .infinity)
         .scrollIndicators(.hidden)
-        .background(Color.cream)
+        .background(Color.cream.ignoresSafeArea())
         .onAppear {
             keyDraft = settings.apiKey
             if settings.hasAPIKey && models.isEmpty { Task { await loadModels() } }

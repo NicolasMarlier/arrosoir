@@ -113,10 +113,11 @@ struct GraveyardView: View {
                     }
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 16)
             .padding(.top, 8)
         }
-        .background(Color.cream)
+        .background(Color.cream.ignoresSafeArea())
     }
 
     private func dates(_ p: Plant) -> String {

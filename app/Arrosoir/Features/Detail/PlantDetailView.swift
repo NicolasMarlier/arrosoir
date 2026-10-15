@@ -89,8 +89,9 @@ struct PlantDetailView: View {
                 .padding(.bottom, 30)
             }
         }
+        .frame(maxWidth: .infinity)
         .scrollIndicators(.hidden)
-        .background(Color.cream)
+        .background(Color.cream.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {

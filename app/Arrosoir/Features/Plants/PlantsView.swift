@@ -65,11 +65,13 @@ struct PlantsView: View {
                     .padding(.top, 28)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 16)
             .padding(.bottom, 24)
         }
+        .frame(maxWidth: .infinity)
         .scrollIndicators(.hidden)
-        .background(Color.cream)
+        .background(Color.cream.ignoresSafeArea())
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(for: UUID.self) { id in
             if let p = plants.first(where: { $0.id == id }) { PlantDetailView(plant: p) }

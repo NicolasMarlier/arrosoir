@@ -55,7 +55,8 @@ struct RootView: View {
                 case .plants: NavigationStack(path: $plantsPath) { PlantsView(onAdd: { showAdd = true }) }
                 }
             }
-            .frame(maxHeight: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.cream.ignoresSafeArea())
             TabBar(tab: $tab, onAdd: { showAdd = true })
         }
         .background(Color.cream.ignoresSafeArea())
@@ -74,6 +75,12 @@ struct RootView: View {
                 plantsPath = [p.id]
             }
             if args.contains("-add") { showAdd = true }
+            if args.contains("-allGood") {
+                for p in plants {
+                    p.lastWateredAt = Calendar.current.date(byAdding: .day, value: -1, to: Date())
+                    for k in [CareKind.misting, .rotation, .fertilizing] { p.log(k, date: Date(), in: ctx) }
+                }
+            }
             if args.contains("-diagnose") { debugDiagnosis = plants.first }
             if args.contains("-diagnosisResult"), let p = plants.first {
                 let d = Diagnosis(note: "Les feuilles du bas jaunissent depuis 2 semaines, et la terre reste humide longtemps.", photo: nil, result: DiagnosisResult(

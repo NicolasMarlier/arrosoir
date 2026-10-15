@@ -70,12 +70,14 @@ struct TodayView: View {
                     .padding(.top, 8)
                 }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 16)
             .padding(.bottom, 24)
             .animation(.spring(duration: 0.35), value: done.count)
         }
+        .frame(maxWidth: .infinity)
         .scrollIndicators(.hidden)
-        .background(Color.cream)
+        .background(Color.cream.ignoresSafeArea())
         .toolbar(.hidden, for: .navigationBar)
         .navigationDestination(for: UUID.self) { id in
             if let p = plants.first(where: { $0.id == id }) { PlantDetailView(plant: p) }
@@ -263,8 +265,8 @@ struct AllGoodView: View {
 
             Text("Tout le monde va bien").font(.brico(26, .heavy)).padding(.top, 4)
             Text(Voice.pick(Voice.allGood, seed: plants.first?.id ?? UUID(), date: now)).font(.brico(15)).foregroundStyle(Color.muted)
-
         }
+        .frame(maxWidth: .infinity)
     }
 }
 
