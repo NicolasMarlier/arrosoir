@@ -132,24 +132,34 @@ struct PlantDetailView: View {
 
     // MARK: Sous-vues
 
+    @ViewBuilder
     private func hero(_ st: CareStatus) -> some View {
-        ZStack(alignment: .bottomTrailing) {
+        if let data = plant.photo, let img = UIImage(data: data) {
+            // La vraie photo en grand, le personnage en vignette.
+            Button { showPhoto = true } label: {
+                Color.clear
+                    .frame(height: 300)
+                    .overlay { Image(uiImage: img).resizable().scaledToFill() }
+                    .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("Voir la photo en grand")
+            .overlay(alignment: .bottomTrailing) {
+                PlantIllustration(plant: plant, mood: st.mood)
+                    .padding(4)
+                    .frame(width: 84, height: 84)
+                    .background(plant.potStyle.tintColor, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 20, style: .continuous).strokeBorder(.white, lineWidth: 3))
+                    .padding(12)
+                    .allowsHitTesting(false)
+            }
+        } else {
             PlantIllustration(plant: plant, mood: st.mood)
                 .frame(width: 210, height: 210)
                 .frame(maxWidth: .infinity)
                 .padding(.top, 10)
-            if let data = plant.photo, let img = UIImage(data: data) {
-                Button { showPhoto = true } label: {
-                    Image(uiImage: img).resizable().scaledToFill()
-                        .frame(width: 66, height: 66)
-                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
-                        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(.white, lineWidth: 3))
-                }
-                .padding(12)
-                .accessibilityLabel("Voir la photo")
-            }
+                .background(plant.potStyle.tintColor, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
         }
-        .background(plant.potStyle.tintColor, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
     }
 
     private func chip(_ t: String) -> some View {

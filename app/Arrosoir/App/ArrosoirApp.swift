@@ -75,6 +75,13 @@ struct RootView: View {
                 plantsPath = [p.id]
             }
             if args.contains("-add") { showAdd = true }
+            if args.contains("-demoPhoto") {
+                let img = UIGraphicsImageRenderer(size: CGSize(width: 900, height: 1200)).image { c in
+                    UIColor(red: 0.25, green: 0.4, blue: 0.28, alpha: 1).setFill(); c.fill(CGRect(x: 0, y: 0, width: 900, height: 1200))
+                    UIColor(red: 0.8, green: 0.7, blue: 0.55, alpha: 1).setFill(); c.fill(CGRect(x: 0, y: 800, width: 900, height: 400))
+                }
+                for p in plants { p.photo = img.jpegData(compressionQuality: 0.8) }
+            }
             if args.contains("-allGood") {
                 for p in plants {
                     p.lastWateredAt = Calendar.current.date(byAdding: .day, value: -1, to: Date())
