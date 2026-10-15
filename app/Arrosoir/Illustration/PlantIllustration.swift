@@ -6,6 +6,8 @@ struct PlantIllustration: View {
     let archetype: PlantArchetype
     let mood: Mood
     let pot: PotStyle
+    /// Direction du regard (-1…1), pour faire suivre quelque chose des yeux.
+    var gaze: CGSize? = nil
 
     var body: some View {
         Canvas { ctx, size in
@@ -15,7 +17,7 @@ struct PlantIllustration: View {
             var d = Drawer(ctx: ctx, palette: IllustrationPalette(mood: mood))
             d.drawPot(pot, ghost: mood == .ghost)
             PlantDrawings.draw(archetype, &d, mood: mood)
-            d.drawFace(mood: mood, lightFace: mood == .ghost ? false : pot.lightFace)
+            d.drawFace(mood: mood, lightFace: mood == .ghost ? false : pot.lightFace, gaze: gaze)
             d.drawDeco(mood: mood)
         }
         .aspectRatio(1, contentMode: .fit)
@@ -24,8 +26,8 @@ struct PlantIllustration: View {
 }
 
 extension PlantIllustration {
-    init(plant: Plant, mood: Mood) {
-        self.init(archetype: plant.archetype, mood: mood, pot: plant.potStyle)
+    init(plant: Plant, mood: Mood, gaze: CGSize? = nil) {
+        self.init(archetype: plant.archetype, mood: mood, pot: plant.potStyle, gaze: gaze)
     }
 }
 
@@ -145,7 +147,7 @@ struct Drawer {
     }
 
     /// Visage « yeux découpés » (variante B validée).
-    func drawFace(mood: Mood, lightFace: Bool) {
+    func drawFace(mood: Mood, lightFace: Bool, gaze: CGSize? = nil) {
         let ink: Color = lightFace ? .cream : .ink
         let ex: [CGFloat] = [43.5, 56.5]
         let ey: CGFloat = 80.5
@@ -156,8 +158,12 @@ struct Drawer {
         case .happy:
             for x in ex { stroke(svg: "M\(x - 3) \(ey + 1.5) Q\(x) \(ey - 2.5) \(x + 3) \(ey + 1.5)", ink, 1.9) }
         case .ok, .thirsty:
-            let py: CGFloat = mood == .thirsty ? -1.6 : 0.4
-            let px: CGFloat = mood == .thirsty ? 0.8 : 0
+            var py: CGFloat = mood == .thirsty ? -1.6 : 0.4
+            var px: CGFloat = mood == .thirsty ? 0.8 : 0
+            if let gaze {
+                px = max(-1, min(1, gaze.width)) * 1.9
+                py = max(-1, min(1, gaze.height)) * 1.9
+            }
             for x in ex {
                 circle(x, ey, 4.6, .white)
                 circle(x + px, ey + py, 2.2, .ink)

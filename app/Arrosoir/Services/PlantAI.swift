@@ -159,12 +159,13 @@ struct PlantAI {
         let str: (String) -> [String: Any] = { ["type": "string", "description": $0] }
         let list: (String) -> [String: Any] = { ["type": "array", "items": ["type": "string"], "description": $0] }
         let props: [String: Any] = [
-            "title": str("Le diagnostic en 3 à 6 mots (ex. « Excès d'eau probable », « En pleine forme »)."),
+            "kind": ["type": "string", "enum": ["diagnosis", "answer"], "description": "diagnosis si l'utilisateur signale un souci ou montre un symptôme ; answer s'il pose simplement une question (déplacement, rempotage, bouture, compatibilité…)."],
+            "title": str("Le verdict ou la réponse en 3 à 6 mots (ex. « Excès d'eau probable », « Oui, dès fin mai »)."),
             "severity": ["type": "string", "enum": ["ok", "watch", "urgent"], "description": "ok = rien d'inquiétant, watch = à surveiller / corriger, urgent = agir vite."],
             "plant_says": str("Une phrase courte, drôle et tendre, dite par la plante à la 1re personne (tutoiement)."),
-            "summary": str("Explication claire en 2 à 4 phrases : ce que tu observes et ce que tu en conclus. Dis-le si tu as un doute."),
-            "causes": list("Causes probables, de la plus à la moins probable (1 à 4)."),
-            "actions": list("Actions concrètes à faire, dans l'ordre (1 à 5), courtes et précises."),
+            "summary": str("Explication claire en 2 à 4 phrases (ce que tu observes et ce que tu en conclus, ou la réponse argumentée). Dis-le si tu as un doute."),
+            "causes": list("Pour un diagnostic : causes probables, de la plus à la moins probable (1 à 4). Pour une question : liste vide."),
+            "actions": list("Pour un diagnostic : actions à faire, dans l'ordre (1 à 5). Pour une question : 1 à 4 conseils « bon à savoir ». Court et précis."),
             "watering_adjustment": ["type": "string", "enum": ["none", "more", "less"], "description": "Faut-il arroser plus souvent (more), moins souvent (less), ou ne rien changer (none) ?"],
             "follow_up_days": ["type": "integer", "description": "Dans combien de jours refaire un point (0 si inutile)."],
         ]
@@ -173,13 +174,11 @@ struct PlantAI {
         content.append(.text("""
         \(plantContext)
 
-        Ce que l'utilisateur observe / raconte :
+        Ce que l'utilisateur dit :
         \(note.isEmpty ? "(rien de plus, regarde les photos)" : note)
-
-        Fais un diagnostic.
         """))
         let data = try await client().callTool(
-            system: "Tu es un phytopathologiste et jardinier expert des plantes d'intérieur, bienveillant et précis. \(context) Tu poses un diagnostic à partir des photos, de la description et de l'historique de soins. Tu réponds en français, sans jargon inutile.",
+            system: "Tu es « le docteur des plantes » : phytopathologiste et jardinier expert des plantes d'intérieur, bienveillant et précis. \(context) L'utilisateur peut te signaler un souci (tu poses alors un diagnostic) ou simplement te poser une question (tu y réponds). Appuie-toi sur les photos, ce qu'il dit (transcription vocale, parfois imparfaite) et l'historique de soins. Réponds en français, sans jargon inutile.",
             content: content,
             toolName: "report_diagnosis",
             toolDescription: "Renvoie le diagnostic de la plante.",
@@ -195,7 +194,8 @@ struct PlantAI {
             causes: j.find("causes").array.compactMap(\.string),
             actions: j.find("actions").array.compactMap(\.string),
             wateringAdjustment: DiagnosisResult.WateringAdjustment(rawValue: j.find("watering_adjustment").string?.lowercased() ?? "") ?? .none,
-            followUpDays: j.find("follow_up_days").double.map { Int($0) }
+            followUpDays: j.find("follow_up_days").double.map { Int($0) },
+            kind: DiagnosisResult.Kind(rawValue: j.find("kind").string?.lowercased() ?? "") ?? .diagnosis
         )
     }
 

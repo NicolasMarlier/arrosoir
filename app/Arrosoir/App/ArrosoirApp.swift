@@ -42,6 +42,7 @@ struct RootView: View {
     @State private var plantsPath: [UUID] = []
     @State private var debugDiagnosis: Plant?
     @State private var debugResult: Diagnosis?
+    @State private var debugLoader: Plant?
     @Environment(\.modelContext) private var ctx
     @Environment(\.scenePhase) private var scenePhase
     @Environment(AppSettings.self) private var settings
@@ -64,7 +65,8 @@ struct RootView: View {
         .fullScreenCover(isPresented: $showAdd) {
             AddPlantFlow()
         }
-        .fullScreenCover(item: $debugDiagnosis) { p in DiagnosisFlow(plant: p) }
+        .sheet(item: $debugDiagnosis) { p in DoctorSheet(plant: p, preview: ProcessInfo.processInfo.arguments.contains("-preview")).presentationBackground(Color.cream).presentationCornerRadius(32) }
+        .sheet(item: $debugLoader) { p in DoctorLoader(plant: p).presentationBackground(Color.cream) }
         .sheet(item: $debugResult) { d in if let p = d.plant { DiagnosisResultView(plant: p, diagnosis: d) } }
         .onAppear {
             // Raccourci de debug : -open <NomDeLaPlante>
@@ -89,6 +91,7 @@ struct RootView: View {
                 }
             }
             if args.contains("-diagnose") { debugDiagnosis = plants.first }
+            if args.contains("-doctorLoader") { debugLoader = plants.first }
             if args.contains("-diagnosisResult"), let p = plants.first {
                 let d = Diagnosis(note: "Les feuilles du bas jaunissent depuis 2 semaines, et la terre reste humide longtemps.", photo: nil, result: DiagnosisResult(
                     title: "Excès d'eau probable", severity: .watch, plantSays: "J'ai les pieds dans l'eau, au secours 🫠",

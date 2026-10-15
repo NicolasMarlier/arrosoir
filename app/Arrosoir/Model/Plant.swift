@@ -130,6 +130,8 @@ final class Diagnosis {
 nonisolated struct DiagnosisResult: Codable, Sendable, Equatable {
     enum Severity: String, Codable, Sendable { case ok, watch, urgent }
     enum WateringAdjustment: String, Codable, Sendable { case none, more, less }
+    /// Un souci (diagnostic) ou une simple question (réponse).
+    enum Kind: String, Codable, Sendable { case diagnosis, answer }
 
     var title: String
     var severity: Severity
@@ -139,4 +141,7 @@ nonisolated struct DiagnosisResult: Codable, Sendable, Equatable {
     var actions: [String]
     var wateringAdjustment: WateringAdjustment
     var followUpDays: Int?
+    var kind: Kind? = nil
+
+    var isAnswer: Bool { kind == .answer }
 }

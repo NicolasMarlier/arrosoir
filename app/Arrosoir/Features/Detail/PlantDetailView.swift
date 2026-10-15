@@ -38,10 +38,6 @@ struct PlantDetailView: View {
 
                     stateCard(st, profile).padding(.top, 14)
 
-                    Button("🩺 Diagnostic") { showDiagnosis = true }
-                        .buttonStyle(PillButtonStyle(kind: .dark))
-                        .padding(.top, 10)
-
                     KeyValueRow(key: "Dernier arrosage", value: plant.lastWateredAt.map { Fmt.ago($0, now: now) } ?? "pas encore noté")
                         .padding(.top, 6)
                     KeyValueRow(key: "Prochaine vérif.", value: st.watering.isDue ? "maintenant" : Fmt.shortDay(st.wateringDue, now: now))
@@ -74,7 +70,7 @@ struct PlantDetailView: View {
                     rhythm(profile)
 
                     if !plant.diagnoses.isEmpty {
-                        SectionTitle(text: "Diagnostics")
+                        SectionTitle(text: "Chez le docteur")
                         ForEach(plant.diagnoses.sorted { $0.date > $1.date }) { d in
                             Button { openedDiagnosis = d } label: { diagnosisRow(d) }
                                 .buttonStyle(.plain)
@@ -86,10 +82,14 @@ struct PlantDetailView: View {
                         .padding(.top, 20)
                 }
                 .padding(.horizontal, 16)
-                .padding(.bottom, 30)
+                .padding(.bottom, 100)
             }
         }
         .frame(maxWidth: .infinity)
+        .overlay(alignment: .bottom) {
+            DoctorBubble { showDiagnosis = true }
+                .padding(.bottom, 12)
+        }
         .scrollIndicators(.hidden)
         .background(Color.cream.ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
@@ -107,7 +107,12 @@ struct PlantDetailView: View {
             }
         }
         .overlay { if let working { WorkingOverlay(text: working) } }
-        .fullScreenCover(isPresented: $showDiagnosis) { DiagnosisFlow(plant: plant) }
+        .sheet(isPresented: $showDiagnosis) {
+            DoctorSheet(plant: plant)
+                .presentationDetents([.large])
+                .presentationCornerRadius(32)
+                .presentationBackground(Color.cream)
+        }
         .sheet(item: $openedDiagnosis) { d in DiagnosisResultView(plant: plant, diagnosis: d).presentationDragIndicator(.visible) }
         .sheet(isPresented: $showLog) { LogCareSheet(plant: plant).presentationDetents([.medium, .large]) }
         .sheet(isPresented: $showEdit) { EditPlantSheet(plant: plant, rooms: Array(Set(allPlants.compactMap(\.room)))).presentationDetents([.large]) }
