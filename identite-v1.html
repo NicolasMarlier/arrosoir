@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Arrosoir — Identité visuelle · 4 directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..800&family=DM+Sans:wght@400;500;700&family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Nunito:wght@400;600;800;900&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, sans-serif; background: #dcdcd8; color: #1d1d1f; padding: 40px 30px 120px; }
+  .page-head { max-width: 1400px; margin: 0 auto 40px; }
+  .page-head h1 { font-size: 30px; }
+  .page-head p { color: #555; margin-top: 8px; max-width: 820px; line-height: 1.5; }
+  .nav { display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }
+  .nav a { background:#1d1d1f; color:white; padding:6px 14px; border-radius:20px; text-decoration:none; font-size:14px; }
+
+  .dir { max-width: 1400px; margin: 0 auto 70px; border-radius: 28px; padding: 36px; background: var(--bg); color: var(--ink); font-family: var(--fb); position: relative; overflow: hidden; }
+  .dir-head { display: grid; grid-template-columns: 1fr 340px; gap: 40px; align-items: start; }
+  .dir .num { font-family: var(--fb); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  .dir h2 { font-family: var(--ft); font-weight: var(--ftw); font-style: var(--fts); font-size: 54px; line-height: 1; margin: 6px 0 12px; letter-spacing: var(--ftls, 0); text-transform: var(--ftt, none); }
+  .dir .tagline { font-size: 19px; font-weight: 500; }
+  .dir .desc { margin-top: 12px; line-height: 1.55; font-size: 15px; max-width: 640px; color: var(--ink); opacity: .85; }
+  .kw { margin-top: 14px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .kw span { font-size: 12px; border: 1px solid var(--line); padding: 3px 10px; border-radius: 20px; }
+  .icon-zone { display:flex; gap: 18px; align-items: center; }
+  .icon-zone .appicon { width: 120px; height: 120px; border-radius: 28px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,.18); flex: none; }
+  .icon-zone .appname { font-family: var(--ft); font-weight: var(--ftw); font-style: var(--fts); font-size: 30px; text-transform: var(--ftt, none); }
+  .swatches { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+  .sw { width: 62px; text-align: center; font-size: 10px; color: var(--muted); }
+  .sw i { display:block; width: 62px; height: 62px; border-radius: 14px; margin-bottom: 4px; border: 1px solid rgba(0,0,0,.08); }
+  .type { margin-top: 18px; font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .type b { color: var(--ink); }
+
+  .showcase { display: flex; gap: 34px; margin-top: 34px; flex-wrap: wrap; align-items: flex-start; }
+  .states { flex: 1; min-width: 300px; }
+  .states h4, .voice h4 { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; font-weight: 700; }
+  .state-row { display: flex; gap: 12px; }
+  .state { background: var(--surface); border-radius: var(--r); padding: 10px; text-align: center; flex: 1; border: var(--cardBorder); box-shadow: var(--cardShadow); }
+  .state svg { width: 100%; height: auto; }
+  .state div { font-size: 12px; margin-top: 4px; }
+  .all6 { display:grid; grid-template-columns: repeat(6, 1fr); gap: 8px; margin-top: 12px; }
+  .all6 div { background: var(--surface); border-radius: calc(var(--r) * .7); padding: 4px; border: var(--cardBorder); }
+  .voice { margin-top: 22px; }
+  .voice p { font-size: 14.5px; margin: 6px 0; padding: 8px 12px; background: var(--surface); border-radius: var(--r); border: var(--cardBorder); }
+  .voice p small { display:block; color: var(--muted); font-size: 11px; margin-bottom: 2px; }
+
+  /* phone */
+  .phone { width: 310px; height: 780px; border-radius: 44px; border: 10px solid #111; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; position: relative; flex: none; box-shadow: 0 20px 40px rgba(0,0,0,.15); }
+  .status { height: 34px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; font-size: 12px; font-weight: 600; font-family: -apple-system, sans-serif; flex: none; }
+  .scr { flex: 1; padding: 4px 16px 0; overflow: hidden; }
+  .date { font-size: 12px; color: var(--muted); }
+  .title { font-family: var(--ft); font-weight: var(--ftw); font-style: var(--fts); font-size: 34px; line-height: 1.05; margin: 4px 0 4px; text-transform: var(--ftt, none); letter-spacing: var(--ftls, 0); }
+  .subrow { display:flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
+  .allbtn { font-size: 11.5px; font-weight: 700; padding: 5px 10px; border-radius: var(--btnR); background: var(--accent2, var(--accent)); color: var(--accentInk); border: var(--btnBorder); }
+  .card { background: var(--surface); border-radius: var(--r); padding: 10px; margin-top: 10px; border: var(--cardBorder); box-shadow: var(--cardShadow); }
+  .card-top { display: flex; gap: 10px; align-items: center; }
+  .card-top .ill { width: 58px; height: 58px; flex: none; background: var(--illBg); border-radius: calc(var(--r) * .7); }
+  .card-top .ill svg { width: 100%; height: 100%; }
+  .pname { font-family: var(--ft); font-weight: var(--ftw); font-style: var(--fts); font-size: 17px; line-height: 1.1; text-transform: var(--ftt, none); }
+  .meta { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+  .tag { font-size: 10.5px; font-weight: 700; padding: 2px 8px; border-radius: 20px; background: var(--tagBg); color: var(--tagInk); margin-left: auto; align-self: flex-start; white-space: nowrap; }
+  .bubble { font-size: 12px; margin-top: 8px; padding: 6px 10px; background: var(--bubbleBg); color: var(--bubbleInk); border-radius: 12px 12px 12px 3px; display: inline-block; font-family: var(--bubbleFont, inherit); font-style: var(--bubbleStyle, normal); }
+  .method { font-size: 11px; margin-top: 7px; color: var(--muted); line-height: 1.35; }
+  .btns { display: flex; gap: 7px; margin-top: 9px; }
+  .btn { flex: 1; text-align: center; font-size: 12px; font-weight: 700; padding: 8px 0; border-radius: var(--btnR); }
+  .btn.fill { background: var(--accent); color: var(--accentInk); border: var(--btnBorder); }
+  .btn.alt { background: transparent; color: var(--ink); border: var(--btnAltBorder); }
+  .mini { display:flex; justify-content: space-between; align-items: center; font-size: 12px; margin-top: 7px; }
+  .mini .btn { flex: none; padding: 4px 12px; font-size: 11px; }
+  .tabbar { height: 70px; display:flex; justify-content: space-around; align-items: center; padding-bottom: 10px; flex: none; background: var(--tabBg); border-top: var(--tabBorder); font-size: 10.5px; color: var(--muted); }
+  .tabbar .on { color: var(--ink); font-weight: 700; }
+  .tabbar .plus { width: 44px; height: 44px; border-radius: var(--plusR, 50%); background: var(--accent); color: var(--accentInk); display:flex; align-items:center; justify-content:center; font-size: 26px; font-weight: 400; border: var(--btnBorder); }
+  .room { font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; color: var(--muted); margin: 12px 0 6px; font-weight: 700; }
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tile { background: var(--surface); border-radius: calc(var(--r) * .8); padding: 6px 6px 8px; border: var(--cardBorder); box-shadow: var(--cardShadow); text-align: center; }
+  .tile svg { width: 100%; height: 66px; }
+  .tile .tn { font-family: var(--ft); font-weight: var(--ftw); font-style: var(--fts); font-size: 12.5px; text-transform: var(--ftt, none); line-height: 1.1; }
+  .tile .ts { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .tile .ts.hot { color: var(--accent); font-weight: 700; }
+
+  /* ===== 1 · HERBIER ===== */
+  .d-herbier { --bg:#f3eee1; --surface:#fbf8ef; --ink:#2f2a21; --muted:#8b8170; --accent:#a85a35; --accentInk:#fbf8ef; --line:#cfc5ad;
+    --ft:'Fraunces', serif; --ftw:400; --fts:italic; --fb:'DM Sans', sans-serif; --r:6px; --btnR:4px;
+    --cardBorder:1px solid #d9cfb8; --cardShadow:none; --btnBorder:none; --btnAltBorder:1px solid #b8ab8f;
+    --illBg:#f1ead8; --tagBg:transparent; --tagInk:#a85a35; --bubbleBg:transparent; --bubbleInk:#5e5547; --bubbleFont:'Fraunces',serif; --bubbleStyle:italic;
+    --tabBg:#f3eee1; --tabBorder:1px solid #d9cfb8; }
+  .d-herbier .tag { border: 1px solid #a85a35; }
+  .d-herbier .bubble { padding: 0; border-left: 2px solid #a85a35; padding-left: 8px; border-radius: 0; }
+  .d-herbier .room { font-family: 'Fraunces', serif; font-style: italic; text-transform: none; letter-spacing: 0; font-size: 14px; font-weight: 400; border-bottom: 1px solid #d9cfb8; padding-bottom: 2px; }
+  .d-herbier .allbtn { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+
+  /* ===== 2 · PAPIERS DÉCOUPÉS ===== */
+  .d-decoupe { --bg:#fff4e2; --surface:#ffffff; --ink:#1c1b3a; --muted:#7a7488; --accent:#ff5a36; --accentInk:#fff; --line:#1c1b3a33;
+    --ft:'Bricolage Grotesque', sans-serif; --ftw:800; --fts:normal; --fb:'Bricolage Grotesque', sans-serif; --ftls:-1px; --r:22px; --btnR:30px;
+    --cardBorder:none; --cardShadow:none; --btnBorder:none; --btnAltBorder:2px solid #1c1b3a;
+    --illBg:#ffd88a; --tagBg:#2b59c3; --tagInk:#fff; --bubbleBg:#ffb627; --bubbleInk:#1c1b3a;
+    --tabBg:#fff4e2; --tabBorder:none; --accent2:#1c1b3a; }
+  .d-decoupe .bubble { font-weight: 800; transform: rotate(-3deg); border-radius: 14px; }
+  .d-decoupe .card:nth-child(odd) .ill { background: #c9e6c4; }
+  .d-decoupe .card:nth-child(3n) .ill { background: #ffc4dc; }
+  .d-decoupe .tile:nth-child(3n+1) { background: #c9e6c4; } .d-decoupe .tile:nth-child(3n+2) { background: #ffd88a; } .d-decoupe .tile:nth-child(3n) { background: #ffc4dc; }
+  .d-decoupe .dir-blob { position:absolute; right:-80px; top:-80px; width:300px; height:300px; background:#ffb627; border-radius: 60% 40% 55% 45%; opacity:.5; }
+  .d-decoupe .dir-blob2 { position:absolute; left:-60px; bottom:-60px; width:220px; height:220px; background:#2b59c3; border-radius: 45% 55% 40% 60%; opacity:.15; }
+
+  /* ===== 3 · LA COLOC ===== */
+  .d-coloc { --bg:#eef4ea; --surface:#ffffff; --ink:#2c4436; --muted:#7f9386; --accent:#f08a68; --accentInk:#fff; --line:#cfe0cf;
+    --ft:'Nunito', sans-serif; --ftw:900; --fts:normal; --fb:'Nunito', sans-serif; --r:22px; --btnR:16px;
+    --cardBorder:none; --cardShadow:0 4px 14px rgba(44,68,54,.08); --btnBorder:none; --btnAltBorder:2px solid #d5e4d5;
+    --illBg:#f3f8ef; --tagBg:#fde4da; --tagInk:#c9603f; --bubbleBg:#e7f1ff; --bubbleInk:#2c4436;
+    --tabBg:#ffffff; --tabBorder:none; --plusR:18px; }
+  .d-coloc .bubble { font-weight: 700; }
+
+  /* ===== 4 · RISO ===== */
+  .d-riso { --bg:#f1ede3; --surface:#f8f5ee; --ink:#1a1a1a; --muted:#6c6a63; --accent:#ff48b0; --accentInk:#1a1a1a; --line:#1a1a1a;
+    --ft:'Space Grotesk', sans-serif; --ftw:700; --fts:normal; --ftt:uppercase; --ftls:-.5px; --fb:'Space Grotesk', sans-serif; --r:0px; --btnR:0px;
+    --cardBorder:2px solid #1a1a1a; --cardShadow:4px 4px 0 #0078bf; --btnBorder:2px solid #1a1a1a; --btnAltBorder:2px solid #1a1a1a;
+    --illBg:#fff7a8; --tagBg:#1a1a1a; --tagInk:#ffe800; --bubbleBg:#ffe800; --bubbleInk:#1a1a1a; --bubbleFont:'Space Mono',monospace;
+    --tabBg:#f1ede3; --tabBorder:2px solid #1a1a1a; --plusR:0; }
+  .d-riso .date, .d-riso .meta, .d-riso .room, .d-riso .tile .ts, .d-riso .method, .d-riso .num, .d-riso .subrow { font-family: 'Space Mono', monospace; }
+  .d-riso .bubble { border-radius: 0; border: 2px solid #1a1a1a; }
+  .d-riso .phone::after, .d-riso.dir::after { content:''; position:absolute; inset:0; pointer-events:none; opacity:.35; mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
+  .d-riso .tile:nth-child(odd) { box-shadow: 3px 3px 0 #ff48b0; }
+
+  .verdict { max-width: 1400px; margin: 0 auto; background: #fff; border-radius: 18px; padding: 22px 28px; }
+  .verdict h2 { font-size: 20px; margin-bottom: 10px; }
+  .verdict li { margin: 8px 0 8px 20px; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>🪴 Arrosoir — Identité visuelle · 4 directions</h1>
+  <p>Chaque direction est déclinée en icône, palette, typographies, <b>style d'illustration</b> (avec les 3 états : en forme, a soif, dort), <b>ton de voix</b>, et appliquée aux deux écrans principaux validés en wireframe. Les illustrations sont des esquisses vectorielles faites à la main : elles montrent l'intention, pas le rendu final.</p>
+  <div class="nav"><a href="#herbier">1 · Herbier</a><a href="#decoupe">2 · Papiers découpés</a><a href="#coloc">3 · La Coloc</a><a href="#riso">4 · Riso</a></div>
+</div>
+
+<div id="root"></div>
+
+<div class="verdict">
+  <h2>❓ À toi</h2>
+  <ol>
+    <li>Quelle(s) direction(s) te parle(nt) ? Laquelle élimines-tu d'office ?</li>
+    <li>Des éléments à piocher dans plusieurs directions ? Par exemple les illustrations de l'une avec la typo d'une autre.</li>
+    <li>Le ton de voix : quelle direction a le bon niveau d'humour ?</li>
+    <li>Mode sombre : à prévoir dès la V1 ou pas ?</li>
+  </ol>
+</div>
+
+<script>
+/* ============ ILLUSTRATIONS ============ */
+let UID = 0;
+const HEART = "M0 14 C -14 6, -16 -10, -6 -14 C -2 -15, 0 -12, 0 -10 C 0 -12, 2 -15, 6 -14 C 16 -10, 14 6, 0 14 Z";
+const g = (x, y, s, r, inner) => `<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})">${inner}</g>`;
+
+const DRAW = {
+  monstera(P, L) {
+    let o = '';
+    const leaves = [[33,34,1.45,150],[63,27,1.55,200],[74,48,1.15,235],[36,52,1.05,125]];
+    leaves.forEach(([x,y]) => o += `<path d="M50 66 Q ${(x+50)/2} ${y+18} ${x} ${y}" ${L('stem',2.4)}/>`);
+    leaves.forEach(([x,y,s,r]) => o += g(x,y,s,r,
+      `<path d="${HEART}" ${P('leaf')}/>` +
+      `<path d="M0 -9 L0 11" ${L('vein',1.2)}/>` +
+      `<path d="M-2 -3 L-11 -6 M-2 3 L-10 4 M-1 8 L-6 10 M2 -3 L11 -6 M2 3 L10 4 M1 8 L6 10" ${L('bg',1.8)}/>`));
+    return o;
+  },
+  pothos(P, L) {
+    let o = `<path d="M34 66 C 26 70, 20 80, 22 94" ${L('stem',1.6)}/><path d="M66 66 C 76 72, 80 82, 78 94" ${L('stem',1.6)}/>`;
+    [[38,54,.85,160],[52,47,.95,185],[63,56,.85,215],[46,60,.7,150]].forEach(([x,y,s,r]) =>
+      o += g(x,y,s,r,`<path d="${HEART}" ${P('leaf')}/><path d="M-3 -4 Q 0 2 -2 8 M4 -6 Q 3 0 5 5" ${L('leaf2',1.4)}/>`));
+    [[25,76,.6,20],[21,89,.55,-10],[75,77,.6,-25],[79,90,.55,10]].forEach(([x,y,s,r]) =>
+      o += g(x,y,s,r,`<path d="${HEART}" ${P('leaf')}/><path d="M-3 -4 Q 0 2 -2 8" ${L('leaf2',1.4)}/>`));
+    return o;
+  },
+  cactus(P, L, mood) {
+    let o = `<rect x="29" y="33" width="9" height="20" rx="4.5" ${P('leaf')}/><rect x="31" y="45" width="15" height="8" rx="4" ${P('leaf')}/>`
+      + `<rect x="62" y="27" width="9" height="18" rx="4.5" ${P('leaf')}/><rect x="55" y="38" width="15" height="8" rx="4" ${P('leaf')}/>`
+      + `<rect x="41" y="20" width="18" height="48" rx="9" ${P('leaf')}/>`
+      + `<path d="M46 25 L46 64 M50 22 L50 66 M54 25 L54 64" ${L('leaf2',1.1)}/>`;
+    if (mood !== 'sleep') o += g(50,19,1,0,[0,72,144,216,288].map(a=>`<ellipse cx="0" cy="-4" rx="2.6" ry="4" transform="rotate(${a})" ${P('flower')}/>`).join('') + `<circle r="2" ${P('flowerC')}/>`);
+    return o;
+  },
+  dionee(P, L) {
+    let o = `<ellipse cx="50" cy="64" rx="18" ry="5" ${P('leaf')}/>`;
+    const traps = [[27,46,-55],[38,32,-25],[62,32,25],[73,46,55],[50,24,0]];
+    traps.forEach(([x,y]) => o += `<path d="M50 63 L ${x} ${y+6}" ${L('leaf',3.2)}/>`);
+    traps.forEach(([x,y,r]) => o += g(x,y,1,r,
+      `<path d="M-8 1 A8 6 0 0 1 8 1 Z" ${P('trap')}/><path d="M-8 3 A8 6 0 0 0 8 3 Z" ${P('trap')}/>`
+      + `<path d="M-7 -2 L-9 -7 M-3.5 -4.5 L-4.5 -10 M0 -5 L0 -11 M3.5 -4.5 L4.5 -10 M7 -2 L9 -7 M-7 6 L-9 10 M0 9 L0 13 M7 6 L9 10" ${L('leaf2',1)}/>`));
+    return o;
+  },
+  calathea(P, L) {
+    let o = '';
+    const ls = [[-48,.85],[-22,1],[0,1.08],[22,1],[48,.85]];
+    ls.forEach(([a,s]) => {
+      const rad = a*Math.PI/180, d = 24*s, x = 50+Math.sin(rad)*d, y = 64-Math.cos(rad)*d;
+      o += `<path d="M50 66 L ${50+Math.sin(rad)*(d-17*s)} ${64-Math.cos(rad)*(d-17*s)}" ${L('stem',1.6)}/>`;
+      o += g(x,y,s,a,`<ellipse rx="8.5" ry="19" ${P('leaf')}/><path d="M0 -17 L0 17" ${L('leaf2',1.2)}/>`
+        + [-11,-5,1,7,13].map(yy=>`<path d="M-1.5 ${yy} L-6 ${yy-3} M1.5 ${yy} L6 ${yy-3}" ${L('leaf2',2.2)}/>`).join(''));
+    });
+    return o;
+  },
+  rose(P, L, mood) {
+    let o = `<path d="M47 46 L36 26 M50 44 L51 18 M53 46 L66 27" ${L('trunk',4.5)}/>`
+      + `<path d="M38 68 C 30 60, 37 47, 46 44 L 54 44 C 63 47, 70 60, 62 68 Z" ${P('trunk')}/>`;
+    [[36,26],[51,18],[66,27]].forEach(([x,y],i) => {
+      o += g(x,y,1,0,`<ellipse cx="-5" cy="-1" rx="5" ry="2.4" transform="rotate(-30)" ${P('leaf')}/><ellipse cx="5" cy="-1" rx="5" ry="2.4" transform="rotate(30)" ${P('leaf')}/>`);
+      if (mood !== 'sleep') o += g(x + (i-1)*3, y-6, .95, i*20, [0,72,144,216,288].map(a=>`<ellipse cx="0" cy="-4.5" rx="3" ry="4.6" transform="rotate(${a})" ${P('flower')}/>`).join('') + `<circle r="2" ${P('flowerC')}/>`);
+    });
+    return o;
+  },
+};
+
+const POT = (P, L) => `<path d="M31 70 L69 70 L65 96 L35 96 Z" ${P('pot')}/><rect x="28" y="64" width="44" height="9" rx="2.5" ${P('pot2')}/>`;
+
+function face(mood, c) {
+  const k = `fill="${c.stroke}"`, st = `fill="none" stroke="${c.stroke}" stroke-width="1.8" stroke-linecap="round"`;
+  let eyes = mood === 'sleep'
+    ? `<path d="M41 81 Q44 84 47 81 M53 81 Q56 84 59 81" ${st}/>`
+    : `<circle cx="44" cy="81" r="2.3" ${k}/><circle cx="56" cy="81" r="2.3" ${k}/>`;
+  if (mood === 'soif') eyes += `<path d="M40 76 L46 77.5 M60 76 L54 77.5" ${st}/>`;
+  const mouth = mood === 'soif' ? `<ellipse cx="50" cy="88" rx="2.2" ry="2.8" ${k}/>` : mood === 'sleep' ? `<path d="M48 88 L52 88" ${st}/>` : `<path d="M46 86.5 Q50 90.5 54 86.5" ${st}/>`;
+  return `<circle cx="39.5" cy="86" r="2.8" fill="${c.cheek}" opacity=".7"/><circle cx="60.5" cy="86" r="2.8" fill="${c.cheek}" opacity=".7"/>` + eyes + mouth;
+}
+
+function deco(mood, c, S) {
+  const drop = (x,y,s) => g(x,y,s,0,`<path d="M0 -7 C 4 -1, 5 2, 0 6 C -5 2, -4 -1, 0 -7 Z" fill="${c.water}" ${S.mode==='flat'?'':`stroke="${c.stroke}" stroke-width="${S.mode==='perso'?1.6:.8}"`} vector-effect="non-scaling-stroke"/>`);
+  if (mood === 'soif') return drop(85,15,1) + drop(92,28,.6);
+  if (mood === 'sleep') return `<text x="76" y="22" font-family="${S.decoFont}" font-weight="800" font-size="11" fill="${c.zz}">z</text><text x="84" y="14" font-family="${S.decoFont}" font-weight="800" font-size="15" fill="${c.zz}">Z</text>`;
+  return '';
+}
+
+function plant(name, mood, S) {
+  const c = S.c, id = 'p' + (UID++);
+  const col = k => (mood === 'soif' && k === 'leaf' && c.leafDry) ? c.leafDry : (mood === 'sleep' && k === 'leaf' && c.leafSleep) ? c.leafSleep : c[k];
+  const strokeAttr = S.mode === 'flat' ? '' : `stroke="${c.stroke}" stroke-width="${S.sw}" stroke-linejoin="round"`;
+  const P1 = k => `fill="${col(k)}" ${S.mode==='riso'?'':strokeAttr} vector-effect="non-scaling-stroke"`;
+  const L1 = (k,w) => `fill="none" stroke="${c[k]}" stroke-width="${w}" stroke-linecap="round" vector-effect="non-scaling-stroke"`;
+  let body = POT(P1,L1) + DRAW[name](P1,L1,mood);
+  let out = '';
+  if (S.mode === 'riso') {
+    const P2 = () => `fill="none" stroke="${c.ink2}" stroke-width="1.1" vector-effect="non-scaling-stroke"`;
+    const L2 = () => `display="none"`;
+    out = `<defs><filter id="${id}"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="1" seed="${UID}"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.35"/><feComposite in="SourceGraphic" operator="in"/></filter></defs>`
+      + `<g filter="url(#${id})" style="mix-blend-mode:multiply">${body}</g>`
+      + `<g transform="translate(1.8 -1.4)" style="mix-blend-mode:multiply">${POT(P2,L2) + DRAW[name](P2,L2,mood)}</g>`;
+  } else out = body;
+  if (S.mode === 'perso') out += face(mood, c);
+  out += deco(mood, c, S);
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${out}</svg>`;
+}
+
+function appIcon(S) {
+  const c = S.c, id = 'i' + (UID++);
+  const st = S.mode === 'flat' || S.mode === 'riso' ? '' : `stroke="${c.stroke}" stroke-width="${S.mode==='perso'?3:1.6}" stroke-linejoin="round"`;
+  const P = k => `fill="${c[k]}" ${st}`;
+  let can = `<path d="M40 50 C 40 30, 62 30, 62 50" fill="none" stroke="${S.mode==='flat'||S.mode==='riso'?c.handle:c.stroke}" stroke-width="5" stroke-linecap="round"/>`
+    + `<path d="M64 62 L82 44 L86 48 L68 72 Z" ${P('pot2')}/><circle cx="85" cy="44" r="5" ${P('pot2')}/>`
+    + `<path d="M30 50 L70 50 L66 82 L34 82 Z" ${P('pot')}/>`
+    + g(44,40,.75,155,`<path d="${HEART}" ${P('leaf')}/>`) + g(56,36,.85,205,`<path d="${HEART}" ${P('leaf')}/>`)
+    + `<path d="M50 50 L50 42" stroke="${c.stem}" stroke-width="2.5" stroke-linecap="round"/>`
+    + g(90,60,.7,0,`<path d="M0 -7 C 4 -1, 5 2, 0 6 C -5 2, -4 -1, 0 -7 Z" fill="${c.water}"/>`) + g(84,70,.5,0,`<path d="M0 -7 C 4 -1, 5 2, 0 6 C -5 2, -4 -1, 0 -7 Z" fill="${c.water}"/>`);
+  if (S.mode === 'perso') can += `<circle cx="44" cy="64" r="2.6" fill="${c.stroke}"/><circle cx="56" cy="64" r="2.6" fill="${c.stroke}"/><path d="M46 70 Q50 74 54 70" fill="none" stroke="${c.stroke}" stroke-width="2.2" stroke-linecap="round"/>`;
+  if (S.mode === 'riso') can = `<defs><filter id="${id}"><feTurbulence type="fractalNoise" baseFrequency="1.2" seed="3"/><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1 1.7"/><feComposite in="SourceGraphic" operator="in"/></filter></defs><g filter="url(#${id})" style="mix-blend-mode:multiply">${can}</g><g transform="translate(2.5 -2)" fill="none" stroke="${c.ink2}" stroke-width="1.6"><path d="M30 50 L70 50 L66 82 L34 82 Z"/><path d="M64 62 L82 44 L86 48 L68 72 Z"/></g>`;
+  return `<svg viewBox="0 0 100 100" width="120" height="120"><rect width="100" height="100" fill="${c.iconBg}"/>${can}</svg>`;
+}
+
+/* ============ DIRECTIONS ============ */
+const DIRS = [
+ { id:'herbier', cls:'d-herbier', name:'Herbier', tagline:'Le carnet botanique d\'un jardinier du XIXᵉ, version de poche.',
+   desc:'Calme, lettré, un peu nostalgique. Papier crème, encre brune, aquarelles délavées, une serif italique élégante. L\'humour passe par l\'écrit, sur un ton pince-sans-rire. C\'est la direction la plus « adulte » : on pense à une belle édition plutôt qu\'à une app.',
+   kw:['papier','encre','aquarelle','serif italique','calme'],
+   swatches:[['#f3eee1','Papier'],['#2f2a21','Encre'],['#a85a35','Terre cuite'],['#a9bd93','Sauge'],['#e3a3a8','Rose fané']],
+   type:'<b>Fraunces Italic</b> pour les titres et les noms · <b>DM Sans</b> pour le texte',
+   S:{ mode:'herbier', sw:1.1, decoFont:'Fraunces, serif', c:{ leaf:'#b7c9a0', leaf2:'#7d9468', leafDry:'#d6cf9a', leafSleep:'#c4cbb3', vein:'#6f8659', stem:'#6f8659', stroke:'#3a3326', bg:'#fbf8ef', pot:'#d9a582', pot2:'#c98e68', trunk:'#c9ab88', flower:'#eab2b5', flowerC:'#f6e3a5', trap:'#e09a8a', water:'#9cc3d6', zz:'#8b8170', cheek:'#e8a9a0', iconBg:'#f3eee1', handle:'#3a3326' } },
+   copy:{ title:'Aujourd\'hui', date:'Mercredi 15 octobre · automne', sub:'Trois plantes, quatre soins', all:'Tout arroser', bubble:'« Je boirais volontiers quelque chose. »',
+          soif:'Arroser', check:'À vérifier', ok:'Dans 4 jours', sleep:'Au repos', plants:'Mes plantes', water:'Arrosé', wet:'Encore humide' },
+   voice:[['Rien à faire','Le jardin se suffit à lui-même aujourd\'hui.'],['Dormance','Au repos jusqu\'en mars. Ne la dérangez pas.'],['Archive','Basilic, 2025. Il aimait le soleil, peut-être un peu trop.']] },
+
+ { id:'decoupe', cls:'d-decoupe', name:'Papiers découpés', tagline:'Matisse fait du jardinage.',
+   desc:'Joyeux, solaire, graphique. Des formes pleines sans contour, des couleurs franches (vermillon, moutarde, cobalt, vert profond) et une grotesque bien grasse. Les cartes sont des aplats de couleur. C\'est énergique sans être enfantin, à la manière d\'une affiche d\'expo.',
+   kw:['aplats','couleurs franches','sans contour','grotesque grasse','solaire'],
+   swatches:[['#fff4e2','Crème'],['#1c1b3a','Nuit'],['#ff5a36','Vermillon'],['#ffb627','Moutarde'],['#2b59c3','Cobalt'],['#1f8a4c','Vert']],
+   type:'<b>Bricolage Grotesque ExtraBold</b> pour les titres · <b>Bricolage Grotesque</b> pour le texte',
+   S:{ mode:'flat', sw:0, decoFont:'Bricolage Grotesque, sans-serif', c:{ leaf:'#1f8a4c', leaf2:'#0f5e33', leafDry:'#b8a03a', leafSleep:'#5f8f74', vein:'#0f5e33', stem:'#0f5e33', stroke:'#1c1b3a', bg:'#ffffff', pot:'#ff5a36', pot2:'#2b59c3', trunk:'#c9732f', flower:'#ff7eb6', flowerC:'#ffb627', trap:'#ff5a36', water:'#2b59c3', zz:'#2b59c3', cheek:'#ff7eb6', iconBg:'#ffb627', handle:'#1c1b3a' } },
+   copy:{ title:'À faire', date:'Mer. 15 octobre · Automne', sub:'3 plantes · 4 soins', all:'💧 Tout arroser', bubble:'SOIF !',
+          soif:'Arroser', check:'Vérifier', ok:'Dans 4 j', sleep:'Dodo', plants:'Mes plantes', water:'Arrosé', wet:'Encore humide' },
+   voice:[['Rien à faire','Tout va bien. Va vivre ta vie ☀️'],['Dormance','Dodo jusqu\'en mars. Pas touche.'],['Archive','Basilic. Parti trop tôt, trop au soleil.']] },
+
+ { id:'coloc', cls:'d-coloc', name:'La Coloc', tagline:'Tes plantes sont tes colocataires, chacune avec son caractère.',
+   desc:'Chaleureux et attachant. Chaque plante a une tête : elle sourit, a soif ou dort. C\'est la direction qui pousse le plus loin les « plantes qui parlent ». Les traits sont ronds et épais, les pastels doux, la typo arrondie. Pour ne pas faire app pour enfants : une palette sobre, des visages minimalistes (deux points et un trait) et une écriture adulte.',
+   kw:['personnages','visages','pastels','arrondi','attachant'],
+   swatches:[['#eef4ea','Menthe'],['#2c4436','Forêt'],['#f08a68','Pêche'],['#9fd39a','Feuille'],['#e7f1ff','Ciel'],['#f7a1c4','Joue']],
+   type:'<b>Nunito Black</b> pour les titres · <b>Nunito</b> pour le texte',
+   S:{ mode:'perso', sw:2, decoFont:'Nunito, sans-serif', c:{ leaf:'#a6d89f', leaf2:'#6aae6a', leafDry:'#d8d49a', leafSleep:'#b9d3b4', vein:'#6aae6a', stem:'#6aae6a', stroke:'#2c4436', bg:'#ffffff', pot:'#f8cfb0', pot2:'#f3b893', trunk:'#e0bd98', flower:'#f7a1c4', flowerC:'#ffe08a', trap:'#f49a9a', water:'#8cc4f2', zz:'#7f9386', cheek:'#f7a1c4', iconBg:'#eef4ea', handle:'#2c4436' } },
+   copy:{ title:'Ta tournée', date:'Mercredi 15 octobre · Automne', sub:'3 colocs ont besoin de toi', all:'💧 Tout arroser', bubble:'Psst… j\'ai un peu soif 🥺',
+          soif:'A soif', check:'À vérifier', ok:'Dans 4 j', sleep:'Fait dodo', plants:'Mes colocs', water:'Arrosé', wet:'Encore humide' },
+   voice:[['Rien à faire','Tout le monde est content. On se voit dans 2 jours ?'],['Dormance','Chut… le Cactus hiberne jusqu\'en mars 😴'],['Archive','Basilic nous a quittés. On ne l\'oubliera pas (enfin, on va essayer).']] },
+
+ { id:'riso', cls:'d-riso', name:'Riso', tagline:'Un fanzine imprimé en risographie dans un atelier du 11ᵉ.',
+   desc:'Indé, brut, graphique. Deux ou trois encres fluo qui se chevauchent (rose, bleu, vert, jaune) avec un léger décalage de calage et du grain d\'impression. Grotesque en capitales, monospace pour les infos, des cadres noirs épais avec des ombres décalées. L\'humour est sec et un peu absurde. C\'est la direction la plus « culture », dans l\'esprit d\'une affiche de concert.',
+   kw:['risographie','grain','encres fluo','décalage','brutaliste'],
+   swatches:[['#f1ede3','Papier recyclé'],['#1a1a1a','Noir'],['#ff48b0','Rose fluo'],['#0078bf','Bleu riso'],['#00a95c','Vert riso'],['#ffe800','Jaune']],
+   type:'<b>Space Grotesk Bold</b> en capitales pour les titres · <b>Space Mono</b> pour les infos',
+   S:{ mode:'riso', sw:0, decoFont:'Space Grotesk, sans-serif', c:{ leaf:'#00a95c', leaf2:'#0078bf', leafDry:'#ffe800', leafSleep:'#7fc9a5', vein:'#0078bf', stem:'#00a95c', stroke:'#1a1a1a', ink2:'#0078bf', bg:'#f8f5ee', pot:'#ff48b0', pot2:'#ff48b0', trunk:'#ff48b0', flower:'#ff48b0', flowerC:'#ffe800', trap:'#ff48b0', water:'#0078bf', zz:'#0078bf', cheek:'#ff48b0', iconBg:'#ffe800', handle:'#1a1a1a' } },
+   copy:{ title:'À faire', date:'MER. 15.10 — AUTOMNE', sub:'3 PLANTES / 4 SOINS', all:'TOUT ARROSER', bubble:'Niveau d\'eau : critique. (j\'exagère à peine)',
+          soif:'SOIF', check:'À VÉRIFIER', ok:'J-4', sleep:'ZZZ', plants:'Mes plantes', water:'Arrosé', wet:'Encore humide' },
+   voice:[['Rien à faire','Rien à signaler. Les plantes font des plantes.'],['Dormance','Cactus en mode avion jusqu\'en mars.'],['Archive','BASILIC (2025–2025). Il a vécu vite.']] },
+];
+
+const P = { monstera:'Monstera', dionee:'Dionée', calathea:'Calathea', pothos:'Pothos', cactus:'Cactus', rose:'Rose du désert' };
+
+function screenTodo(d) {
+  const S = d.S, C = d.copy;
+  return `<div class="phone"><div class="status"><span>9:41</span><span>●●● ▮</span></div><div class="scr">
+    <div class="date">${C.date}</div><div class="title">${C.title}</div>
+    <div class="subrow"><span>${C.sub}</span><span class="allbtn">${C.all}</span></div>
+    <div class="card"><div class="card-top"><div class="ill">${plant('monstera','soif',S)}</div><div><div class="pname">Monstera</div><div class="meta">Salon · il y a 9 j</div></div><span class="tag">${C.soif}</span></div>
+      <div class="bubble">${C.bubble}</div>
+      <div class="method">🚿 Par le dessus, généreusement. Vide la soucoupe.</div>
+      <div class="btns"><div class="btn fill">${C.water}</div><div class="btn alt">${C.wet}</div></div></div>
+    <div class="card"><div class="card-top"><div class="ill">${plant('dionee','soif',S)}</div><div><div class="pname">Dionée</div><div class="meta">Cuisine · il y a 4 j</div></div><span class="tag">${C.check}</span></div>
+      <div class="method">🍽️ Par la soucoupe, eau déminéralisée ou de pluie.</div>
+      <div class="btns"><div class="btn fill">${C.water}</div><div class="btn alt">${C.wet}</div></div></div>
+    <div class="card"><div class="card-top"><div class="ill">${plant('calathea','ok',S)}</div><div><div class="pname">Calathea</div><div class="meta">Chambre</div></div></div>
+      <div class="mini"><span>💨 Brumiser</span><span class="btn alt">Fait</span></div>
+      <div class="mini"><span>🔄 Tourner d'1/4</span><span class="btn alt">Fait</span></div></div>
+  </div>${tabbar(d,0)}</div>`;
+}
+
+function screenPlants(d) {
+  const S = d.S, C = d.copy;
+  const st = m => m==='soif' ? `<div class="ts hot">${C.soif}</div>` : m==='sleep' ? `<div class="ts">${C.sleep}</div>` : `<div class="ts">${C.ok}</div>`;
+  const tile = (k,m) => `<div class="tile">${plant(k,m,S)}<div class="tn">${P[k]}</div>${st(m)}</div>`;
+  return `<div class="phone"><div class="status"><span>9:41</span><span>●●● ▮</span></div><div class="scr">
+    <div class="date">6 plantes · Paris</div><div class="title">${C.plants}</div>
+    <div class="room">Salon</div><div class="tiles">${tile('monstera','soif')}${tile('pothos','ok')}${tile('cactus','sleep')}</div>
+    <div class="room">Cuisine · Chambre · Bureau</div><div class="tiles">${tile('dionee','soif')}${tile('calathea','ok')}${tile('rose','sleep')}</div>
+  </div>${tabbar(d,1)}</div>`;
+}
+
+function tabbar(d, on) {
+  return `<div class="tabbar"><span class="${on===0?'on':''}">${d.copy.title}</span><span class="plus">+</span><span class="${on===1?'on':''}">${d.copy.plants}</span></div>`;
+}
+
+const root = document.getElementById('root');
+DIRS.forEach((d,i) => {
+  const S = d.S;
+  root.insertAdjacentHTML('beforeend', `
+  <section class="dir ${d.cls}" id="${d.id}">
+    ${d.id==='decoupe' ? '<div class="dir-blob"></div><div class="dir-blob2"></div>' : ''}
+    <div style="position:relative">
+    <div class="dir-head">
+      <div>
+        <div class="num">Direction ${i+1} / 4</div>
+        <h2>${d.name}</h2>
+        <div class="tagline">${d.tagline}</div>
+        <div class="desc">${d.desc}</div>
+        <div class="kw">${d.kw.map(k=>`<span>${k}</span>`).join('')}</div>
+      </div>
+      <div>
+        <div class="icon-zone"><div class="appicon">${appIcon(S)}</div><div class="appname">Arrosoir</div></div>
+        <div class="swatches">${d.swatches.map(([c,n])=>`<div class="sw"><i style="background:${c}"></i>${n}</div>`).join('')}</div>
+        <div class="type">${d.type}</div>
+      </div>
+    </div>
+    <div class="showcase">
+      ${screenTodo(d)}
+      ${screenPlants(d)}
+      <div class="states">
+        <h4>Illustrations · 3 états</h4>
+        <div class="state-row">
+          <div class="state">${plant('monstera','ok',S)}<div>En forme</div></div>
+          <div class="state">${plant('monstera','soif',S)}<div>A soif</div></div>
+          <div class="state">${plant('rose','sleep',S)}<div>Dort</div></div>
+        </div>
+        <div class="all6">${Object.keys(P).map(k=>`<div>${plant(k,'ok',S)}</div>`).join('')}</div>
+        <div class="voice"><h4>Ton de voix</h4>${d.voice.map(([t,v])=>`<p><small>${t}</small>${v}</p>`).join('')}</div>
+      </div>
+    </div>
+    </div>
+  </section>`);
+});
+</script>
+</body>
+</html>

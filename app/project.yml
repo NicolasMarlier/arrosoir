@@ -1,0 +1,62 @@
+name: Arrosoir
+options:
+  bundleIdPrefix: com.nicolasmarlier
+  deploymentTarget:
+    iOS: "18.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    DEVELOPMENT_TEAM: ZBL8NZ2ZE7
+    CODE_SIGN_STYLE: Automatic
+    SWIFT_DEFAULT_ACTOR_ISOLATION: MainActor
+    SWIFT_APPROACHABLE_CONCURRENCY: YES
+targets:
+  Arrosoir:
+    type: application
+    platform: iOS
+    sources:
+      - path: Arrosoir
+    info:
+      path: Arrosoir/Info.plist
+      properties:
+        UIAppFonts:
+          - BricolageGrotesque-Regular.ttf
+          - BricolageGrotesque-SemiBold.ttf
+          - BricolageGrotesque-Bold.ttf
+          - BricolageGrotesque-ExtraBold.ttf
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.nicolasmarlier.arrosoir
+        MARKETING_VERSION: "0.1"
+        CURRENT_PROJECT_VERSION: "1"
+        GENERATE_INFOPLIST_FILE: YES
+        TARGETED_DEVICE_FAMILY: "1"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_CFBundleDisplayName: Arrosoir
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_UIUserInterfaceStyle: Light
+        INFOPLIST_KEY_NSCameraUsageDescription: "Pour photographier tes plantes et les reconnaître."
+        INFOPLIST_KEY_NSPhotoLibraryUsageDescription: "Pour choisir une photo de ta plante."
+        INFOPLIST_KEY_CFBundleDevelopmentRegion: fr
+  ArrosoirTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: ArrosoirTests
+    dependencies:
+      - target: Arrosoir
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.nicolasmarlier.arrosoir.tests
+schemes:
+  Arrosoir:
+    build:
+      targets:
+        Arrosoir: all
+        ArrosoirTests: [test]
+    test:
+      targets:
+        - ArrosoirTests

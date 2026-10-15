@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Arrosoir — Maquettes v1 (wireframes)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #e9e9e6; color: #1d1d1f; padding: 40px 30px 100px; }
+  header { max-width: 1400px; margin: 0 auto 30px; }
+  header h1 { font-size: 28px; }
+  header p { color: #555; margin-top: 6px; max-width: 800px; line-height: 1.5; }
+  .flow { max-width: 1400px; margin: 0 auto 50px; }
+  .flow > h2 { font-size: 20px; margin-bottom: 18px; border-bottom: 2px solid #999; padding-bottom: 6px; }
+  .row { display: flex; gap: 34px; flex-wrap: wrap; align-items: flex-start; }
+  .screen { width: 300px; }
+  .label { font-weight: 700; margin-bottom: 8px; font-size: 14px; }
+  .label span { display: inline-block; background: #1d1d1f; color: white; border-radius: 10px; padding: 1px 8px; margin-right: 6px; font-size: 12px; }
+  .note { font-size: 12.5px; color: #444; margin-top: 10px; line-height: 1.45; }
+  .note b { color: #000; }
+  .note .q { color: #b05a00; }
+
+  /* iPhone */
+  .phone { width: 300px; height: 630px; background: #fff; border-radius: 40px; border: 9px solid #1d1d1f; overflow: hidden; position: relative; display: flex; flex-direction: column; }
+  .status { height: 34px; display: flex; justify-content: space-between; align-items: center; padding: 0 22px; font-size: 12px; font-weight: 600; flex: none; }
+  .content { flex: 1; overflow: hidden; padding: 4px 16px 0; }
+  .tabbar { height: 64px; border-top: 1px solid #e3e3e3; display: flex; justify-content: space-around; align-items: center; flex: none; font-size: 10px; color: #999; padding-bottom: 8px; background: #fafafa; }
+  .tab { text-align: center; } .tab .i { font-size: 20px; display: block; } .tab.on { color: #1d1d1f; font-weight: 700; }
+  .tab.add .i { background: #1d1d1f; color: white; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; font-size: 22px; }
+
+  h3 { font-size: 26px; font-weight: 800; margin: 6px 0 2px; }
+  .muted { color: #888; font-size: 12px; }
+  .small { font-size: 11.5px; }
+  .ph { background: repeating-linear-gradient(45deg, #ececec, #ececec 6px, #e2e2e2 6px, #e2e2e2 12px); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex: none; }
+  .illu { background: #f2f2ee; border: 1.5px dashed #bbb; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex: none; }
+  .card { border: 1.5px solid #ddd; border-radius: 14px; padding: 10px; margin-top: 10px; }
+  .card.done { opacity: .45; }
+  .row-c { display: flex; gap: 10px; align-items: center; }
+  .btn { border: 1.5px solid #1d1d1f; border-radius: 10px; padding: 7px 0; text-align: center; font-size: 12px; font-weight: 600; flex: 1; }
+  .btn.fill { background: #1d1d1f; color: white; }
+  .btn.ghost { border-color: #ccc; color: #555; }
+  .btns { display: flex; gap: 8px; margin-top: 8px; }
+  .bubble { background: #f3f3f0; border-radius: 12px 12px 12px 3px; padding: 6px 10px; font-size: 11.5px; font-style: italic; margin-top: 8px; display: inline-block; }
+  .method { font-size: 11px; color: #555; margin-top: 6px; background: #fafafa; border-left: 3px solid #bbb; padding: 4px 8px; }
+  .pill { display: inline-block; font-size: 10.5px; border: 1px solid #ccc; border-radius: 8px; padding: 1px 7px; margin-right: 4px; color: #555; }
+  .pill.dark { background: #1d1d1f; color: white; border-color: #1d1d1f; }
+  .section { font-size: 12px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .5px; margin: 16px 0 2px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .tile { border: 1.5px solid #ddd; border-radius: 14px; padding: 8px; }
+  .tile .ph, .tile .illu { height: 92px; }
+  .tile .n { font-weight: 700; font-size: 12.5px; margin-top: 6px; }
+  .gauge { height: 6px; border-radius: 3px; background: #eee; margin-top: 6px; overflow: hidden; }
+  .gauge i { display: block; height: 100%; background: #1d1d1f; }
+  .kv { display: flex; justify-content: space-between; font-size: 12.5px; padding: 7px 0; border-bottom: 1px solid #eee; }
+  .kv span:first-child { color: #777; }
+  .slider { height: 4px; background: #ddd; border-radius: 2px; position: relative; margin: 14px 4px 6px; }
+  .slider i { position: absolute; left: 45%; top: -7px; width: 18px; height: 18px; background: white; border: 2px solid #1d1d1f; border-radius: 50%; }
+  .hint { border: 1.5px dashed #bbb; border-radius: 12px; padding: 8px 10px; font-size: 11.5px; margin-top: 8px; color: #444; }
+  .camera { background: #2a2a2a; height: 100%; margin: 0 -16px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 30px 0 26px; color: white; }
+  .viewfinder { width: 210px; height: 280px; border: 2px solid rgba(255,255,255,.6); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 60px; }
+  .shutter { width: 64px; height: 64px; border-radius: 50%; border: 4px solid white; background: rgba(255,255,255,.25); }
+  .option { border: 1.5px solid #ddd; border-radius: 12px; padding: 8px; margin-top: 8px; display: flex; gap: 10px; align-items: center; }
+  .option.sel { border-color: #1d1d1f; border-width: 2px; }
+  .field { border: 1.5px solid #ddd; border-radius: 10px; padding: 8px 10px; font-size: 12.5px; margin-top: 6px; color: #777; }
+  .field b { color: #1d1d1f; font-weight: 600; }
+  .seg { display: flex; border: 1.5px solid #ddd; border-radius: 10px; overflow: hidden; margin-top: 6px; }
+  .seg div { flex: 1; text-align: center; font-size: 11.5px; padding: 6px 0; border-right: 1px solid #ddd; }
+  .seg div:last-child { border: none; }
+  .seg .on { background: #1d1d1f; color: white; }
+  .flabel { font-size: 11.5px; font-weight: 700; margin-top: 12px; }
+  .toggle { width: 38px; height: 22px; border-radius: 11px; background: #ddd; position: relative; flex: none; }
+  .toggle::after { content: ''; position: absolute; width: 18px; height: 18px; background: white; border-radius: 50%; top: 2px; left: 2px; }
+  .toggle.on { background: #1d1d1f; } .toggle.on::after { left: 18px; }
+  .navbar { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0 6px; }
+  .questions { max-width: 1400px; margin: 0 auto; background: #fff8e8; border-left: 5px solid #e0a63a; border-radius: 10px; padding: 18px 24px; }
+  .questions h2 { font-size: 18px; margin-bottom: 10px; }
+  .questions li { margin: 8px 0 8px 18px; line-height: 1.45; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🪴 Arrosoir — Maquettes v1</h1>
+  <p>Wireframes en noir et blanc : on valide la <b>structure, les flux et le contenu</b>, pas le style. L'identité visuelle viendra après. Les notes en orange sont des questions pour toi, et la liste des questions à trancher est en bas de page.</p>
+</header>
+
+<!-- ============ FLOW 1 ============ -->
+<div class="flow">
+  <h2>1 · Ouverture de l'app : « À faire »</h2>
+  <div class="row">
+
+    <!-- A1 -->
+    <div class="screen">
+      <div class="label"><span>A1</span>À faire, avec des actions</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="muted">Mercredi 15 octobre · Automne</div>
+          <h3>À faire</h3>
+          <div class="row-c" style="justify-content:space-between">
+            <div class="muted">4 soins · 3 plantes</div>
+            <div class="pill dark">💧 Tout arroser</div>
+          </div>
+
+          <div class="card">
+            <div class="row-c">
+              <div class="ph" style="width:46px;height:46px">🌿</div>
+              <div style="flex:1"><b style="font-size:13.5px">Monstera</b><div class="muted">Salon · arrosée il y a 9 j</div></div>
+              <div class="pill">💧 Arroser</div>
+            </div>
+            <div class="method">🚿 Par le dessus, généreusement, jusqu'à ce que ça coule. Vide la soucoupe.</div>
+            <div class="btns"><div class="btn fill">💧 Arrosé</div><div class="btn">⏳ Encore humide</div></div>
+          </div>
+
+          <div class="card">
+            <div class="row-c">
+              <div class="ph" style="width:46px;height:46px">🪤</div>
+              <div style="flex:1"><b style="font-size:13.5px">Dionée</b><div class="muted">Cuisine · arrosée il y a 4 j</div></div>
+              <div class="pill">💧 Vérifier</div>
+            </div>
+            <div class="bubble">« Mes pieds sèchent… 🥲 »</div>
+            <div class="method">🍽️ Par la soucoupe, 1 cm d'eau <b>déminéralisée ou de pluie</b>. Jamais l'eau du robinet.</div>
+            <div class="btns"><div class="btn fill">💧 Arrosé</div><div class="btn">⏳ Encore humide</div></div>
+          </div>
+
+          <div class="card">
+            <div class="row-c">
+              <div class="ph" style="width:46px;height:46px">🍃</div>
+              <div style="flex:1"><b style="font-size:13.5px">Calathea</b><div class="muted">Chambre</div></div>
+            </div>
+            <div class="row-c" style="margin-top:8px;justify-content:space-between">
+              <span class="small">💨 Brumiser</span><div class="btn" style="flex:none;padding:5px 12px">Fait</div>
+            </div>
+            <div class="row-c" style="margin-top:6px;justify-content:space-between">
+              <span class="small">🔄 Tourner le pot d'1/4</span><div class="btn" style="flex:none;padding:5px 12px">Fait</div>
+            </div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tab on"><span class="i">✅</span>À faire</div>
+          <div class="tab add"><span class="i">+</span></div>
+          <div class="tab"><span class="i">🪴</span>Mes plantes</div>
+        </div>
+      </div>
+      <div class="note"><b>L'app s'ouvre ici.</b> Une carte par plante, qui regroupe tous ses soins du jour. La méthode d'arrosage est rappelée au moment d'agir.<br>« Encore humide » repousse la plante et allonge son intervalle.<br>Une seule bulle de dialogue par écran, pour garder la parcimonie.</div>
+    </div>
+
+    <!-- A2 -->
+    <div class="screen">
+      <div class="label"><span>A2</span>Après avoir tapé « Arrosé »</div>
+      <div class="phone">
+        <div class="status"><span>9:42</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="muted">Mercredi 15 octobre · Automne</div>
+          <h3>À faire</h3>
+          <div class="muted">3 soins · 2 plantes</div>
+
+          <div class="card done">
+            <div class="row-c">
+              <div class="ph" style="width:46px;height:46px">🌿</div>
+              <div style="flex:1"><b style="font-size:13.5px">Monstera ✓</b><div class="muted">Prochaine vérif. ~ 24 oct.</div></div>
+              <div class="small" style="text-decoration:underline">Annuler</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="row-c">
+              <div class="ph" style="width:46px;height:46px">🪤</div>
+              <div style="flex:1"><b style="font-size:13.5px">Dionée</b><div class="muted">Cuisine · arrosée il y a 4 j</div></div>
+              <div class="pill">💧 Vérifier</div>
+            </div>
+            <div class="method">🍽️ Par la soucoupe, 1 cm d'eau <b>déminéralisée ou de pluie</b>.</div>
+            <div class="btns"><div class="btn fill">💧 Arrosé</div><div class="btn">⏳ Encore humide</div></div>
+          </div>
+
+          <div class="card" style="border-style:dashed">
+            <div class="small"><b>⏳ Encore humide ?</b> Dans combien de temps je repasse ?</div>
+            <div class="seg"><div>2 j</div><div class="on">4 j</div><div>1 sem.</div></div>
+            <div class="muted" style="margin-top:6px">Je note qu'elle boit moins que prévu.</div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tab on"><span class="i">✅</span>À faire</div>
+          <div class="tab add"><span class="i">+</span></div>
+          <div class="tab"><span class="i">🪴</span>Mes plantes</div>
+        </div>
+      </div>
+      <div class="note">La carte se grise et affiche la prochaine échéance, avec un « Annuler » en cas d'erreur.<br><span class="q">❓ Pour « Encore humide », vaut-il mieux te demander le délai (comme ici) ou laisser l'app décider seule ? Moi, je laisserais l'app décider.</span></div>
+    </div>
+
+    <!-- A3 -->
+    <div class="screen">
+      <div class="label"><span>A3</span>Rien à faire</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="muted">Vendredi 17 octobre · Automne</div>
+          <h3>À faire</h3>
+          <div style="text-align:center;margin-top:60px">
+            <div style="font-size:64px">😌</div>
+            <div style="font-weight:700;font-size:17px;margin-top:10px">Tout le monde va bien</div>
+            <div class="muted" style="margin-top:6px">Rien à faire aujourd'hui.</div>
+          </div>
+          <div class="section" style="margin-top:50px">Prochainement</div>
+          <div class="kv"><span>🪤 Dionée</span><span>dim. 19</span></div>
+          <div class="kv"><span>🍃 Calathea · brumiser</span><span>lun. 20</span></div>
+          <div class="kv"><span>🌿 Monstera</span><span>ven. 24</span></div>
+          <div class="kv" style="border:none"><span>🌵 Cactus</span><span>😴 en repos</span></div>
+        </div>
+        <div class="tabbar">
+          <div class="tab on"><span class="i">✅</span>À faire</div>
+          <div class="tab add"><span class="i">+</span></div>
+          <div class="tab"><span class="i">🪴</span>Mes plantes</div>
+        </div>
+      </div>
+      <div class="note">Quand il n'y a rien à faire, l'écran le dit tout de suite et montre ce qui arrive ensuite. Tu sais quand revenir.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ FLOW 2 ============ -->
+<div class="flow">
+  <h2>2 · Vue d'ensemble : « Mes plantes » (variante photos et variante illustrations)</h2>
+  <div class="row">
+
+    <div class="screen">
+      <div class="label"><span>B1</span>Mes plantes · photos</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="row-c" style="justify-content:space-between"><h3>Mes plantes</h3><span style="font-size:18px">⚙️</span></div>
+          <div class="muted">7 plantes · Paris</div>
+          <div class="grid">
+            <div class="tile"><div class="ph">🌿</div><div class="n">Monstera</div><div class="muted">Salon</div><div class="gauge"><i style="width:95%"></i></div><div class="muted small">À arroser</div></div>
+            <div class="tile"><div class="ph">🪤</div><div class="n">Dionée</div><div class="muted">Cuisine</div><div class="gauge"><i style="width:85%"></i></div><div class="muted small">À vérifier</div></div>
+            <div class="tile"><div class="ph">🍃</div><div class="n">Calathea</div><div class="muted">Chambre</div><div class="gauge"><i style="width:50%"></i></div><div class="muted small">Dans 4 j</div></div>
+            <div class="tile"><div class="ph">🪴</div><div class="n">Pothos</div><div class="muted">Salon</div><div class="gauge"><i style="width:30%"></i></div><div class="muted small">Dans 6 j</div></div>
+            <div class="tile"><div class="ph">🌵</div><div class="n">Cactus</div><div class="muted">Salon</div><div class="pill" style="margin-top:6px">😴 Repos</div></div>
+            <div class="tile"><div class="ph">🌸</div><div class="n">Rose du désert</div><div class="muted">Bureau</div><div class="pill" style="margin-top:6px">😴 Repos</div></div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tab"><span class="i">✅</span>À faire</div>
+          <div class="tab add"><span class="i">+</span></div>
+          <div class="tab on"><span class="i">🪴</span>Mes plantes</div>
+        </div>
+      </div>
+      <div class="note">Une grille triée par soif, avec une jauge qui se remplit au fil des jours. Les plantes en dormance n'ont pas de jauge : elles affichent un badge « Repos ».<br><span class="q">❓ Trier par soif, ou par pièce ?</span></div>
+    </div>
+
+    <div class="screen">
+      <div class="label"><span>B2</span>Mes plantes · illustrations</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="row-c" style="justify-content:space-between"><h3>Mes plantes</h3><span style="font-size:18px">⚙️</span></div>
+          <div class="muted">7 plantes · Paris</div>
+          <div class="grid">
+            <div class="tile"><div class="illu">🌿<span style="font-size:14px">💦</span></div><div class="n">Monstera</div><div class="muted small">« J'ai soif »</div></div>
+            <div class="tile"><div class="illu">🪤</div><div class="n">Dionée</div><div class="muted small">À vérifier</div></div>
+            <div class="tile"><div class="illu">🍃</div><div class="n">Calathea</div><div class="muted small">Dans 4 j</div></div>
+            <div class="tile"><div class="illu">🪴</div><div class="n">Pothos</div><div class="muted small">Dans 6 j</div></div>
+            <div class="tile"><div class="illu">🌵<span style="font-size:14px">💤</span></div><div class="n">Cactus</div><div class="muted small">Dort jusqu'en mars</div></div>
+            <div class="tile"><div class="illu">🌸<span style="font-size:14px">💤</span></div><div class="n">Rose du désert</div><div class="muted small">Dort jusqu'en avril</div></div>
+          </div>
+        </div>
+        <div class="tabbar">
+          <div class="tab"><span class="i">✅</span>À faire</div>
+          <div class="tab add"><span class="i">+</span></div>
+          <div class="tab on"><span class="i">🪴</span>Mes plantes</div>
+        </div>
+      </div>
+      <div class="note">Chaque plante est une <b>illustration</b> dont l'état change : elle se fane quand elle a soif, ferme les yeux quand elle dort. C'est plus ludique et plus cohérent visuellement, mais il faut savoir générer ces illustrations (piste : une famille de dessins par grand type de plante).<br>La vraie photo reste visible sur la fiche. On tranchera pendant l'identité visuelle.</div>
+    </div>
+
+    <div class="screen">
+      <div class="label"><span>B3</span>Archives / cimetière</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="navbar"><span>‹ Réglages</span><span></span></div>
+          <h3>🪦 Le jardin du souvenir</h3>
+          <div class="muted">Elles ont fait de leur mieux.</div>
+          <div class="card"><div class="row-c"><div class="ph" style="width:46px;height:46px;filter:grayscale(1)">🌱</div><div><b style="font-size:13px">Basilic</b><div class="muted">mars → juillet 2025</div><div class="muted small">« Mort de chaud, en héros. »</div></div></div></div>
+          <div class="card"><div class="row-c"><div class="ph" style="width:46px;height:46px">🌳</div><div><b style="font-size:13px">Ficus</b><div class="muted">2022 → sept. 2025</div><div class="muted small">🎁 Adopté par Julie</div></div></div></div>
+          <div class="muted" style="margin-top:14px">Depuis la fiche d'une plante : « Elle n'est plus là » → <i>Morte</i> / <i>Donnée</i>.</div>
+        </div>
+        <div class="tabbar">
+          <div class="tab"><span class="i">✅</span>À faire</div>
+          <div class="tab add"><span class="i">+</span></div>
+          <div class="tab on"><span class="i">🪴</span>Mes plantes</div>
+        </div>
+      </div>
+      <div class="note">On y accède depuis les réglages (⚙️) ou en bas de « Mes plantes ». Chaque plante archivée garde une épitaphe générée, au ton léger.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ FLOW 3 ============ -->
+<div class="flow">
+  <h2>3 · Fiche plante</h2>
+  <div class="row">
+
+    <div class="screen">
+      <div class="label"><span>C1</span>Fiche · haut</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="navbar"><span>‹ Mes plantes</span><span>•••</span></div>
+          <div class="ph" style="height:150px;font-size:56px">🌸</div>
+          <h3 style="font-size:22px;margin-top:10px">Rose du désert</h3>
+          <div class="muted"><i>Adenium obesum</i> · Bureau · Plein sud</div>
+          <div class="card" style="text-align:center">
+            <div style="font-size:26px">😴</div>
+            <b style="font-size:13px">En repos jusqu'à mi-avril</b>
+            <div class="muted" style="margin-top:4px">Un petit arrosage par mois au maximum, et seulement si les tiges se plissent. Sinon, laisse-la dormir.</div>
+          </div>
+          <div class="kv"><span>Dernier arrosage</span><span>il y a 18 j (27 sept.)</span></div>
+          <div class="kv"><span>Prochaine vérif.</span><span>~ 27 oct.</span></div>
+          <div class="kv"><span>Quantité</span><span>Un verre, pas plus</span></div>
+          <div class="method">🚿 Par le dessus, sur un substrat <b>complètement sec</b>. Ne jamais laisser d'eau dans la soucoupe.</div>
+        </div>
+        <div class="tabbar">
+          <div class="tab"><span class="i">✅</span>À faire</div>
+          <div class="tab add"><span class="i">+</span></div>
+          <div class="tab on"><span class="i">🪴</span>Mes plantes</div>
+        </div>
+      </div>
+      <div class="note">On voit en premier <b>l'état actuel</b> (ici la dormance), puis le dernier arrosage, la prochaine vérification, la quantité et la méthode. Pas d'historique complet, comme tu l'as demandé.</div>
+    </div>
+
+    <div class="screen">
+      <div class="label"><span>C2</span>Fiche · bas (après scroll)</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="section" style="margin-top:4px">Soins</div>
+          <div class="kv"><span>💧 Arrosage</span><span>~ tous les 30 j <span class="muted">(hiver)</span></span></div>
+          <div class="kv"><span>🔄 Rotation</span><span>fait il y a 12 j</span></div>
+          <div class="kv"><span>🧪 Engrais</span><span>pas avant mai</span></div>
+          <div class="kv"><span>💨 Brumisation</span><span class="muted">non nécessaire</span></div>
+
+          <div class="section">À l'horizon</div>
+          <div class="hint">🪴 <b>Rempotée il y a 2 ans et 3 mois.</b> À prévoir au printemps, quand elle se réveille.</div>
+          <div class="hint">✂️ Taille : jamais notée. À faire en fin d'hiver si elle s'étale trop.</div>
+
+          <div class="section">Rythme d'arrosage</div>
+          <div class="muted">Calculé : tous les ~30 j en hiver, ~10 j en été. Ajuste si tu le sens autrement.</div>
+          <div class="slider"><i></i></div>
+          <div class="row-c" style="justify-content:space-between"><span class="muted">Plus souvent</span><span class="muted">Moins souvent</span></div>
+
+          <div class="btns" style="margin-top:14px"><div class="btn ghost">✍️ Noter un soin</div></div>
+        </div>
+        <div class="tabbar">
+          <div class="tab"><span class="i">✅</span>À faire</div>
+          <div class="tab add"><span class="i">+</span></div>
+          <div class="tab on"><span class="i">🪴</span>Mes plantes</div>
+        </div>
+      </div>
+      <div class="note"><b>Deux échelles de temps.</b> Les soins courants (arrosage, rotation, engrais, brumisation) passent par « À faire ». Les soins de long terme (rempotage, taille) n'apparaissent qu'ici, dans « À l'horizon », sans notification.<br>« Noter un soin » sert à enregistrer un rempotage qui vient d'être fait, par exemple.<br><span class="q">❓ Faut-il un bloc « Infos » pour découvrir la plante (origine, toxicité pour les chats, etc.) ?</span></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ FLOW 4 ============ -->
+<div class="flow">
+  <h2>4 · Ajout d'une plante (bouton +)</h2>
+  <div class="row">
+
+    <div class="screen">
+      <div class="label"><span>D1</span>Prise de photo</div>
+      <div class="phone">
+        <div class="status" style="background:#2a2a2a;color:white"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content" style="padding:0 16px">
+          <div class="camera">
+            <div style="font-size:13px">Cadre bien ta plante, feuilles visibles</div>
+            <div class="viewfinder">🌿</div>
+            <div class="row-c" style="gap:50px"><span style="font-size:22px">🖼️</span><div class="shutter"></div><span style="font-size:13px">Annuler</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="note">L'appareil photo s'ouvre directement. 🖼️ permet de choisir une photo existante dans la galerie.</div>
+    </div>
+
+    <div class="screen">
+      <div class="label"><span>D2</span>Identification</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="navbar"><span>‹ Reprendre</span><span></span></div>
+          <div class="ph" style="height:120px;font-size:44px">🌿</div>
+          <div style="font-weight:700;font-size:16px;margin-top:12px">Je pense que c'est…</div>
+          <div class="option sel"><div class="ph" style="width:40px;height:40px;font-size:18px">🌿</div><div style="flex:1"><b style="font-size:13px">Monstera deliciosa</b><div class="muted">Faux philodendron · 92 %</div></div><span>◉</span></div>
+          <div class="option"><div class="ph" style="width:40px;height:40px;font-size:18px">🌿</div><div style="flex:1"><b style="font-size:13px">Monstera adansonii</b><div class="muted">Monstera « gruyère » · 5 %</div></div><span>○</span></div>
+          <div class="option"><div class="ph" style="width:40px;height:40px;font-size:18px">🍃</div><div style="flex:1"><b style="font-size:13px">Philodendron bipinnatifidum</b><div class="muted">3 %</div></div><span>○</span></div>
+          <div class="muted" style="margin-top:10px;text-align:center;text-decoration:underline">Aucune de celles-ci ? Écrire le nom</div>
+          <div class="btns" style="margin-top:14px"><div class="btn fill">Continuer</div></div>
+        </div>
+      </div>
+      <div class="note">Claude propose 1 à 3 espèces. Le champ texte n'est qu'un <b>recours</b> si l'identification échoue, pas un parcours d'ajout à part entière.<br><span class="q">❓ Ce recours te va-t-il, ou on reste 100 % photo ?</span></div>
+    </div>
+
+    <div class="screen">
+      <div class="label"><span>D3</span>Derniers détails</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="navbar"><span>‹</span><span></span></div>
+          <div style="font-weight:800;font-size:20px">Monstera 🌿</div>
+          <div class="muted">Plus que quelques questions.</div>
+
+          <div class="flabel">Dernier arrosage *</div>
+          <div class="seg"><div>Aujourd'hui</div><div class="on">Il y a qq jours</div><div>+1 sem.</div><div>Aucune idée</div></div>
+
+          <div class="flabel">Pièce <span class="muted">(facultatif)</span></div>
+          <div class="row-c" style="flex-wrap:wrap;gap:5px;margin-top:6px"><span class="pill dark">Salon</span><span class="pill">Chambre</span><span class="pill">Cuisine</span><span class="pill">Bureau</span><span class="pill">+ Autre</span></div>
+
+          <div class="flabel">Lumière <span class="muted">(facultatif)</span></div>
+          <div class="seg"><div>☀️ Plein soleil</div><div class="on">🌤️ Lumineux</div><div>☁️ Peu</div></div>
+
+          <div class="flabel">Dernier rempotage <span class="muted">(facultatif)</span></div>
+          <div class="seg"><div>&lt; 1 an</div><div>1-2 ans</div><div>+2 ans</div><div class="on">?</div></div>
+
+          <div class="btns" style="margin-top:20px"><div class="btn fill">Ajouter à mes plantes</div></div>
+        </div>
+      </div>
+      <div class="note">Formulaire court : seul le dernier arrosage est obligatoire.<br>Pendant que tu remplis, la fiche d'entretien est générée en arrière-plan.</div>
+    </div>
+
+    <div class="screen">
+      <div class="label"><span>D4</span>Bienvenue</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="ph" style="height:190px;font-size:64px;margin-top:10px">🌿</div>
+          <div style="text-align:center">
+            <div class="bubble" style="margin-top:14px">« Salut ! Je suis plutôt facile à vivre. Arrose-moi quand le dessus de la terre est sec, et on s'entendra bien. »</div>
+          </div>
+          <div class="section">L'essentiel</div>
+          <div class="kv"><span>💧 Arrosage</span><span>~ tous les 10 j (automne)</span></div>
+          <div class="kv"><span>🚿 Méthode</span><span>Par le dessus, généreux</span></div>
+          <div class="kv"><span>☀️ Lumière</span><span>Vive, sans soleil direct</span></div>
+          <div class="kv"><span>🧪 Engrais</span><span>Avril → septembre</span></div>
+          <div class="btns" style="margin-top:14px"><div class="btn fill">Super</div></div>
+        </div>
+      </div>
+      <div class="note">La plante se présente en une phrase, suivie d'un résumé de sa fiche. Tu peux vérifier d'un coup d'œil que l'IA ne raconte pas n'importe quoi.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============ FLOW 5 ============ -->
+<div class="flow">
+  <h2>5 · Réglages</h2>
+  <div class="row">
+    <div class="screen">
+      <div class="label"><span>E1</span>Réglages</div>
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>●●● 🔋</span></div>
+        <div class="content">
+          <div class="navbar"><span>‹ Mes plantes</span><span></span></div>
+          <h3>Réglages</h3>
+          <div class="section">Lieu</div>
+          <div class="kv"><span>Ville</span><span>Paris ›</span></div>
+          <div class="section">Notifications</div>
+          <div class="kv" style="align-items:center"><span>Filet de sécurité<br><span class="small muted">Me prévenir si une plante a<br>+3 j de retard</span></span><div class="toggle"></div></div>
+          <div class="section">IA</div>
+          <div class="kv"><span>Clé API Anthropic</span><span>sk-…4f2a ›</span></div>
+          <div class="section">Plantes</div>
+          <div class="kv"><span>🪦 Le jardin du souvenir</span><span>2 ›</span></div>
+          <div class="kv"><span>Pièces</span><span>4 ›</span></div>
+        </div>
+        <div class="tabbar">
+          <div class="tab"><span class="i">✅</span>À faire</div>
+          <div class="tab add"><span class="i">+</span></div>
+          <div class="tab on"><span class="i">🪴</span>Mes plantes</div>
+        </div>
+      </div>
+      <div class="note">Pas de notifications par défaut, puisque tu ouvres l'app toi-même. Un « filet de sécurité » désactivé par défaut couvre les oublis prolongés.<br><span class="q">❓ J'ai bien compris qu'il n'y a pas de notification du tout ? Le filet de sécurité optionnel te va-t-il ?</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="questions">
+  <h2>❓ Questions à trancher sur ces maquettes</h2>
+  <ol>
+    <li><b>A2</b> : « Encore humide », est-ce que tu choisis le délai, ou est-ce que l'app décide seule ?</li>
+    <li><b>B1/B2</b> : grille triée par soif ou par pièce ? Tes premières impressions entre photos et illustrations ?</li>
+    <li><b>C2</b> : faut-il un bloc « Infos » sur la plante (origine, toxicité pour les animaux, curiosités) ?</li>
+    <li><b>D2</b> : saisie du nom en recours si l'identification par photo échoue, ok ?</li>
+    <li><b>E1</b> : aucune notification par défaut, avec un filet de sécurité optionnel ?</li>
+    <li><b>Navigation</b> : 2 onglets (À faire / Mes plantes) avec un gros « + » au milieu. Ça te va ?</li>
+    <li>Un écran ou une info te manque-t-il ? Un écran est-il en trop ?</li>
+  </ol>
+</div>
+
+</body>
+</html>

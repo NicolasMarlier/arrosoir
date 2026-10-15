@@ -1,0 +1,265 @@
+import SwiftUI
+import SwiftData
+
+struct PlantDetailView: View {
+    @Bindable var plant: Plant
+
+    @Environment(\.modelContext) private var ctx
+    @Environment(\.dismiss) private var dismiss
+    @Environment(AppSettings.self) private var settings
+    @Query(filter: #Predicate<Plant> { $0.archivedAt == nil }) private var allPlants: [Plant]
+
+    @State private var now = Date()
+    @State private var showLog = false
+    @State private var showEdit = false
+    @State private var showPhoto = false
+    @State private var askArchive = false
+    @State private var askDelete = false
+    @State private var working: String?
+    @State private var error: String?
+
+    var body: some View {
+        ScrollView {
+            if let snap = plant.snapshot(), let profile = plant.profile {
+                let st = CareEngine.status(snap, now: now)
+                VStack(alignment: .leading, spacing: 0) {
+                    hero(st)
+                    Text(plant.commonName)
+                        .font(.brico(32, .heavy, relativeTo: .largeTitle)).tracking(-0.8)
+                        .padding(.top, 14)
+                    Text(plant.scientificName).font(.brico(14)).italic().foregroundStyle(Color.muted)
+                    FlowLayout(spacing: 6) {
+                        if let room = plant.room { chip("🏠 \(room)") }
+                        if let light = plant.light { chip(light.label) }
+                    }
+                    .padding(.top, 8)
+
+                    stateCard(st, profile).padding(.top, 14)
+
+                    KeyValueRow(key: "Dernier arrosage", value: plant.lastWateredAt.map { Fmt.ago($0, now: now) } ?? "pas encore noté")
+                        .padding(.top, 6)
+                    KeyValueRow(key: "Prochaine vérif.", value: st.watering.isDue ? "maintenant" : Fmt.shortDay(st.wateringDue, now: now))
+                    KeyValueRow(key: "Quantité", value: profile.watering.quantity)
+
+                    Text(methodText(profile))
+                        .font(.brico(13.5)).foregroundStyle(Color(hex: 0x4A4760))
+                        .card().padding(.top, 10)
+
+                    SectionTitle(text: "Soins")
+                    KeyValueRow(key: "☀️ Lumière", value: profile.light)
+                    if let d = profile.rotationDays, d > 0 {
+                        KeyValueRow(key: "🔄 Rotation", value: plant.lastDone(.rotation).map { "fait \(Fmt.ago($0, now: now))" } ?? "tous les \(Int(d)) j")
+                    }
+                    KeyValueRow(key: "🧪 Engrais", value: fertilizingText(profile), mutedValue: profile.fertilizing == nil)
+                    KeyValueRow(key: "💨 Brumisation", value: profile.mistingDays?.value(for: st.season).map { "\(Fmt.everyDays($0)) (\(st.season.label.lowercased()))" } ?? "pas besoin",
+                                mutedValue: profile.mistingDays?.value(for: st.season) == nil)
+
+                    SectionTitle(text: "À l'horizon")
+                    ForEach(Array(CareEngine.horizon(snap, now: now).enumerated()), id: \.element.id) { i, h in
+                        (Text("\(h.kind.emoji) ") + Text(h.title).bold() + Text(". \(h.detail)"))
+                            .font(.brico(13.5))
+                            .padding(12)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .background(i == 0 ? Color.sand : Color.blush, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
+                            .padding(.top, 8)
+                    }
+
+                    rhythm(profile)
+
+                    Button("✍️ Noter un soin") { showLog = true }
+                        .buttonStyle(PillButtonStyle(kind: .outline))
+                        .padding(.top, 20)
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 30)
+            }
+        }
+        .scrollIndicators(.hidden)
+        .background(Color.cream)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button("Modifier", systemImage: "pencil") { showEdit = true }
+                    Button("Régénérer la fiche", systemImage: "sparkles") { regenerate() }
+                    Divider()
+                    Button("Elle n'est plus là…", systemImage: "leaf") { askArchive = true }
+                    Button("Supprimer", systemImage: "trash", role: .destructive) { askDelete = true }
+                } label: {
+                    Image(systemName: "ellipsis").font(.system(size: 18, weight: .bold)).foregroundStyle(Color.ink)
+                }
+            }
+        }
+        .overlay { if let working { WorkingOverlay(text: working) } }
+        .sheet(isPresented: $showLog) { LogCareSheet(plant: plant).presentationDetents([.medium, .large]) }
+        .sheet(isPresented: $showEdit) { EditPlantSheet(plant: plant, rooms: Array(Set(allPlants.compactMap(\.room)))).presentationDetents([.large]) }
+        .fullScreenCover(isPresented: $showPhoto) { PhotoViewer(data: plant.photo) }
+        .confirmationDialog("Que s'est-il passé ?", isPresented: $askArchive, titleVisibility: .visible) {
+            Button("🥀 Elle est morte") { archive(.died) }
+            Button("🎁 Je l'ai donnée") { archive(.given) }
+            Button("Annuler", role: .cancel) {}
+        }
+        .confirmationDialog("Supprimer définitivement \(plant.commonName) ?", isPresented: $askDelete, titleVisibility: .visible) {
+            Button("Supprimer", role: .destructive) {
+                dismiss()
+                ctx.delete(plant)
+                try? ctx.save()
+            }
+        }
+        .alert("Oups", isPresented: Binding(get: { error != nil }, set: { if !$0 { error = nil } })) {
+            Button("OK") {}
+        } message: { Text(error ?? "") }
+        .onAppear { now = Date() }
+    }
+
+    // MARK: Sous-vues
+
+    private func hero(_ st: CareStatus) -> some View {
+        ZStack(alignment: .bottomTrailing) {
+            PlantIllustration(plant: plant, mood: st.mood)
+                .frame(width: 210, height: 210)
+                .frame(maxWidth: .infinity)
+                .padding(.top, 10)
+            if let data = plant.photo, let img = UIImage(data: data) {
+                Button { showPhoto = true } label: {
+                    Image(uiImage: img).resizable().scaledToFill()
+                        .frame(width: 66, height: 66)
+                        .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                        .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).strokeBorder(.white, lineWidth: 3))
+                }
+                .padding(12)
+                .accessibilityLabel("Voir la photo")
+            }
+        }
+        .background(plant.potStyle.tintColor, in: RoundedRectangle(cornerRadius: 28, style: .continuous))
+    }
+
+    private func chip(_ t: String) -> some View {
+        Text(t).font(.brico(12.5, .bold)).padding(.horizontal, 10).padding(.vertical, 5).background(Color.white, in: Capsule())
+    }
+
+    @ViewBuilder
+    private func stateCard(_ st: CareStatus, _ p: CareProfile) -> some View {
+        if st.watering.isDue {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(st.watering == .water ? "💧 J'ai soif !" : "👆 C'est le moment de vérifier").font(.brico(17, .heavy))
+                Text("\(p.watering.checkHint) ? Alors arrose.").font(.brico(13.5))
+            }
+            .foregroundStyle(st.watering == .water ? Color.white : Color.ink)
+            .card(st.watering == .water ? .vermillon : .mustard)
+        } else if let end = st.dormantUntil {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("💤 Au repos jusqu'à fin \(lastDormantMonth(end))").font(.brico(17, .heavy))
+                if let advice = p.dormancy?.advice { Text(advice).font(.brico(13.5)).opacity(0.92) }
+            }
+            .foregroundStyle(.white)
+            .card(.cobalt)
+        } else {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("😊 En forme").font(.brico(17, .heavy))
+                Text("Prochaine vérification \(Fmt.shortDay(st.wateringDue, now: now)).").font(.brico(13.5))
+            }
+            .card(.sage)
+        }
+    }
+
+    private func rhythm(_ p: CareProfile) -> some View {
+        let f = plant.learnedFactor * plant.manualFactor
+        let winter = CareEngine.baseInterval(p, season: .winter) * f
+        let summer = CareEngine.baseInterval(p, season: .summer) * f
+        return VStack(alignment: .leading, spacing: 4) {
+            SectionTitle(text: "Son rythme")
+            Text("Arrosage \(Fmt.everyDays(winter)) en hiver · \(Fmt.everyDays(summer)) en été")
+                .font(.brico(13.5)).foregroundStyle(Color.muted)
+            if abs(plant.learnedFactor - 1) > 0.04 {
+                let pct = Int(((plant.learnedFactor - 1) * 100).rounded())
+                Text("Ajusté grâce à tes retours : \(pct > 0 ? "+" : "")\(pct) %").font(.brico(12.5)).foregroundStyle(Color.muted)
+            }
+            Slider(value: $plant.manualFactor, in: 0.5...2, step: 0.05)
+                .tint(.cobalt)
+                .padding(.top, 6)
+            HStack {
+                Text("Plus souvent"); Spacer(); Text("Moins souvent")
+            }
+            .font(.brico(12)).foregroundStyle(Color.muted)
+        }
+    }
+
+    // MARK: Textes
+
+    private func methodText(_ p: CareProfile) -> String {
+        var s = "🚿 " + p.watering.method
+        if let w = p.watering.waterType { s += "\n💧 Eau \(w)." }
+        return s
+    }
+
+    private func fertilizingText(_ p: CareProfile) -> String {
+        guard let f = p.fertilizing else { return "pas besoin" }
+        let month = Calendar.current.component(.month, from: now)
+        if f.months.contains(month) { return "tous les \(Int(f.intervalDays)) j" }
+        let next = (1...12).map { (month + $0 - 1) % 12 + 1 }.first { f.months.contains($0) } ?? f.months.first ?? 4
+        return "pas avant \(Fmt.monthName(next))"
+    }
+
+    private func lastDormantMonth(_ end: Date) -> String {
+        let d = Calendar.current.date(byAdding: .day, value: -1, to: end) ?? end
+        return Fmt.monthName(Calendar.current.component(.month, from: d))
+    }
+
+    // MARK: Actions
+
+    private func regenerate() {
+        working = "Je relis mes notes de botanique…"
+        Task {
+            defer { working = nil }
+            do {
+                plant.profile = try await PlantAI(settings: settings).careProfile(commonName: plant.commonName, scientificName: plant.scientificName, room: plant.room, light: plant.light)
+                try? ctx.save()
+            } catch {
+                self.error = error.localizedDescription
+            }
+        }
+    }
+
+    private func archive(_ reason: ArchiveReason) {
+        working = reason == .died ? "Un instant de recueillement…" : "Je prépare ses valises…"
+        Task {
+            let text = await PlantAI(settings: settings).epitaph(name: plant.commonName, reason: reason, since: plant.createdAt)
+            plant.archive(reason, epitaph: text, in: ctx)
+            working = nil
+            dismiss()
+        }
+    }
+}
+
+struct WorkingOverlay: View {
+    let text: String
+    var body: some View {
+        ZStack {
+            Color.cream.opacity(0.85).ignoresSafeArea()
+            VStack(spacing: 14) {
+                ProgressView().controlSize(.large).tint(.ink)
+                Text(text).font(.brico(16, .bold)).multilineTextAlignment(.center)
+            }
+            .padding(30)
+        }
+    }
+}
+
+struct PhotoViewer: View {
+    let data: Data?
+    @Environment(\.dismiss) private var dismiss
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+            Color.black.ignoresSafeArea()
+            if let data, let img = UIImage(data: data) {
+                Image(uiImage: img).resizable().scaledToFit().frame(maxWidth: .infinity, maxHeight: .infinity)
+            }
+            Button { dismiss() } label: {
+                Image(systemName: "xmark").font(.system(size: 18, weight: .bold)).foregroundStyle(.white)
+                    .frame(width: 44, height: 44).background(.white.opacity(0.2), in: Circle())
+            }
+            .padding()
+        }
+    }
+}

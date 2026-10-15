@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arrosoir — Grill produit</title>
+<style>
+  :root { --green:#2f6b3a; --light:#eef5ef; --grey:#666; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 860px; margin: 0 auto; padding: 32px 20px 80px; color:#1d1d1f; line-height:1.5; background:#fafaf8; }
+  h1 { color: var(--green); margin-bottom: 4px; }
+  .sub { color: var(--grey); margin-top: 0; }
+  h2 { margin-top: 40px; border-bottom: 2px solid var(--green); padding-bottom: 6px; color: var(--green); }
+  .q { background: white; border-radius: 12px; padding: 14px 18px; margin: 12px 0; box-shadow: 0 1px 3px rgba(0,0,0,.06); display:flex; gap:14px; }
+  .num { flex: 0 0 34px; height: 34px; border-radius: 50%; background: var(--green); color: white; font-weight: 700; display:flex; align-items:center; justify-content:center; }
+  .q p { margin: 4px 0; }
+  .default { display:inline-block; background: var(--light); color: var(--green); font-size: 0.9em; padding: 2px 10px; border-radius: 8px; margin-top: 6px; }
+  details { background: white; border-radius: 12px; padding: 12px 18px; margin-top: 16px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  summary { cursor: pointer; font-weight: 600; color: var(--green); }
+  details li { margin: 6px 0; }
+  .warn { color: #a05a00; }
+</style>
+</head>
+<body>
+
+<h1>🪴 Arrosoir — Grill produit</h1>
+<p class="sub">21 questions. Réponds par numéro, même partiellement. En vert : mon avis par défaut (« ok » suffit si ça te va).</p>
+
+<details>
+  <summary>📋 Rappel : ce qui est faisable (clique pour déplier)</summary>
+  <ul>
+    <li><b>Données d'entretien</b> : pas de base gratuite fiable. Option réaliste : un LLM génère la fiche d'entretien de chaque plante une seule fois à l'ajout, puis elle est stockée en local (quelques centimes au total).</li>
+    <li><b>Reconnaissance photo</b> : Pl@ntNet (gratuit, 500/jour), Plant.id (payant, avec diagnostic), ou un LLM vision qui identifie la plante et génère sa fiche en un seul appel.</li>
+    <li><b>Météo</b> : Open-Meteo (gratuit, inclut l'évapotranspiration) ou WeatherKit. <span class="warn">⚠️ Pour une plante d'intérieur, la météo extérieure compte peu : ce sont la saison, la lumière et le pot qui comptent.</span></li>
+    <li><b>iOS</b> : notifications locales sans serveur, SwiftData + iCloud, widget interactif « J'ai arrosé », Siri, Apple Watch. <span class="warn">Avec un compte gratuit, l'app installée expire au bout de 7 jours. Le compte développeur à 99 €/an supprime cette limite.</span></li>
+    <li><b>Algorithme</b> : intervalle de base de l'espèce × saison × emplacement × pot × météo, avec un apprentissage selon tes retours (« encore humide », « ok », « très sec »). Dire « vérifie la terre » plutôt que « arrose » quand l'app n'est pas sûre d'elle.</li>
+  </ul>
+</details>
+
+<h2>A. Usage & ambition</h2>
+<div class="q"><div class="num">1</div><div><p>L'app est-elle pour toi seul, ou à terme pour d'autres (App Store, gratuite ou payante) ? Ça change la finition, la création de compte et les coûts d'API.</p><span class="default">Pour toi d'abord, avec un code propre et facile à généraliser</span></div></div>
+<div class="q"><div class="num">2</div><div><p>Partages-tu tes plantes avec quelqu'un (conjoint·e, colocs) qui devrait voir et noter les arrosages ?</p><span class="default">Non au départ</span></div></div>
+<div class="q"><div class="num">3</div><div><p>As-tu le compte Apple Developer à 99 €/an, ou es-tu prêt à le prendre ?</p></div></div>
+
+<h2>B. Tes plantes</h2>
+<div class="q"><div class="num">4</div><div><p>Intérieur, extérieur (balcon, jardin) ou les deux ? Ta liste actuelle, même approximative ?</p></div></div>
+<div class="q"><div class="num">5</div><div><p>Changes-tu de lieu (résidence secondaire, voyages) ? Si oui, l'app doit-elle gérer plusieurs lieux ou te prévenir avant un départ (« tu pars 5 jours, arrose X et Y avant ») ?</p></div></div>
+<div class="q"><div class="num">6</div><div><p>Faut-il gérer d'autres soins qu'arroser : engrais, rempotage, brumisation, rotation du pot ?</p><span class="default">L'arrosage d'abord, l'engrais en V2</span></div></div>
+
+<h2>C. Logique de recommandation</h2>
+<div class="q"><div class="num">7</div><div><p>Quel niveau de précision ? Version simple (espèce + saison) ou version intelligente (+ pot, lumière, météo, apprentissage selon tes retours) ?</p><span class="default">Version simple + apprentissage tout de suite, le reste ensuite</span></div></div>
+<div class="q"><div class="num">8</div><div><p>Es-tu d'accord pour un retour en un tap à chaque arrosage (humide, ok, sec) ? Ça ajoute une petite friction, mais c'est ce qui rend l'app juste.</p></div></div>
+<div class="q"><div class="num">9</div><div><p>Préfères-tu une date précise (« arrose jeudi ») ou une fenêtre (« entre mardi et jeudi, vérifie la terre ») ?</p></div></div>
+<div class="q"><div class="num">10</div><div><p>Faut-il noter la quantité d'eau (« 250 ml »), ou seulement la date ?</p></div></div>
+
+<h2>D. Données & IA</h2>
+<div class="q"><div class="num">11</div><div><p>Es-tu d'accord pour utiliser un LLM (avec une clé API à toi) pour générer les fiches des plantes ? Sinon : base manuelle ou Perenual.</p></div></div>
+<div class="q"><div class="num">12</div><div><p>Pour la photo, et même si c'est en V2 : identification seulement, ou aussi diagnostic (« feuilles jaunes, pourquoi ? ») ?</p></div></div>
+<div class="q"><div class="num">13</div><div><p>Faut-il une photo de chaque plante dans la liste (indépendamment de la reconnaissance automatique) ?</p><span class="default">Oui, dès la V1</span></div></div>
+<div class="q"><div class="num">14</div><div><p>Un historique photo (« voir ma plante grandir ») t'intéresse-t-il ?</p><span class="default">Plus tard</span></div></div>
+
+<h2>E. Notifications & interactions</h2>
+<div class="q"><div class="num">15</div><div><p>Une notification par plante, ou un résumé groupé (« aujourd'hui : 3 plantes à arroser ») à une heure que tu choisis ?</p><span class="default">Résumé groupé à heure fixe, par exemple 9 h</span></div></div>
+<div class="q"><div class="num">16</div><div><p>Veux-tu le widget écran d'accueil avec « J'ai arrosé » en un tap ? Une Apple Watch ? Siri (« Dis Siri, j'ai arrosé le monstera ») ?</p></div></div>
+<div class="q"><div class="num">17</div><div><p>Faut-il pouvoir marquer « tout arrosé » d'un coup (le cas fréquent quand on fait la tournée) ?</p></div></div>
+
+<h2>F. Technique & ton</h2>
+<div class="q"><div class="num">18</div><div><p>SwiftUI natif (meilleur rendu, widgets et Watch faciles, iOS uniquement) ou React Native/Expo (multiplateforme, widgets plus pénibles) ?</p><span class="default">SwiftUI natif</span></div></div>
+<div class="q"><div class="num">19</div><div><p>Données uniquement en local avec iCloud, ou un backend (Supabase, par exemple) ? Un backend serait utile surtout si tu réponds oui à la question 2 ou à l'App Store.</p><span class="default">Local + iCloud</span></div></div>
+<div class="q"><div class="num">20</div><div><p>Quel ton ? Plutôt utilitaire et sobre, ou chaleureux et ludique (des plantes qui « parlent », une petite gamification) ?</p></div></div>
+<div class="q"><div class="num">21</div><div><p>Qu'est-ce qui t'agace dans les apps existantes (Planta, Greg, etc.) ? Ce que tu ne veux surtout pas.</p></div></div>
+
+</body>
+</html>

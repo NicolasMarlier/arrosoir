@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arrosoir — Grill produit #2</title>
+<style>
+  :root { --green:#2f6b3a; --light:#eef5ef; --grey:#666; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; max-width: 860px; margin: 0 auto; padding: 32px 20px 80px; color:#1d1d1f; line-height:1.5; background:#fafaf8; }
+  h1 { color: var(--green); margin-bottom: 4px; }
+  .sub { color: var(--grey); margin-top: 0; }
+  h2 { margin-top: 40px; border-bottom: 2px solid var(--green); padding-bottom: 6px; color: var(--green); }
+  .q { background: white; border-radius: 12px; padding: 14px 18px; margin: 12px 0; box-shadow: 0 1px 3px rgba(0,0,0,.06); display:flex; gap:14px; }
+  .num { flex: 0 0 40px; height: 34px; border-radius: 17px; background: var(--green); color: white; font-weight: 700; display:flex; align-items:center; justify-content:center; font-size: .9em; }
+  .q p { margin: 4px 0; }
+  .default { display:inline-block; background: var(--light); color: var(--green); font-size: 0.9em; padding: 2px 10px; border-radius: 8px; margin-top: 6px; }
+  .recap { background: white; border-radius: 12px; padding: 8px 22px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .recap li { margin: 6px 0; }
+  .tag { font-size: .75em; font-weight: 700; padding: 1px 8px; border-radius: 6px; margin-right: 6px; }
+  .v1 { background: #d8eedc; color: #1f5a2b; }
+  .v2 { background: #fdeccc; color: #8a5a00; }
+  .no { background: #eee; color: #777; }
+  .box { background: #fff8e8; border-left: 4px solid #e0a63a; padding: 10px 16px; border-radius: 8px; margin: 8px 0; }
+</style>
+</head>
+<body>
+
+<h1>🪴 Arrosoir — Grill #2</h1>
+<p class="sub">Récap de tes réponses, la précision sur la question 8, puis une deuxième série de questions plus fines.</p>
+
+<h2>✅ Ce qu'on a décidé</h2>
+<div class="recap"><ul>
+  <li><span class="tag v1">V1</span>App <b>perso</b>, iOS, <b>SwiftUI</b>, données <b>en local</b> (iCloud possible). Code propre pour pouvoir l'ouvrir un jour.</li>
+  <li><span class="tag v1">V1</span>Plantes <b>d'intérieur</b> variées : cactus, plantes carnivores, rose du désert, plantes classiques.</li>
+  <li><span class="tag v1">V1</span>Recommandation selon l'<b>espèce et la saison</b>, avec une <b>quantité d'eau indicative</b> (qualitative, pas en ml).</li>
+  <li><span class="tag v1">V1</span>Usage : tu <b>ouvres l'app tous les quelques jours</b> et tu vois ce qu'il faut arroser. Pas de date imposée.</li>
+  <li><span class="tag v1">V1</span>Ajout d'une plante par <b>photo, avec identification par Claude</b> (ta clé Anthropic).</li>
+  <li><span class="tag v1">V1</span>Soins en plus de l'arrosage : <b>brumisation, rotation du pot, rempotage, engrais</b>.</li>
+  <li><span class="tag v1">V1</span>Notifications <b>groupées</b>, et un bouton <b>« tout arroser »</b>.</li>
+  <li><span class="tag v1">V1</span>Ton <b>chaleureux et ludique</b>, mais adulte.</li>
+  <li><span class="tag v2">V2</span>Photos de suivi analysées par Claude (lumière, santé, conseils), historique photo.</li>
+  <li><span class="tag v2">V2</span>Partage avec une autre personne.</li>
+  <li><span class="tag no">Non</span>Widget, Apple Watch, Siri, mesure de la quantité d'eau, backend.</li>
+</ul></div>
+
+<h2>💡 Précision sur la question 8</h2>
+<div class="box">
+  <p>L'idée : l'app <b>apprend le rythme réel de chacune de tes plantes</b>. Les recommandations génériques (« un monstera, c'est tous les 7 jours ») sont souvent fausses chez toi, à cause de la lumière, du chauffage ou du pot.</p>
+  <p>Vu ta façon d'utiliser l'app, je propose que ce soit naturel. Quand une plante est « à vérifier », tu touches la terre et tu as deux boutons :</p>
+  <ul>
+    <li>💧 <b>« Arrosé »</b> : la terre était sèche, tu as arrosé.</li>
+    <li>⏳ <b>« Encore humide »</b> : pas besoin, l'app repousse de quelques jours.</li>
+  </ul>
+  <p>Si tu appuies souvent sur « Encore humide », l'app allonge l'intervalle de cette plante. Si une plante est souvent en retard et que tu notes « très sec », elle le raccourcit. Tu n'as rien à régler : ça s'ajuste tout seul.</p>
+</div>
+
+<h2>❓ Nouvelles questions</h2>
+
+<div class="q"><div class="num">8</div><div><p>Après cette précision : le système « Arrosé / Encore humide » avec ajustement automatique te va-t-il ?</p><span class="default">Oui, c'est presque gratuit pour toi et ça rend l'app juste</span></div></div>
+
+<div class="q"><div class="num">5</div><div><p>(Pas répondu.) Tes plantes restent-elles toujours au même endroit ? Dans quelle ville habites-tu ? La ville sert à caler les saisons et la durée du jour.</p></div></div>
+
+<div class="q"><div class="num">22</div><div><p><b>Soins hors arrosage.</b> Lesquels doivent être <b>des rappels</b> (l'app te dit quand le faire) et lesquels seulement <b>un journal</b> (tu notes quand tu l'as fait) ?</p><p style="color:#666">Brumisation · rotation du pot · engrais · rempotage · nettoyage des feuilles · taille</p><span class="default">Rappels : brumisation, rotation, engrais (saison de croissance). Journal : rempotage, taille.</span></div></div>
+
+<div class="q"><div class="num">23</div><div><p><b>Méthodes spéciales.</b> La fiche de chaque plante doit-elle afficher <b>comment</b> l'arroser : par la soucoupe, par le dessus, en trempage, et avec quelle eau (de pluie ou déminéralisée pour les carnivores, par exemple) ?</p><span class="default">Oui, sous forme d'une petite ligne visible au moment d'arroser</span></div></div>
+
+<div class="q"><div class="num">24</div><div><p><b>Dormance hivernale.</b> Les cactus et la rose du désert ne s'arrosent quasiment pas en hiver. Faut-il que l'app l'affiche clairement (« 😴 en repos jusqu'en mars ») plutôt que de simplement espacer les rappels ?</p><span class="default">Oui, c'est sympa et c'est rassurant</span></div></div>
+
+<div class="q"><div class="num">25</div><div><p><b>Infos par plante à l'ajout.</b> En plus de l'espèce : <b>surnom</b> (« Gérard le cactus ») ? <b>Pièce</b> ? <b>Exposition</b> (près d'une fenêtre ou non, orientation) ? <b>Date approximative du dernier arrosage</b> ?</p><span class="default">Surnom + pièce + dernier arrosage obligatoires ; exposition facultative, stockée pour la V2</span></div></div>
+
+<div class="q"><div class="num">26</div><div><p><b>Parcours d'ajout.</b> Photo → Claude propose l'espèce (avec 2-3 alternatives si doute) → tu confirmes → fiche générée → surnom. Faut-il aussi pouvoir ajouter une plante <b>en tapant son nom</b>, sans photo ?</p><span class="default">Oui, les deux</span></div></div>
+
+<div class="q"><div class="num">27</div><div><p><b>Fiche modifiable ?</b> Si tu n'es pas d'accord avec la recommandation (« pour moi c'est tous les 10 jours »), veux-tu pouvoir corriger l'intervalle à la main ?</p><span class="default">Oui, une simple réglette, discrète</span></div></div>
+
+<div class="q"><div class="num">28</div><div><p><b>Écran d'accueil.</b> Que veux-tu voir en premier ?</p><p style="color:#666">(a) une liste triée par urgence (« à arroser », « bientôt », « tranquille »)<br>(b) une grille de toutes tes plantes avec un indicateur de soif sur chacune<br>(c) une vue « tournée du jour » avec seulement ce qu'il y a à faire</p><span class="default">(b) avec les plantes à arroser mises en avant en haut. Avec 3 à 10 plantes, tout tient sur un écran.</span></div></div>
+
+<div class="q"><div class="num">29</div><div><p><b>Notifications.</b> Comme tu ouvres l'app de toi-même : faut-il des notifications du tout ? Si oui, uniquement quand une plante est <b>en retard</b>, ou un résumé dès qu'il y a quelque chose à faire ? À quelle heure ?</p><span class="default">Un résumé seulement s'il y a quelque chose à faire, max 1 par jour, à 9 h</span></div></div>
+
+<div class="q"><div class="num">30</div><div><p><b>Mode vacances.</b> « Je pars du 12 au 20 » → l'app te dit quoi arroser avant de partir et ce qui risque de souffrir. Utile en V1, en V2, ou pas du tout ?</p><span class="default">V2</span></div></div>
+
+<div class="q"><div class="num">31</div><div><p><b>Historique.</b> Sur la fiche d'une plante, veux-tu voir le journal de ses soins (« arrosée le 3, le 11, le 19… ») ?</p><span class="default">Oui, une simple frise chronologique</span></div></div>
+
+<div class="q"><div class="num">32</div><div><p><b>Fin de vie.</b> Quand une plante meurt ou est donnée : la supprimer, ou l'archiver (« 🪦 le cimetière », avec une pointe d'humour) ?</p><span class="default">Archiver, ton léger</span></div></div>
+
+<div class="q"><div class="num">33</div><div><p><b>Ludique, jusqu'où ?</b> Les plantes « parlent » (« J'ai soif ! », « Laisse-moi tranquille, je dors ») ? Des séries (« 3 mois sans oublier d'arrosage ») ? Des illustrations plutôt que des photos ?</p><span class="default">Plantes qui parlent : oui, avec parcimonie. Séries et badges : non. Les vraies photos priment.</span></div></div>
+
+<div class="q"><div class="num">34</div><div><p><b>Clé API.</b> Pour un usage perso, je mets ta clé Anthropic dans les réglages de l'app. Si on ouvre l'app un jour, il faudra un petit serveur intermédiaire pour la protéger. Ça te va ?</p><span class="default">Oui</span></div></div>
+
+<div class="q"><div class="num">35</div><div><p><b>Langue.</b> App en français uniquement, ou bilingue dès le départ ?</p><span class="default">Français, avec une structure prête pour l'anglais</span></div></div>
+
+<div class="q"><div class="num">36</div><div><p><b>Nom.</b> « Arrosoir » est-il un nom de travail ou le vrai nom ? On peut le traiter lors de l'identité visuelle.</p></div></div>
+
+</body>
+</html>

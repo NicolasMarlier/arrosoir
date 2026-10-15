@@ -1,0 +1,654 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0048EA9E690E1B9993E28863 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241F72C6B79B5F7FE7F3B875 /* ImageUtils.swift */; };
+		0B11A70D36F422B8AA401D5F /* PlantAI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97DB20F0A02AFA6E4A06F866 /* PlantAI.swift */; };
+		179BC8F4ECFEF5C479321DC8 /* ArrosoirApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432FD292782374B13066DCD9 /* ArrosoirApp.swift */; };
+		28527F0CDD1ED0FA6DC613C4 /* PlantDrawings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DD7631C39415AC827175442 /* PlantDrawings.swift */; };
+		2D2542AB7A3094495AFF3158 /* AnthropicClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A62F8AAEB194E93C1F7179D6 /* AnthropicClient.swift */; };
+		2D5F580778FD5CE3215C9032 /* SafetyNet.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4BB667529B1ACA8F65F8FFA /* SafetyNet.swift */; };
+		3D8A61F5C4B384F24CDADF14 /* BricolageGrotesque-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 467AF11B0B6902B8F808DA62 /* BricolageGrotesque-Regular.ttf */; };
+		4A1FF98E39A3D6A3557891B0 /* BricolageGrotesque-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4A51E5042F1736935F7E219F /* BricolageGrotesque-Bold.ttf */; };
+		4BE5C683330C754CC2EB66FC /* CareProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6A6DC751A9AE07DBC1F60B8 /* CareProfile.swift */; };
+		5FB76D5A249050CF75F4F587 /* Fmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 823F85D10BA4EB7642DCB148 /* Fmt.swift */; };
+		66D68BEFACF135768EB8B4A8 /* DemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C5D804673F1A21543A9AC1B /* DemoData.swift */; };
+		6ED5F5315EF031346F629F35 /* PlantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F3A65F49B87ED4DB905F4D4 /* PlantsView.swift */; };
+		739E07F77046FC230DCDEBF4 /* CareEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02803D3B815B10260C5E2F6B /* CareEngine.swift */; };
+		79E744862AD6897AE35B8316 /* PlantDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB1BD53AAD805400B0557248 /* PlantDetailView.swift */; };
+		7B7D9A047BD644CCDD7B9C5A /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = A604882422E3124365328E62 /* Theme.swift */; };
+		83217724893BA75BB728C339 /* BricolageGrotesque-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AF1DEC149C17279F4477F37D /* BricolageGrotesque-ExtraBold.ttf */; };
+		9F2F4113CD304DB9AAF1B726 /* PlantActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4731924A194E0F62F8933D /* PlantActions.swift */; };
+		A86A8B770869A49509B27F9F /* Pickers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D8221CA01655D33B1A51910 /* Pickers.swift */; };
+		AA375F7FDCC9EDCDEBA044F3 /* IllustrationGallery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177B90C9E7D9F21B170F3137 /* IllustrationGallery.swift */; };
+		AD53410D6CF11C7CD50ACF89 /* Plant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46CBE0F943F7128F2BF752CF /* Plant.swift */; };
+		B21D1C0F2BC39716B11D4A47 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01BA509E4775D80A99B02354 /* TodayView.swift */; };
+		BE1E88EE0676B6314237B6E3 /* CareEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40FF379B0DE23DCB64C6EC28 /* CareEngineTests.swift */; };
+		D20CA5F8999B453B89D74900 /* AddPlantFlow.swift in Sources */ = {isa = PBXBuildFile; fileRef = B79366F01312CEE5EE309DA5 /* AddPlantFlow.swift */; };
+		D48FF01DDDD9F027E388CD23 /* Sheets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36D74600DFB3480CDFD0F050 /* Sheets.swift */; };
+		DC8035969527AAB0A0A0F475 /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63969128D65AA1F1654A0956 /* Keychain.swift */; };
+		DF0A44FC2BBCF98BAAB1970E /* Voice.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB1E3EADCA5B693EA44D843D /* Voice.swift */; };
+		E04E4DD2294F879E862EFD48 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 72055A8603451AEAD4549B49 /* Assets.xcassets */; };
+		E43F3C040824B6BDECB6C6FD /* PlantIllustration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D267E5044CFBD47A4CF47547 /* PlantIllustration.swift */; };
+		E68FD869599C2B0CF623BE82 /* BricolageGrotesque-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6228567D94F765846DA9E0F4 /* BricolageGrotesque-SemiBold.ttf */; };
+		EF009AA1ED9EF2FE94C3C146 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7320FD77194792811511B68 /* SettingsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		261590587151CC2D80F35331 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 45A85DC76F285628C8147F7D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2DD7965BFFDE641B5EA8A172;
+			remoteInfo = Arrosoir;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		01BA509E4775D80A99B02354 /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		02803D3B815B10260C5E2F6B /* CareEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareEngine.swift; sourceTree = "<group>"; };
+		09194506270A2DFD2778E459 /* Arrosoir.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Arrosoir.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		177B90C9E7D9F21B170F3137 /* IllustrationGallery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IllustrationGallery.swift; sourceTree = "<group>"; };
+		241F72C6B79B5F7FE7F3B875 /* ImageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
+		35CB3F5FC1B1EDBFEEA97918 /* ArrosoirTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = ArrosoirTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		36D74600DFB3480CDFD0F050 /* Sheets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sheets.swift; sourceTree = "<group>"; };
+		40FF379B0DE23DCB64C6EC28 /* CareEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareEngineTests.swift; sourceTree = "<group>"; };
+		432FD292782374B13066DCD9 /* ArrosoirApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrosoirApp.swift; sourceTree = "<group>"; };
+		467AF11B0B6902B8F808DA62 /* BricolageGrotesque-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BricolageGrotesque-Regular.ttf"; sourceTree = "<group>"; };
+		46CBE0F943F7128F2BF752CF /* Plant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Plant.swift; sourceTree = "<group>"; };
+		4A51E5042F1736935F7E219F /* BricolageGrotesque-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BricolageGrotesque-Bold.ttf"; sourceTree = "<group>"; };
+		6228567D94F765846DA9E0F4 /* BricolageGrotesque-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BricolageGrotesque-SemiBold.ttf"; sourceTree = "<group>"; };
+		63969128D65AA1F1654A0956 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		6D8221CA01655D33B1A51910 /* Pickers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pickers.swift; sourceTree = "<group>"; };
+		6DD7631C39415AC827175442 /* PlantDrawings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDrawings.swift; sourceTree = "<group>"; };
+		72055A8603451AEAD4549B49 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		823F85D10BA4EB7642DCB148 /* Fmt.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fmt.swift; sourceTree = "<group>"; };
+		8D4731924A194E0F62F8933D /* PlantActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantActions.swift; sourceTree = "<group>"; };
+		97DB20F0A02AFA6E4A06F866 /* PlantAI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantAI.swift; sourceTree = "<group>"; };
+		9C5D804673F1A21543A9AC1B /* DemoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoData.swift; sourceTree = "<group>"; };
+		9F3A65F49B87ED4DB905F4D4 /* PlantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantsView.swift; sourceTree = "<group>"; };
+		A604882422E3124365328E62 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		A62F8AAEB194E93C1F7179D6 /* AnthropicClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnthropicClient.swift; sourceTree = "<group>"; };
+		AF1DEC149C17279F4477F37D /* BricolageGrotesque-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "BricolageGrotesque-ExtraBold.ttf"; sourceTree = "<group>"; };
+		B6A6DC751A9AE07DBC1F60B8 /* CareProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareProfile.swift; sourceTree = "<group>"; };
+		B79366F01312CEE5EE309DA5 /* AddPlantFlow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPlantFlow.swift; sourceTree = "<group>"; };
+		CB1E3EADCA5B693EA44D843D /* Voice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Voice.swift; sourceTree = "<group>"; };
+		CCDD90AB3B544BCDEA873FF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D267E5044CFBD47A4CF47547 /* PlantIllustration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantIllustration.swift; sourceTree = "<group>"; };
+		DB1BD53AAD805400B0557248 /* PlantDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlantDetailView.swift; sourceTree = "<group>"; };
+		E4BB667529B1ACA8F65F8FFA /* SafetyNet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafetyNet.swift; sourceTree = "<group>"; };
+		E7320FD77194792811511B68 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		260EA7FE43410DC6B2268221 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				DB1BD53AAD805400B0557248 /* PlantDetailView.swift */,
+				36D74600DFB3480CDFD0F050 /* Sheets.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
+		3C4E558D46CD79D34BB2480F /* Plants */ = {
+			isa = PBXGroup;
+			children = (
+				9F3A65F49B87ED4DB905F4D4 /* PlantsView.swift */,
+			);
+			path = Plants;
+			sourceTree = "<group>";
+		};
+		47872334A429B01BF4099F98 /* Add */ = {
+			isa = PBXGroup;
+			children = (
+				B79366F01312CEE5EE309DA5 /* AddPlantFlow.swift */,
+			);
+			path = Add;
+			sourceTree = "<group>";
+		};
+		4882379A2DDE88B11E20E52C /* Engine */ = {
+			isa = PBXGroup;
+			children = (
+				02803D3B815B10260C5E2F6B /* CareEngine.swift */,
+				823F85D10BA4EB7642DCB148 /* Fmt.swift */,
+				8D4731924A194E0F62F8933D /* PlantActions.swift */,
+			);
+			path = Engine;
+			sourceTree = "<group>";
+		};
+		49B5C3897A66025B83F32C2B /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				47872334A429B01BF4099F98 /* Add */,
+				260EA7FE43410DC6B2268221 /* Detail */,
+				3C4E558D46CD79D34BB2480F /* Plants */,
+				F1F2964AB39CAD0D7FA37C9A /* Settings */,
+				ACA1B63D9E1F5FA638490AE3 /* Today */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		5EF3F01FD9501BEC647D6070 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				4A51E5042F1736935F7E219F /* BricolageGrotesque-Bold.ttf */,
+				AF1DEC149C17279F4477F37D /* BricolageGrotesque-ExtraBold.ttf */,
+				467AF11B0B6902B8F808DA62 /* BricolageGrotesque-Regular.ttf */,
+				6228567D94F765846DA9E0F4 /* BricolageGrotesque-SemiBold.ttf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		7294D83792B01F05C34D8391 /* Illustration */ = {
+			isa = PBXGroup;
+			children = (
+				177B90C9E7D9F21B170F3137 /* IllustrationGallery.swift */,
+				6DD7631C39415AC827175442 /* PlantDrawings.swift */,
+				D267E5044CFBD47A4CF47547 /* PlantIllustration.swift */,
+			);
+			path = Illustration;
+			sourceTree = "<group>";
+		};
+		8DB546A6B4D29EF7DA42327A /* Arrosoir */ = {
+			isa = PBXGroup;
+			children = (
+				72055A8603451AEAD4549B49 /* Assets.xcassets */,
+				CCDD90AB3B544BCDEA873FF3 /* Info.plist */,
+				ADC4CF5971227996A20ABB89 /* App */,
+				FCF43F80E4578DD090E68188 /* Content */,
+				B8F41E5D0B409BAB97C59255 /* Design */,
+				4882379A2DDE88B11E20E52C /* Engine */,
+				49B5C3897A66025B83F32C2B /* Features */,
+				7294D83792B01F05C34D8391 /* Illustration */,
+				9DB8BA296723D2A3B1AF46EF /* Model */,
+				CDE5111E9775F16D3F5E9B83 /* Services */,
+			);
+			path = Arrosoir;
+			sourceTree = "<group>";
+		};
+		9DB8BA296723D2A3B1AF46EF /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				B6A6DC751A9AE07DBC1F60B8 /* CareProfile.swift */,
+				46CBE0F943F7128F2BF752CF /* Plant.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		9F28D5E56C76094EA73DE9FB = {
+			isa = PBXGroup;
+			children = (
+				8DB546A6B4D29EF7DA42327A /* Arrosoir */,
+				DA4A6C3FEC683AE8C278C2C1 /* ArrosoirTests */,
+				E09B750A8C2B0395A7991BBE /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		ACA1B63D9E1F5FA638490AE3 /* Today */ = {
+			isa = PBXGroup;
+			children = (
+				01BA509E4775D80A99B02354 /* TodayView.swift */,
+			);
+			path = Today;
+			sourceTree = "<group>";
+		};
+		ADC4CF5971227996A20ABB89 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				432FD292782374B13066DCD9 /* ArrosoirApp.swift */,
+			);
+			path = App;
+			sourceTree = "<group>";
+		};
+		B8F41E5D0B409BAB97C59255 /* Design */ = {
+			isa = PBXGroup;
+			children = (
+				6D8221CA01655D33B1A51910 /* Pickers.swift */,
+				A604882422E3124365328E62 /* Theme.swift */,
+				5EF3F01FD9501BEC647D6070 /* Fonts */,
+			);
+			path = Design;
+			sourceTree = "<group>";
+		};
+		CDE5111E9775F16D3F5E9B83 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A62F8AAEB194E93C1F7179D6 /* AnthropicClient.swift */,
+				241F72C6B79B5F7FE7F3B875 /* ImageUtils.swift */,
+				63969128D65AA1F1654A0956 /* Keychain.swift */,
+				97DB20F0A02AFA6E4A06F866 /* PlantAI.swift */,
+				E4BB667529B1ACA8F65F8FFA /* SafetyNet.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		DA4A6C3FEC683AE8C278C2C1 /* ArrosoirTests */ = {
+			isa = PBXGroup;
+			children = (
+				40FF379B0DE23DCB64C6EC28 /* CareEngineTests.swift */,
+			);
+			path = ArrosoirTests;
+			sourceTree = "<group>";
+		};
+		E09B750A8C2B0395A7991BBE /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				09194506270A2DFD2778E459 /* Arrosoir.app */,
+				35CB3F5FC1B1EDBFEEA97918 /* ArrosoirTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F1F2964AB39CAD0D7FA37C9A /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				E7320FD77194792811511B68 /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		FCF43F80E4578DD090E68188 /* Content */ = {
+			isa = PBXGroup;
+			children = (
+				9C5D804673F1A21543A9AC1B /* DemoData.swift */,
+				CB1E3EADCA5B693EA44D843D /* Voice.swift */,
+			);
+			path = Content;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2DD7965BFFDE641B5EA8A172 /* Arrosoir */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3B50987787D749DD0C232867 /* Build configuration list for PBXNativeTarget "Arrosoir" */;
+			buildPhases = (
+				3AA836114E0FB657203C3A07 /* Sources */,
+				32A66DA03F73DB49A73FF462 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Arrosoir;
+			packageProductDependencies = (
+			);
+			productName = Arrosoir;
+			productReference = 09194506270A2DFD2778E459 /* Arrosoir.app */;
+			productType = "com.apple.product-type.application";
+		};
+		5A29170251726265BBF1781A /* ArrosoirTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0A5E277610158A4CC9ADB1AC /* Build configuration list for PBXNativeTarget "ArrosoirTests" */;
+			buildPhases = (
+				E54B86DBC128302881BD6015 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F1BFE1DE4F7A42461F568A8E /* PBXTargetDependency */,
+			);
+			name = ArrosoirTests;
+			packageProductDependencies = (
+			);
+			productName = ArrosoirTests;
+			productReference = 35CB3F5FC1B1EDBFEEA97918 /* ArrosoirTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		45A85DC76F285628C8147F7D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					2DD7965BFFDE641B5EA8A172 = {
+						DevelopmentTeam = ZBL8NZ2ZE7;
+						ProvisioningStyle = Automatic;
+					};
+					5A29170251726265BBF1781A = {
+						DevelopmentTeam = ZBL8NZ2ZE7;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = D4F4CEC9260EA4B447CC1C9D /* Build configuration list for PBXProject "Arrosoir" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 9F28D5E56C76094EA73DE9FB;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = E09B750A8C2B0395A7991BBE /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2DD7965BFFDE641B5EA8A172 /* Arrosoir */,
+				5A29170251726265BBF1781A /* ArrosoirTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		32A66DA03F73DB49A73FF462 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E04E4DD2294F879E862EFD48 /* Assets.xcassets in Resources */,
+				4A1FF98E39A3D6A3557891B0 /* BricolageGrotesque-Bold.ttf in Resources */,
+				83217724893BA75BB728C339 /* BricolageGrotesque-ExtraBold.ttf in Resources */,
+				3D8A61F5C4B384F24CDADF14 /* BricolageGrotesque-Regular.ttf in Resources */,
+				E68FD869599C2B0CF623BE82 /* BricolageGrotesque-SemiBold.ttf in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3AA836114E0FB657203C3A07 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D20CA5F8999B453B89D74900 /* AddPlantFlow.swift in Sources */,
+				2D2542AB7A3094495AFF3158 /* AnthropicClient.swift in Sources */,
+				179BC8F4ECFEF5C479321DC8 /* ArrosoirApp.swift in Sources */,
+				739E07F77046FC230DCDEBF4 /* CareEngine.swift in Sources */,
+				4BE5C683330C754CC2EB66FC /* CareProfile.swift in Sources */,
+				66D68BEFACF135768EB8B4A8 /* DemoData.swift in Sources */,
+				5FB76D5A249050CF75F4F587 /* Fmt.swift in Sources */,
+				AA375F7FDCC9EDCDEBA044F3 /* IllustrationGallery.swift in Sources */,
+				0048EA9E690E1B9993E28863 /* ImageUtils.swift in Sources */,
+				DC8035969527AAB0A0A0F475 /* Keychain.swift in Sources */,
+				A86A8B770869A49509B27F9F /* Pickers.swift in Sources */,
+				AD53410D6CF11C7CD50ACF89 /* Plant.swift in Sources */,
+				0B11A70D36F422B8AA401D5F /* PlantAI.swift in Sources */,
+				9F2F4113CD304DB9AAF1B726 /* PlantActions.swift in Sources */,
+				79E744862AD6897AE35B8316 /* PlantDetailView.swift in Sources */,
+				28527F0CDD1ED0FA6DC613C4 /* PlantDrawings.swift in Sources */,
+				E43F3C040824B6BDECB6C6FD /* PlantIllustration.swift in Sources */,
+				6ED5F5315EF031346F629F35 /* PlantsView.swift in Sources */,
+				2D5F580778FD5CE3215C9032 /* SafetyNet.swift in Sources */,
+				EF009AA1ED9EF2FE94C3C146 /* SettingsView.swift in Sources */,
+				D48FF01DDDD9F027E388CD23 /* Sheets.swift in Sources */,
+				7B7D9A047BD644CCDD7B9C5A /* Theme.swift in Sources */,
+				B21D1C0F2BC39716B11D4A47 /* TodayView.swift in Sources */,
+				DF0A44FC2BBCF98BAAB1970E /* Voice.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E54B86DBC128302881BD6015 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BE1E88EE0676B6314237B6E3 /* CareEngineTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F1BFE1DE4F7A42461F568A8E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2DD7965BFFDE641B5EA8A172 /* Arrosoir */;
+			targetProxy = 261590587151CC2D80F35331 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		1582DC611BFCF05F9A7E02F8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = ZBL8NZ2ZE7;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		6B6C006145ACB1D4915CCECF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Arrosoir/Info.plist;
+				INFOPLIST_KEY_CFBundleDevelopmentRegion = fr;
+				INFOPLIST_KEY_CFBundleDisplayName = Arrosoir;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Pour photographier tes plantes et les reconnaître.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Pour choisir une photo de ta plante.";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nicolasmarlier.arrosoir;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		96CF1FD57762972FADFD70E7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = ZBL8NZ2ZE7;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A8A2E9F50C12BD21CD043486 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Arrosoir/Info.plist;
+				INFOPLIST_KEY_CFBundleDevelopmentRegion = fr;
+				INFOPLIST_KEY_CFBundleDisplayName = Arrosoir;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Pour photographier tes plantes et les reconnaître.";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Pour choisir une photo de ta plante.";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.nicolasmarlier.arrosoir;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		B96BC121EB51B3BAD5DB6DF4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.nicolasmarlier.arrosoir.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Arrosoir.app/Arrosoir";
+			};
+			name = Debug;
+		};
+		C16F2AB1B942E5630FE492F0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.nicolasmarlier.arrosoir.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Arrosoir.app/Arrosoir";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0A5E277610158A4CC9ADB1AC /* Build configuration list for PBXNativeTarget "ArrosoirTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B96BC121EB51B3BAD5DB6DF4 /* Debug */,
+				C16F2AB1B942E5630FE492F0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		3B50987787D749DD0C232867 /* Build configuration list for PBXNativeTarget "Arrosoir" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A8A2E9F50C12BD21CD043486 /* Debug */,
+				6B6C006145ACB1D4915CCECF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D4F4CEC9260EA4B447CC1C9D /* Build configuration list for PBXProject "Arrosoir" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1582DC611BFCF05F9A7E02F8 /* Debug */,
+				96CF1FD57762972FADFD70E7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 45A85DC76F285628C8147F7D /* Project object */;
+}

@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Arrosoir — Identité v2 · Papiers découpés × La Coloc</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#fff4e2; --surface:#ffffff; --ink:#1c1b3a; --muted:#7a7488; --red:#ff5a36; --mustard:#ffb627; --cobalt:#2b59c3; --green:#1f8a4c; --pink:#ff7eb6;
+          --sage:#c9e6c4; --sand:#ffd88a; --blush:#ffc4dc; --sky:#c8d8ff; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Bricolage Grotesque', sans-serif; background: var(--bg); color: var(--ink); padding: 40px 30px 120px; overflow-x: hidden; }
+  .wrap { max-width: 1400px; margin: 0 auto; position: relative; }
+  .blob { position: absolute; border-radius: 60% 40% 55% 45%; z-index: -1; }
+  h1 { font-size: 64px; font-weight: 800; letter-spacing: -2px; line-height: 1; }
+  .lead { font-size: 18px; margin-top: 12px; max-width: 760px; line-height: 1.5; }
+  h2 { font-size: 34px; font-weight: 800; letter-spacing: -1px; margin: 60px 0 6px; }
+  .h2sub { color: var(--muted); font-size: 15px; max-width: 760px; line-height: 1.5; }
+  .note { font-size: 13px; color: var(--muted); margin-top: 10px; line-height: 1.45; max-width: 310px; }
+  .note b { color: var(--ink); }
+
+  /* face switcher */
+  .switch { display: flex; gap: 10px; margin-top: 18px; flex-wrap: wrap; }
+  .switch button { font-family: inherit; font-size: 15px; font-weight: 700; padding: 10px 18px; border-radius: 30px; border: 2px solid var(--ink); background: transparent; color: var(--ink); cursor: pointer; }
+  .switch button.on { background: var(--ink); color: white; }
+
+  .faces { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 20px; }
+  .facecard { background: white; border-radius: 26px; padding: 18px; cursor: pointer; border: 3px solid transparent; }
+  .facecard.on { border-color: var(--ink); }
+  .facecard h3 { font-size: 20px; font-weight: 800; }
+  .facecard p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .facecard .row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin-top: 10px; }
+  .facecard .row div { text-align: center; font-size: 11px; color: var(--muted); }
+  .facecard svg { width: 100%; }
+
+  .cast { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; margin-top: 20px; }
+  .cast > div { border-radius: 24px; padding: 12px 10px 14px; text-align: center; }
+  .cast svg { width: 100%; }
+  .cast b { display: block; font-size: 16px; font-weight: 800; }
+  .cast span { font-size: 12px; color: var(--ink); opacity: .7; }
+
+  .bases { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 18px; margin-top: 20px; }
+  .base { background: white; border-radius: 26px; padding: 22px; }
+  .base h4 { font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .sws { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sws div { width: 64px; font-size: 10.5px; text-align: center; color: var(--muted); }
+  .sws i { display: block; height: 64px; border-radius: 18px; margin-bottom: 4px; }
+  .typo .big { font-size: 46px; font-weight: 800; letter-spacing: -1.5px; line-height: 1; }
+  .typo .mid { font-size: 20px; font-weight: 700; margin-top: 8px; }
+  .typo .sm { font-size: 14px; margin-top: 6px; color: var(--muted); }
+  .iconrow { display: flex; gap: 16px; align-items: flex-end; }
+  .iconrow .ic { border-radius: 26%; overflow: hidden; box-shadow: 0 8px 20px rgba(28,27,58,.18); }
+
+  /* phones */
+  .screens { display: flex; gap: 30px; flex-wrap: wrap; margin-top: 24px; align-items: flex-start; }
+  .screen { width: 310px; }
+  .slabel { font-weight: 800; font-size: 15px; margin-bottom: 10px; }
+  .slabel i { font-style: normal; background: var(--ink); color: white; border-radius: 10px; padding: 1px 8px; font-size: 12px; margin-right: 6px; }
+  .phone { width: 310px; height: 760px; border-radius: 44px; border: 10px solid #111; overflow: hidden; background: var(--bg); display: flex; flex-direction: column; position: relative; box-shadow: 0 20px 40px rgba(28,27,58,.16); }
+  .phone.long { height: 1180px; }
+  .status { height: 34px; display: flex; justify-content: space-between; align-items: center; padding: 0 24px; font-size: 12px; font-weight: 700; flex: none; }
+  .scr { flex: 1; padding: 4px 16px 0; overflow: hidden; position: relative; }
+  .date { font-size: 12px; color: var(--muted); }
+  .title { font-size: 36px; font-weight: 800; letter-spacing: -1px; line-height: 1.05; margin: 2px 0 4px; }
+  .subrow { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--muted); margin-bottom: 4px; }
+  .pillbtn { font-size: 11.5px; font-weight: 700; padding: 6px 12px; border-radius: 30px; background: var(--ink); color: white; }
+  .card { background: var(--surface); border-radius: 24px; padding: 10px; margin-top: 10px; }
+  .card.done { background: #fffaf2; }
+  .ctop { display: flex; gap: 10px; align-items: center; }
+  .ill { width: 64px; height: 64px; flex: none; border-radius: 18px; }
+  .ill svg { width: 100%; height: 100%; }
+  .pname { font-size: 18px; font-weight: 800; letter-spacing: -.3px; line-height: 1.1; }
+  .meta { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+  .tag { font-size: 10.5px; font-weight: 800; padding: 3px 9px; border-radius: 20px; background: var(--cobalt); color: white; margin-left: auto; align-self: flex-start; white-space: nowrap; }
+  .sticker { display: inline-block; font-size: 12.5px; font-weight: 800; padding: 6px 12px; border-radius: 14px; background: var(--mustard); transform: rotate(-2.5deg); margin-top: 8px; }
+  .method { font-size: 11.5px; margin-top: 8px; color: #4a4760; line-height: 1.35; }
+  .btns { display: flex; gap: 7px; margin-top: 9px; }
+  .btn { flex: 1; text-align: center; font-size: 12.5px; font-weight: 800; padding: 9px 0; border-radius: 30px; }
+  .btn.fill { background: var(--red); color: white; }
+  .btn.alt { border: 2px solid var(--ink); padding: 7px 0; }
+  .btn.dark { background: var(--ink); color: white; }
+  .mini { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; margin-top: 8px; font-weight: 600; }
+  .mini .btn { flex: none; padding: 4px 14px; font-size: 11px; }
+  .tabbar { height: 74px; display: flex; justify-content: space-around; align-items: center; padding-bottom: 12px; flex: none; background: var(--bg); font-size: 11px; color: var(--muted); font-weight: 600; }
+  .tabbar .on { color: var(--ink); font-weight: 800; }
+  .plus { width: 50px; height: 50px; border-radius: 50%; background: var(--red); color: white; display: flex; align-items: center; justify-content: center; font-size: 30px; font-weight: 400; }
+  .room { font-size: 11px; letter-spacing: 1.3px; text-transform: uppercase; color: var(--muted); margin: 14px 0 6px; font-weight: 800; }
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tile { border-radius: 20px; padding: 6px 6px 9px; text-align: center; }
+  .tile svg { width: 100%; height: 72px; }
+  .tn { font-size: 13px; font-weight: 800; line-height: 1.1; }
+  .ts { font-size: 10.5px; margin-top: 2px; opacity: .7; }
+  .ts.hot { color: var(--red); opacity: 1; font-weight: 800; }
+  .kv { display: flex; justify-content: space-between; font-size: 13px; padding: 9px 0; border-bottom: 1.5px dashed #ead9bd; }
+  .kv span:first-child { color: var(--muted); }
+  .kv span:last-child { font-weight: 700; text-align: right; }
+  .sect { font-size: 11px; letter-spacing: 1.3px; text-transform: uppercase; color: var(--muted); margin: 18px 0 4px; font-weight: 800; }
+  .horizon { background: var(--sand); border-radius: 18px; padding: 10px 12px; font-size: 12.5px; margin-top: 8px; line-height: 1.4; }
+  .slider { height: 8px; background: #f0e2c8; border-radius: 4px; position: relative; margin: 16px 4px 6px; }
+  .slider::before { content: ''; position: absolute; left: 0; width: 45%; height: 100%; background: var(--cobalt); border-radius: 4px; }
+  .slider i { position: absolute; left: 45%; top: -8px; width: 24px; height: 24px; margin-left: -12px; background: var(--mustard); border-radius: 50%; }
+  .opt { background: white; border-radius: 18px; padding: 8px; margin-top: 8px; display: flex; gap: 10px; align-items: center; border: 3px solid transparent; }
+  .opt.sel { border-color: var(--ink); }
+  .opt .dot { width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--ink); margin-left: auto; }
+  .opt.sel .dot { background: var(--red); border-color: var(--red); box-shadow: inset 0 0 0 3px white; }
+  .photo { height: 150px; border-radius: 24px; background: linear-gradient(160deg, #3a5a40, #1d3326); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.75); font-size: 13px; font-weight: 600; position: relative; overflow: hidden; }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .chip { font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: white; }
+  .bubble { background: white; border-radius: 20px 20px 20px 4px; padding: 10px 14px; font-size: 14px; font-weight: 700; line-height: 1.35; }
+  .ess { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+  .ess div { border-radius: 18px; padding: 10px; font-size: 11px; color: var(--ink); }
+  .ess b { display: block; font-size: 13.5px; margin-top: 2px; }
+
+  .qs { background: white; border-radius: 26px; padding: 24px 30px; margin-top: 60px; }
+  .qs h2 { margin: 0 0 10px; font-size: 26px; }
+  .qs li { margin: 8px 0 8px 20px; line-height: 1.5; font-size: 15px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="blob" style="right:-120px;top:-120px;width:380px;height:380px;background:var(--mustard);opacity:.55"></div>
+  <div class="blob" style="right:220px;top:120px;width:120px;height:120px;background:var(--pink);opacity:.5;border-radius:45% 55% 60% 40%"></div>
+
+  <h1>Arrosoir<br>Papiers découpés × La Coloc</h1>
+  <p class="lead">La direction graphique de <b>Papiers découpés</b> (aplats, couleurs franches, typo grasse), avec <b>des têtes sur les pots</b>. Je propose 3 traitements de visage. <b>Clique sur l'un d'eux</b> : toute la page se met à jour avec ce visage.</p>
+
+  <h2>1 · Les visages</h2>
+  <p class="h2sub">5 humeurs : en forme, a soif, dort, vient d'être arrosée (nouvelle) et « partie » (pour le jardin du souvenir).</p>
+  <div class="faces" id="faces"></div>
+
+  <h2>2 · La bande</h2>
+  <p class="h2sub">Chaque plante a <b>son pot de couleur</b>. On la reconnaît d'un coup d'œil, et ça lui donne une identité de « personnage ». Les visages s'adaptent au contraste : clairs sur les pots foncés, foncés sur les pots clairs.</p>
+  <div class="cast" id="cast"></div>
+
+  <h2>3 · Les fondamentaux</h2>
+  <div class="bases">
+    <div class="base"><h4>Palette</h4><div class="sws">
+      <div><i style="background:#fff4e2;border:1px solid #eadcc2"></i>Crème<br>fond</div>
+      <div><i style="background:#1c1b3a"></i>Nuit<br>texte</div>
+      <div><i style="background:#ff5a36"></i>Vermillon<br>action</div>
+      <div><i style="background:#ffb627"></i>Moutarde<br>stickers</div>
+      <div><i style="background:#2b59c3"></i>Cobalt<br>eau</div>
+      <div><i style="background:#1f8a4c"></i>Vert<br>feuillage</div>
+      <div><i style="background:#ff7eb6"></i>Rose<br>fleurs</div>
+      <div><i style="background:#c9e6c4"></i>Sauge<br>fond</div>
+      <div><i style="background:#ffd88a"></i>Sable<br>fond</div>
+      <div><i style="background:#ffc4dc"></i>Blush<br>fond</div>
+    </div></div>
+    <div class="base typo"><h4>Typographie · Bricolage Grotesque</h4>
+      <div class="big">J'ai soif !</div>
+      <div class="mid">Monstera · Salon</div>
+      <div class="sm">Par le dessus, généreusement. Vide la soucoupe.</div>
+    </div>
+    <div class="base"><h4>Icône</h4><div class="iconrow" id="icons"></div>
+      <p class="note" style="margin-top:14px">Un arrosoir-personnage. Sur l'écran d'accueil, il doit rester lisible en tout petit (60 px).</p></div>
+  </div>
+
+  <h2>4 · Les écrans</h2>
+  <p class="h2sub">Les écrans validés en wireframe, habillés avec la nouvelle direction.</p>
+  <div class="screens" id="screens"></div>
+
+  <div class="qs">
+    <h2>❓ À toi</h2>
+    <ol>
+      <li><b>Visage</b> : A (points), B (yeux découpés) ou C (minimal) ?</li>
+      <li><b>Pots de couleur</b> : un pot coloré par plante, ça te va ? Le choisit-on automatiquement ou au choix de l'utilisateur ?</li>
+      <li><b>Ton de voix</b> : le niveau d'humour des phrases (sticker « J'ai soif ! », « Merci, ça fait du bien », etc.) est-il le bon ?</li>
+      <li><b>Icône</b> : une préférence ?</li>
+      <li>Quelque chose à ajuster avant de lancer le développement ?</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+/* ============ PALETTE ============ */
+const C = { leaf:'#1f8a4c', leaf2:'#0f5e33', leafDry:'#c2a53a', leafSleep:'#5f9b78', leafGhost:'#bdb7c9', leaf2Ghost:'#a29cb0',
+  stem:'#0f5e33', bg:'#ffffff', trunk:'#c9732f', flower:'#ff7eb6', flowerC:'#ffb627', trap:'#ff5a36',
+  water:'#2b59c3', ink:'#1c1b3a', cream:'#fff4e2', cheek:'#ff7eb6', spark:'#ffb627' };
+const POTS = {
+  monstera:{ pot:'#ff5a36', rim:'#2b59c3', face:'light', tint:'#c9e6c4', room:'Salon' },
+  dionee:  { pot:'#2b59c3', rim:'#ff5a36', face:'light', tint:'#ffd88a', room:'Cuisine' },
+  calathea:{ pot:'#ffb627', rim:'#ff5a36', face:'dark',  tint:'#ffc4dc', room:'Chambre' },
+  pothos:  { pot:'#ff7eb6', rim:'#2b59c3', face:'dark',  tint:'#ffd88a', room:'Salon' },
+  cactus:  { pot:'#ff5a36', rim:'#ffb627', face:'light', tint:'#c8d8ff', room:'Salon' },
+  rose:    { pot:'#2b59c3', rim:'#ffb627', face:'light', tint:'#ffc4dc', room:'Bureau' },
+};
+const NAMES = { monstera:'Monstera', dionee:'Dionée', calathea:'Calathea', pothos:'Pothos', cactus:'Cactus', rose:'Rose du désert' };
+let FACE = 'B';
+
+/* ============ DRAWING ============ */
+const HEART = "M0 14 C -14 6, -16 -10, -6 -14 C -2 -15, 0 -12, 0 -10 C 0 -12, 2 -15, 6 -14 C 16 -10, 14 6, 0 14 Z";
+const g = (x,y,s,r,inner) => `<g transform="translate(${x} ${y}) rotate(${r}) scale(${s})">${inner}</g>`;
+const DRAW = {
+  monstera(F,L){ let o=''; const lv=[[33,34,1.45,150],[63,27,1.55,200],[74,48,1.15,235],[36,52,1.05,125]];
+    lv.forEach(([x,y])=>o+=`<path d="M50 66 Q ${(x+50)/2} ${y+18} ${x} ${y}" ${L('stem',2.4)}/>`);
+    lv.forEach(([x,y,s,r])=>o+=g(x,y,s,r,`<path d="${HEART}" ${F('leaf')}/><path d="M-2 -3 L-11 -6 M-2 3 L-10 4 M-1 8 L-6 10 M2 -3 L11 -6 M2 3 L10 4 M1 8 L6 10" ${L('bg',1.8)}/>`)); return o; },
+  pothos(F,L){ let o=`<path d="M34 66 C 26 70, 20 80, 22 94" ${L('stem',1.6)}/><path d="M66 66 C 76 72, 80 82, 78 94" ${L('stem',1.6)}/>`;
+    [[38,54,.85,160],[52,47,.95,185],[63,56,.85,215],[46,60,.7,150]].forEach(([x,y,s,r])=>o+=g(x,y,s,r,`<path d="${HEART}" ${F('leaf')}/><path d="M-3 -4 Q 0 2 -2 8 M4 -6 Q 3 0 5 5" ${L('leaf2',1.6)}/>`));
+    [[25,76,.6,20],[21,89,.55,-10],[75,77,.6,-25],[79,90,.55,10]].forEach(([x,y,s,r])=>o+=g(x,y,s,r,`<path d="${HEART}" ${F('leaf')}/>`)); return o; },
+  cactus(F,L,m){ let o=`<rect x="29" y="33" width="9" height="20" rx="4.5" ${F('leaf')}/><rect x="31" y="45" width="15" height="8" rx="4" ${F('leaf')}/><rect x="62" y="27" width="9" height="18" rx="4.5" ${F('leaf')}/><rect x="55" y="38" width="15" height="8" rx="4" ${F('leaf')}/><rect x="41" y="20" width="18" height="48" rx="9" ${F('leaf')}/><path d="M46 26 L46 62 M50 23 L50 64 M54 26 L54 62" ${L('leaf2',1.3)}/>`;
+    if(m!=='sleep'&&m!=='ghost') o+=g(50,19,1,0,[0,72,144,216,288].map(a=>`<ellipse cy="-4" rx="2.6" ry="4" transform="rotate(${a})" ${F('flower')}/>`).join('')+`<circle r="2" ${F('flowerC')}/>`); return o; },
+  dionee(F,L){ let o=`<ellipse cx="50" cy="64" rx="18" ry="5" ${F('leaf')}/>`; const t=[[27,46,-55],[38,32,-25],[62,32,25],[73,46,55],[50,24,0]];
+    t.forEach(([x,y])=>o+=`<path d="M50 63 L ${x} ${y+6}" ${L('leaf',3.2)}/>`);
+    t.forEach(([x,y,r])=>o+=g(x,y,1,r,`<path d="M-8 1 A8 6 0 0 1 8 1 Z" ${F('trap')}/><path d="M-8 3 A8 6 0 0 0 8 3 Z" ${F('trap')}/><path d="M-7 -2 L-9 -7 M-3.5 -4.5 L-4.5 -10 M0 -5 L0 -11 M3.5 -4.5 L4.5 -10 M7 -2 L9 -7 M-7 6 L-9 10 M0 9 L0 13 M7 6 L9 10" ${L('leaf',1.1)}/>`)); return o; },
+  calathea(F,L){ let o=''; [[-48,.85],[-22,1],[0,1.08],[22,1],[48,.85]].forEach(([a,s])=>{ const r=a*Math.PI/180,d=24*s;
+    o+=g(50+Math.sin(r)*d,64-Math.cos(r)*d,s,a,`<ellipse rx="8.5" ry="19" ${F('leaf')}/><path d="M0 -17 L0 17" ${L('leaf2',1.3)}/>`+[-11,-5,1,7,13].map(y=>`<path d="M-1.5 ${y} L-6 ${y-3} M1.5 ${y} L6 ${y-3}" ${L('leaf2',2.4)}/>`).join('')); }); return o; },
+  rose(F,L,m){ let o=`<path d="M47 46 L36 26 M50 44 L51 18 M53 46 L66 27" ${L('trunk',4.5)}/><path d="M38 68 C 30 60, 37 47, 46 44 L 54 44 C 63 47, 70 60, 62 68 Z" ${F('trunk')}/>`;
+    [[36,26],[51,18],[66,27]].forEach(([x,y],i)=>{ o+=g(x,y,1,0,`<ellipse cx="-5" cy="-1" rx="5" ry="2.4" transform="rotate(-30)" ${F('leaf')}/><ellipse cx="5" cy="-1" rx="5" ry="2.4" transform="rotate(30)" ${F('leaf')}/>`);
+      if(m!=='sleep'&&m!=='ghost') o+=g(x+(i-1)*3,y-6,.95,i*20,[0,72,144,216,288].map(a=>`<ellipse cy="-4.5" rx="3" ry="4.6" transform="rotate(${a})" ${F('flower')}/>`).join('')+`<circle r="2" ${F('flowerC')}/>`); }); return o; },
+};
+
+function faceSVG(mood, tone, style) {
+  const ink = tone === 'light' ? C.cream : C.ink;
+  const fi = `fill="${ink}"`, st = (w=1.9) => `fill="none" stroke="${ink}" stroke-width="${w}" stroke-linecap="round"`;
+  const ex = [43.5, 56.5], ey = 80.5;
+  let o = '';
+  const closed = (up) => ex.map(x => up ? `<path d="M${x-3} ${ey+1.5} Q${x} ${ey-2.5} ${x+3} ${ey+1.5}" ${st()}/>` : `<path d="M${x-3} ${ey} Q${x} ${ey+3.5} ${x+3} ${ey}" ${st()}/>`).join('');
+  const mouth = { ok:`<path d="M46.5 86.5 Q50 90 53.5 86.5" ${st()}/>`, soif:`<ellipse cx="50" cy="88" rx="2" ry="2.6" ${fi}/>`, sleep:`<path d="M48 88 L52 88" ${st()}/>`,
+                  happy:`<path d="M45.5 86 Q50 92.5 54.5 86 Z" ${fi}/>`, ghost:`<path d="M47.5 88.5 Q50 87 52.5 88.5" ${st(1.6)}/>` }[mood];
+  if (style === 'A') {
+    if (mood==='sleep'||mood==='ghost') o += closed(false); else if (mood==='happy') o += closed(true);
+    else o += ex.map(x=>`<circle cx="${x}" cy="${ey}" r="2.4" ${fi}/>`).join('');
+    if (mood==='soif') o += `<path d="M40 75.5 L46 77 M60 75.5 L54 77" ${st(1.6)}/>`;
+    o += `<circle cx="39" cy="86" r="3" fill="${C.cheek}" opacity=".85"/><circle cx="61" cy="86" r="3" fill="${C.cheek}" opacity=".85"/>` + mouth;
+  } else if (style === 'B') {
+    if (mood==='sleep'||mood==='ghost') o += closed(false);
+    else if (mood==='happy') o += closed(true);
+    else { const py = mood==='soif' ? -1.6 : 0.4, px = mood==='soif' ? 0.8 : 0;
+      o += ex.map(x=>`<circle cx="${x}" cy="${ey}" r="4.6" fill="#fff"/><circle cx="${x+px}" cy="${ey+py}" r="2.2" fill="${C.ink}"/>`).join(''); }
+    if (mood==='soif') o += `<path d="M38.5 74 L46 75.8 M61.5 74 L54 75.8" ${st(1.8)}/>`;
+    o += mouth.replace(/(cy=")88/, '$189');
+  } else {
+    if (mood==='sleep'||mood==='ghost') o += ex.map(x=>`<path d="M${x-2} ${ey} L${x+2} ${ey}" ${st(1.6)}/>`).join('');
+    else if (mood==='happy') o += closed(true);
+    else o += ex.map(x=>`<circle cx="${x}" cy="${ey}" r="1.6" ${fi}/>`).join('');
+    o += { ok:`<path d="M48 86 Q50 88 52 86" ${st(1.5)}/>`, soif:`<circle cx="50" cy="87.5" r="1.4" ${fi}/>`, sleep:'', happy:`<path d="M47 85.5 Q50 89.5 53 85.5" ${st(1.6)}/>`, ghost:'' }[mood];
+  }
+  return o;
+}
+
+function deco(mood) {
+  const drop = (x,y,s)=>g(x,y,s,0,`<path d="M0 -7 C 4 -1, 5 2, 0 6 C -5 2, -4 -1, 0 -7 Z" fill="${C.water}"/>`);
+  const spark = (x,y,s)=>g(x,y,s,0,`<path d="M0 -6 Q1 -1 6 0 Q1 1 0 6 Q-1 1 -6 0 Q-1 -1 0 -6Z" fill="${C.spark}"/>`);
+  if (mood==='soif') return drop(85,15,1)+drop(92,28,.6);
+  if (mood==='sleep') return `<text x="76" y="22" font-family="Bricolage Grotesque" font-weight="800" font-size="11" fill="${C.water}">z</text><text x="84" y="14" font-family="Bricolage Grotesque" font-weight="800" font-size="16" fill="${C.water}">Z</text>`;
+  if (mood==='happy') return spark(16,22,1)+spark(86,16,1.2)+spark(88,40,.7)+drop(14,44,.6);
+  if (mood==='ghost') return `<ellipse cx="50" cy="9" rx="13" ry="3.6" fill="none" stroke="${C.spark}" stroke-width="2.5"/>`;
+  return '';
+}
+
+function plant(name, mood='ok', faceStyle=FACE) {
+  const p = POTS[name];
+  const ghost = mood==='ghost';
+  const col = k => { if (ghost) return k==='leaf'?C.leafGhost : k==='leaf2'||k==='stem'?C.leaf2Ghost : k==='flower'||k==='trap'||k==='trunk'?'#cfc9d8' : C[k];
+    if (k==='leaf' && mood==='soif') return C.leafDry; if (k==='leaf' && mood==='sleep') return C.leafSleep; return C[k]; };
+  const F = k => `fill="${col(k)}"`;
+  const L = (k,w) => `fill="none" stroke="${col(k)}" stroke-width="${w}" stroke-linecap="round"`;
+  const pot = ghost ? '#d9d4e0' : p.pot, rim = ghost ? '#c7c1cf' : p.rim;
+  let o = `<path d="M30 70 L70 70 L65.5 96 L34.5 96 Z" fill="${pot}"/><rect x="27" y="64" width="46" height="9" rx="3" fill="${rim}"/>`;
+  o += DRAW[name](F, L, mood);
+  o += faceSVG(mood, ghost ? 'dark' : p.face, faceStyle);
+  o += deco(mood);
+  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">${o}</svg>`;
+}
+
+function icon(bg, size, faceStyle=FACE) {
+  const o = `<rect width="100" height="100" fill="${bg}"/>`
+    + `<path d="M38 46 C 38 24, 62 24, 62 46" fill="none" stroke="${C.ink}" stroke-width="6" stroke-linecap="round"/>`
+    + `<path d="M64 60 L84 40 L89 45 L69 71 Z" fill="${C.water}"/><circle cx="87" cy="41" r="6" fill="${C.water}"/>`
+    + `<path d="M27 46 L73 46 L68 84 L32 84 Z" fill="${C.trap}"/>`
+    + g(43,37,.8,150,`<path d="${HEART}" fill="${C.leaf}"/>`) + g(57,33,.9,205,`<path d="${HEART}" fill="${C.leaf}"/>`)
+    + `<g transform="translate(0 -15)">${faceSVG('happy','light',faceStyle)}</g>`
+    + g(91,58,.75,0,`<path d="M0 -7 C 4 -1, 5 2, 0 6 C -5 2, -4 -1, 0 -7 Z" fill="${C.water}"/>`);
+  return `<div class="ic" style="width:${size}px;height:${size}px"><svg viewBox="0 0 100 100" width="${size}" height="${size}">${o}</svg></div>`;
+}
+
+/* ============ SECTIONS ============ */
+const MOODS = [['ok','En forme'],['soif','A soif'],['sleep','Dort'],['happy','Arrosée'],['ghost','Partie']];
+const FACEDESC = { A:['A · Points','Deux points, des joues roses. Doux, « kawaii » maîtrisé.'], B:['B · Yeux découpés','De grands yeux blancs avec des pupilles qui bougent selon l\'humeur. Le plus expressif, et le plus « papier découpé ».'], C:['C · Minimal','Presque rien : deux points et un trait. Discret et graphique, le personnage reste en retrait.'] };
+
+function renderFaces() {
+  document.getElementById('faces').innerHTML = ['A','B','C'].map(s => `<div class="facecard ${s===FACE?'on':''}" onclick="setFace('${s}')">
+    <h3>${FACEDESC[s][0]}</h3><p>${FACEDESC[s][1]}</p>
+    <div class="row">${MOODS.map(([m,l],i)=>`<div>${plant(['monstera','dionee','rose','calathea','pothos'][i], m, s)}${l}</div>`).join('')}</div></div>`).join('');
+}
+function renderCast() {
+  const st = { monstera:['soif','A soif'], dionee:['ok','En forme'], calathea:['happy','Vient de boire'], pothos:['ok','En forme'], cactus:['sleep','Dort'], rose:['sleep','Dort'] };
+  document.getElementById('cast').innerHTML = Object.keys(POTS).map(k=>`<div style="background:${POTS[k].tint}">${plant(k, st[k][0])}<b>${NAMES[k]}</b><span>${st[k][1]}</span></div>`).join('');
+  document.getElementById('icons').innerHTML = icon('#ffb627',110) + icon('#fff4e2',76) + icon('#c9e6c4',60);
+}
+
+const status = `<div class="status"><span>9:41</span><span>●●● ▮</span></div>`;
+const tab = on => `<div class="tabbar"><span class="${on===0?'on':''}">À faire</span><span class="plus">+</span><span class="${on===1?'on':''}">Mes plantes</span></div>`;
+const ill = (k,m) => `<div class="ill" style="background:${POTS[k].tint}">${plant(k,m)}</div>`;
+
+function renderScreens() {
+  const S = [];
+  // A1
+  S.push(['A1','À faire', `${status}<div class="scr">
+    <div class="date">Mer. 15 octobre · Automne</div><div class="title">À faire</div>
+    <div class="subrow"><span>3 plantes · 4 soins</span><span class="pillbtn">💧 Tout arroser</span></div>
+    <div class="card"><div class="ctop">${ill('monstera','soif')}<div><div class="pname">Monstera</div><div class="meta">Salon · il y a 9 j</div></div><span class="tag">Arroser</span></div>
+      <div class="sticker">J'ai soif ! 🥵</div>
+      <div class="method">🚿 Par le dessus, généreusement. Vide la soucoupe.</div>
+      <div class="btns"><div class="btn fill">💧 Arrosé</div><div class="btn alt">Encore humide</div></div></div>
+    <div class="card"><div class="ctop">${ill('dionee','soif')}<div><div class="pname">Dionée</div><div class="meta">Cuisine · il y a 4 j</div></div><span class="tag" style="background:var(--mustard);color:var(--ink)">Vérifier</span></div>
+      <div class="method">🍽️ Par la soucoupe, eau <b>déminéralisée ou de pluie</b>.</div>
+      <div class="btns"><div class="btn fill">💧 Arrosé</div><div class="btn alt">Encore humide</div></div></div>
+    <div class="card"><div class="ctop">${ill('calathea','ok')}<div><div class="pname">Calathea</div><div class="meta">Chambre</div></div></div>
+      <div class="mini"><span>💨 Brumiser</span><span class="btn alt">Fait</span></div>
+      <div class="mini"><span>🔄 Tourner d'1/4</span><span class="btn alt">Fait</span></div></div>
+  </div>${tab(0)}`, 'L\'écran d\'ouverture. Un seul sticker par écran : la plante la plus assoiffée « parle ».']);
+  // A2
+  S.push(['A2','Juste après « Arrosé »', `${status}<div class="scr">
+    <div class="date">Mer. 15 octobre · Automne</div><div class="title">À faire</div>
+    <div class="subrow"><span>2 plantes · 3 soins</span><span class="pillbtn">💧 Tout arroser</span></div>
+    <div class="card done" style="background:var(--sage)"><div class="ctop"><div class="ill" style="background:white">${plant('monstera','happy')}</div><div><div class="pname">Monstera ✓</div><div class="meta" style="color:var(--ink)">Prochaine vérif. ~ ven. 24</div></div><span style="margin-left:auto;font-size:11px;text-decoration:underline;align-self:flex-start">Annuler</span></div>
+      <div class="sticker" style="background:white">Ahhh, merci ! 😌</div></div>
+    <div class="card"><div class="ctop">${ill('dionee','soif')}<div><div class="pname">Dionée</div><div class="meta">Cuisine · il y a 4 j</div></div><span class="tag" style="background:var(--mustard);color:var(--ink)">Vérifier</span></div>
+      <div class="method">🍽️ Par la soucoupe, eau <b>déminéralisée ou de pluie</b>.</div>
+      <div class="btns"><div class="btn fill">💧 Arrosé</div><div class="btn alt">Encore humide</div></div></div>
+    <div class="card"><div class="ctop">${ill('calathea','ok')}<div><div class="pname">Calathea</div><div class="meta">Chambre</div></div></div>
+      <div class="mini"><span>💨 Brumiser</span><span class="btn alt">Fait</span></div>
+      <div class="mini"><span>🔄 Tourner d'1/4</span><span class="btn alt">Fait</span></div></div>
+  </div>${tab(0)}`, 'Un petit moment de récompense : la plante passe à l\'humeur « arrosée » (yeux fermés de plaisir, étincelles), puis la carte glisse en bas de la liste.']);
+  // A3
+  S.push(['A3','Rien à faire', `${status}<div class="scr">
+    <div class="date">Ven. 17 octobre · Automne</div><div class="title">À faire</div>
+    <div style="position:relative;height:250px;margin-top:10px">
+      <div class="blob" style="position:absolute;z-index:0;left:10px;top:20px;width:260px;height:220px;background:var(--sage)"></div>
+      <div style="position:absolute;left:0;top:70px;width:100px">${plant('pothos','ok')}</div>
+      <div style="position:absolute;left:85px;top:25px;width:120px">${plant('calathea','ok')}</div>
+      <div style="position:absolute;left:172px;top:80px;width:90px">${plant('cactus','sleep')}</div>
+    </div>
+    <div style="text-align:center"><div class="pname" style="font-size:24px">Tout le monde va bien</div><div class="meta" style="font-size:13px">Va vivre ta vie ☀️</div></div>
+    <div class="sect">Prochainement</div>
+    <div class="kv"><span>🪤 Dionée</span><span>dim. 19</span></div>
+    <div class="kv"><span>💨 Calathea · brumiser</span><span>lun. 20</span></div>
+    <div class="kv"><span>🌿 Monstera</span><span>ven. 24</span></div>
+    <div class="kv" style="border:none"><span>🌵 Cactus, Rose du désert</span><span>💤 au repos</span></div>
+  </div>${tab(0)}`, 'Une petite scène de groupe. On pourrait choisir les plantes au hasard à chaque visite.']);
+  // B1
+  const tile = (k,m,s,hot) => `<div class="tile" style="background:${POTS[k].tint}">${plant(k,m)}<div class="tn">${NAMES[k]}</div><div class="ts ${hot?'hot':''}">${s}</div></div>`;
+  S.push(['B1','Mes plantes', `${status}<div class="scr">
+    <div class="date">6 plantes · Paris</div><div class="title">Mes plantes</div>
+    <div class="room">Salon</div><div class="tiles">${tile('monstera','soif','J\'ai soif',1)}${tile('pothos','ok','Dans 6 j')}${tile('cactus','sleep','💤 Dodo')}</div>
+    <div class="room">Cuisine</div><div class="tiles">${tile('dionee','soif','À vérifier',1)}</div>
+    <div class="room">Chambre · Bureau</div><div class="tiles">${tile('calathea','ok','Dans 4 j')}${tile('rose','sleep','💤 Dodo')}</div>
+  </div>${tab(1)}`, 'Groupé par pièce. Chaque tuile prend la couleur de fond associée au pot.']);
+  // C
+  S.push(['C','Fiche plante (scroll complet)', `${status}<div class="scr">
+    <div style="display:flex;justify-content:space-between;font-size:14px;font-weight:700"><span>‹ Mes plantes</span><span>•••</span></div>
+    <div style="background:${POTS.rose.tint};border-radius:28px;margin-top:10px;padding:10px 20px 0;position:relative">
+      <div style="width:190px;margin:0 auto">${plant('rose','sleep')}</div>
+      <div style="position:absolute;right:10px;bottom:12px;width:62px;height:62px;border-radius:16px;background:linear-gradient(160deg,#6a7d4f,#2f3d22);border:3px solid white;font-size:9px;color:#fff;display:flex;align-items:center;justify-content:center;text-align:center">vraie<br>photo</div>
+    </div>
+    <div class="title" style="font-size:30px;margin-top:12px">Rose du désert</div>
+    <div class="meta"><i>Adenium obesum</i></div>
+    <div class="chips"><span class="chip">🏠 Bureau</span><span class="chip">☀️ Plein soleil</span></div>
+    <div class="card" style="background:var(--cobalt);color:white;margin-top:14px">
+      <div style="font-weight:800;font-size:16px">💤 Au repos jusqu'à mi-avril</div>
+      <div style="font-size:12.5px;margin-top:4px;opacity:.9">Un petit verre par mois au maximum, et seulement si les tiges se plissent. Sinon, laisse-la dormir.</div></div>
+    <div class="kv" style="margin-top:8px"><span>Dernier arrosage</span><span>il y a 18 j</span></div>
+    <div class="kv"><span>Prochaine vérif.</span><span>~ lun. 27 oct.</span></div>
+    <div class="kv"><span>Quantité</span><span>Un verre, pas plus</span></div>
+    <div class="method" style="background:white;border-radius:16px;padding:10px">🚿 Par le dessus, sur une terre <b>complètement sèche</b>. Jamais d'eau dans la soucoupe.</div>
+    <div class="sect">Soins</div>
+    <div class="kv"><span>🔄 Rotation</span><span>il y a 12 j</span></div>
+    <div class="kv"><span>🧪 Engrais</span><span>pas avant mai</span></div>
+    <div class="kv"><span>💨 Brumisation</span><span style="color:var(--muted);font-weight:500">pas besoin</span></div>
+    <div class="sect">À l'horizon</div>
+    <div class="horizon">🪴 <b>Rempotée il y a 2 ans.</b> À prévoir au printemps, quand elle se réveille.</div>
+    <div class="horizon" style="background:var(--blush)">✂️ <b>Taille</b> : jamais notée. En fin d'hiver si elle s'étale.</div>
+    <div class="sect">Son rythme</div>
+    <div class="meta">~ 30 j en hiver · ~ 10 j en été</div>
+    <div class="slider"><i></i></div>
+    <div style="display:flex;justify-content:space-between" class="meta"><span>Plus souvent</span><span>Moins souvent</span></div>
+    <div class="btns" style="margin-top:16px"><div class="btn alt">✍️ Noter un soin</div></div>
+  </div>${tab(1)}`, 'L\'illustration est en grand, avec la vraie photo en vignette. La carte d\'état (ici, la dormance) passe en premier.', true]);
+  // D2
+  S.push(['D2','Ajout · identification', `${status}<div class="scr">
+    <div style="font-size:14px;font-weight:700">‹ Reprendre</div>
+    <div class="photo" style="margin-top:10px">📷 ta photo</div>
+    <div class="pname" style="font-size:22px;margin-top:14px">Je pense que c'est…</div>
+    <div class="opt sel"><div class="ill" style="width:48px;height:48px;background:var(--sage)">${plant('monstera','ok')}</div><div><div class="pname" style="font-size:15px">Monstera deliciosa</div><div class="meta">Faux philodendron · très probable</div></div><span class="dot"></span></div>
+    <div class="opt"><div class="ill" style="width:48px;height:48px;background:var(--sand)">${plant('pothos','ok')}</div><div><div class="pname" style="font-size:15px">Monstera adansonii</div><div class="meta">« Gruyère » · possible</div></div><span class="dot"></span></div>
+    <div class="opt"><div class="ill" style="width:48px;height:48px;background:var(--blush)">${plant('calathea','ok')}</div><div><div class="pname" style="font-size:15px">Philodendron</div><div class="meta">peu probable</div></div><span class="dot"></span></div>
+    <div class="meta" style="text-align:center;margin-top:12px;text-decoration:underline">Aucune ? Écrire le nom</div>
+    <div class="btns" style="margin-top:14px"><div class="btn fill">C'est elle !</div></div>
+  </div>`, 'Claude propose 1 à 3 espèces. Les illustrations sont déjà dans le style de l\'app.']);
+  // D4
+  S.push(['D4','Ajout · bienvenue', `${status}<div class="scr" style="background:var(--sage)">
+    <div style="width:220px;margin:30px auto 0">${plant('monstera','happy')}</div>
+    <div class="bubble" style="margin-top:8px">Salut ! Moi c'est Monstera. Je suis plutôt facile à vivre : arrose-moi quand le dessus de la terre est sec, et on s'entendra bien 🤝</div>
+    <div class="ess">
+      <div style="background:white">💧 Arrosage<b>~ 10 j (automne)</b></div>
+      <div style="background:white">🚿 Méthode<b>Par le dessus</b></div>
+      <div style="background:white">☀️ Lumière<b>Vive, indirecte</b></div>
+      <div style="background:white">🧪 Engrais<b>Avril → sept.</b></div>
+    </div>
+    <div class="btns" style="margin-top:16px"><div class="btn dark">Bienvenue à la maison</div></div>
+  </div>`, 'La plante se présente avec sa tête de personnage. C\'est le moment où elle « emménage » dans la coloc.']);
+  // B3
+  S.push(['B3','Le jardin du souvenir', `${status}<div class="scr">
+    <div style="font-size:14px;font-weight:700">‹ Réglages</div>
+    <div class="title" style="font-size:30px;margin-top:8px">Le jardin du souvenir</div>
+    <div class="meta" style="font-size:13px">Elles ont fait de leur mieux.</div>
+    <div class="card" style="display:flex;gap:10px;align-items:center"><div class="ill" style="background:#efeaf3">${plant('calathea','ghost')}</div><div><div class="pname">Basilic</div><div class="meta">mars → juillet 2025</div><div style="font-size:12px;margin-top:3px;font-weight:600">« Parti trop tôt, trop au soleil. »</div></div></div>
+    <div class="card" style="display:flex;gap:10px;align-items:center"><div class="ill" style="background:var(--sand)">${plant('pothos','happy')}</div><div><div class="pname">Ficus</div><div class="meta">2022 → sept. 2025</div><div style="font-size:12px;margin-top:3px;font-weight:600">🎁 Adopté par Julie. Il est heureux là-bas.</div></div></div>
+  </div>${tab(1)}`, 'Une plante morte devient grise avec une auréole. Une plante donnée garde ses couleurs, toujours aussi contente.']);
+
+  document.getElementById('screens').innerHTML = S.map(([n,l,html,note,long]) =>
+    `<div class="screen"><div class="slabel"><i>${n}</i>${l}</div><div class="phone ${long?'long':''}">${html}</div><div class="note">${note}</div></div>`).join('');
+}
+
+function setFace(s) { FACE = s; renderAll(); }
+function renderAll() { renderFaces(); renderCast(); renderScreens(); }
+renderAll();
+</script>
+</body>
+</html>
