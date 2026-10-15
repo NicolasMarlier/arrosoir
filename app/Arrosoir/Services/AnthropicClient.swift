@@ -30,8 +30,10 @@ struct AnthropicClient {
         let display_name: String?
     }
 
-    private func request(_ path: String, method: String = "GET", body: Data? = nil) -> URLRequest {
-        var r = URLRequest(url: Self.base.appendingPathComponent(path))
+    private func request(_ path: String, query: [URLQueryItem] = [], method: String = "GET", body: Data? = nil) -> URLRequest {
+        var comps = URLComponents(url: Self.base.appendingPathComponent(path), resolvingAgainstBaseURL: false)!
+        if !query.isEmpty { comps.queryItems = query }
+        var r = URLRequest(url: comps.url!)
         r.httpMethod = method
         r.setValue(apiKey, forHTTPHeaderField: "x-api-key")
         r.setValue("2023-06-01", forHTTPHeaderField: "anthropic-version")
@@ -55,7 +57,7 @@ struct AnthropicClient {
 
     func listModels() async throws -> [ModelInfo] {
         struct Resp: Decodable { let data: [ModelInfo] }
-        let data = try await send(request("models?limit=100"))
+        let data = try await send(request("models", query: [URLQueryItem(name: "limit", value: "100")]))
         return try JSONDecoder().decode(Resp.self, from: data).data
     }
 
