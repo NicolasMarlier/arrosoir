@@ -148,7 +148,7 @@ struct DoctorSheet: View {
                 .padding(.top, 2)
 
             SoundBars(level: micBlocked ? 0 : dictation.level)
-                .frame(height: 60)
+                .frame(height: 80)
                 .padding(.vertical, 8)
 
             if !photos.isEmpty {
@@ -176,32 +176,28 @@ struct DoctorSheet: View {
             }
 
             transcript
+                .overlay(alignment: .bottomTrailing) { photoMenu.padding(10) }
 
             if let error {
                 Text(error).font(.brico(13.5, .semibold)).foregroundStyle(Color.vermillon)
                     .multilineTextAlignment(.center).padding(.top, 8)
             }
 
-            Menu {
-                if UIImagePickerController.isSourceTypeAvailable(.camera) {
-                    Button("Prendre une photo", systemImage: "camera") { showCamera = true }
+            Button(action: send) {
+                HStack(spacing: 10) {
+                    Text("🩺").font(.system(size: 24))
+                    Text("Envoyer au docteur").font(.brico(20, .heavy))
                 }
-                Button("Choisir dans la galerie", systemImage: "photo.on.rectangle") { showLibrary = true }
-            } label: {
-                Text("📷 Ajouter une photo")
-                    .font(.brico(14, .heavy))
-                    .foregroundStyle(Color.ink)
-                    .padding(.horizontal, 18).padding(.vertical, 9)
-                    .overlay(Capsule().strokeBorder(Color.ink, lineWidth: 2))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 66)
+                .background(Color.vermillon, in: Capsule())
+                .shadow(color: .vermillon.opacity(0.35), radius: 10, y: 5)
             }
-            .disabled(photos.count >= maxPhotos)
-            .padding(.top, 12)
-
-            Button("Envoyer au docteur") { send() }
-                .buttonStyle(PillButtonStyle(kind: .fill))
-                .disabled(!canSend || !settings.hasAPIKey)
-                .opacity(canSend && settings.hasAPIKey ? 1 : 0.4)
-                .padding(.top, 10)
+            .buttonStyle(.plain)
+            .disabled(!canSend || !settings.hasAPIKey)
+            .opacity(canSend && settings.hasAPIKey ? 1 : 0.4)
+            .padding(.top, 14)
 
             if !settings.hasAPIKey {
                 Text("🔑 Ajoute ta clé API Anthropic dans les réglages.").font(.brico(12.5)).foregroundStyle(Color.muted).padding(.top, 6)
@@ -209,6 +205,27 @@ struct DoctorSheet: View {
         }
         .padding(.horizontal, 18)
         .padding(.bottom, 12)
+    }
+
+    private var photoMenu: some View {
+        Menu {
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                Button("Prendre une photo", systemImage: "camera") { showCamera = true }
+            }
+            Button("Choisir dans la galerie", systemImage: "photo.on.rectangle") { showLibrary = true }
+        } label: {
+            HStack(spacing: 6) {
+                Image(systemName: "camera.fill").font(.system(size: 14, weight: .bold))
+                Text("Photo").font(.brico(14, .heavy))
+            }
+            .foregroundStyle(Color.ink)
+            .padding(.horizontal, 14).padding(.vertical, 9)
+            .background(Color.cream, in: Capsule())
+            .overlay(Capsule().strokeBorder(Color.ink.opacity(0.15), lineWidth: 1.5))
+        }
+        .disabled(photos.count >= maxPhotos)
+        .opacity(photos.count >= maxPhotos ? 0.4 : 1)
+        .accessibilityLabel("Ajouter une photo")
     }
 
     @ViewBuilder
@@ -239,6 +256,7 @@ struct DoctorSheet: View {
                     }
                     .font(.brico(16))
                     .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.bottom, 44)
                     .id("end")
                 }
                 .scrollIndicators(.hidden)
@@ -338,7 +356,7 @@ struct SoundBars: View {
                 ForEach(0..<count, id: \.self) { i in
                     let profile = 0.45 + 0.55 * sin(Double.pi * (Double(i) + 0.5) / Double(count))
                     let jitter = 0.55 + 0.45 * abs(sin(t * (6 + Double(i % 5)) + Double(i)))
-                    let h = 7 + CGFloat(Double(level) * profile * jitter) * 52
+                    let h = 8 + CGFloat(Double(level) * profile * jitter) * 70
                     Capsule().fill(colors[i % colors.count])
                         .frame(width: 7, height: h)
                 }

@@ -140,8 +140,11 @@ final class Dictation {
             var count = 0
             for i in stride(from: 0, to: n, by: 4) { sum += data[i] * data[i]; count += 1 }
             let rms = sqrt(sum / Float(max(1, count)))
-            // Seuil : en dessous, c'est du silence (barre plate).
-            let level = min(1, max(0, (rms - 0.008) * 16))
+            // Échelle en décibels : une voix normale (≈ -35…-20 dB) remplit bien la barre,
+            // le silence (< -50 dB) la laisse plate.
+            let db = 20 * log10(max(rms, 1e-7))
+            let norm = min(1, max(0, (db + 50) / 28))
+            let level = norm < 0.12 ? 0 : sqrt(norm)
             Task { @MainActor in owner.setLevel(level) }
         }
     }
