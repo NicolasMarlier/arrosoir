@@ -8,11 +8,23 @@ struct ArrosoirApp: App {
     init() {
         Telemetry.start()
         let inMemory = ProcessInfo.processInfo.arguments.contains("-inMemory")
-        do {
-            container = try ModelContainer(for: Plant.self, CareEvent.self, Diagnosis.self,
-                                           configurations: ModelConfiguration(isStoredInMemoryOnly: inMemory))
-        } catch {
-            fatalError("Impossible d'ouvrir la base : \(error)")
+        let schema = Schema([Plant.self, CareEvent.self, Diagnosis.self])
+        if inMemory {
+            container = try! ModelContainer(for: schema, configurations: ModelConfiguration(schema: schema, isStoredInMemoryOnly: true, cloudKitDatabase: .none))
+        } else {
+            do {
+                // Synchronisation iCloud (base privée de l'utilisateur) entre ses appareils.
+                container = try ModelContainer(for: schema, configurations: ModelConfiguration(schema: schema, cloudKitDatabase: .private(CloudSync.containerID)))
+                CloudSync.enabled = true
+            } catch {
+                // Repli : stockage local seul (iCloud indisponible ou mal configuré).
+                Telemetry.capture(error, feature: "icloud-sync")
+                do {
+                    container = try ModelContainer(for: schema, configurations: ModelConfiguration(schema: schema, cloudKitDatabase: .none))
+                } catch {
+                    fatalError("Impossible d'ouvrir la base : \(error)")
+                }
+            }
         }
         if ProcessInfo.processInfo.arguments.contains("-demo") {
             let ctx = container.mainContext
@@ -154,6 +166,7 @@ struct TabBar: View {
             tabButton("Mes plantes", .plants)
         }
         .padding(.horizontal, 24)
+        .readable(520)
         .padding(.top, 8)
         .padding(.bottom, 2)
         .background(Color.cream)

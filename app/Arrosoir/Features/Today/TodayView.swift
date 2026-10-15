@@ -53,7 +53,7 @@ struct TodayView: View {
                 } else if rows.isEmpty {
                     AllGoodView(plants: plants, now: now)
                 } else {
-                    VStack(spacing: 12) {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 340), spacing: 12, alignment: .top)], spacing: 12) {
                         ForEach(rows) { row in
                             TaskCard(
                                 plant: row.plant, status: row.status, done: done[row.plant.id],
@@ -72,6 +72,7 @@ struct TodayView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 16)
+            .readable(1000)
             .padding(.bottom, 24)
             .animation(.spring(duration: 0.35), value: done.count)
         }

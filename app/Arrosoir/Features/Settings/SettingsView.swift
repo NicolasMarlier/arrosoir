@@ -12,6 +12,7 @@ struct SettingsView: View {
     @State private var keyStatus: String?
     @State private var checking = false
     @State private var demoLoaded = false
+    @State private var cloudStatus: CloudSync.Status?
     @State private var bugReport = ""
     @State private var bugSent = false
 
@@ -25,6 +26,13 @@ struct SettingsView: View {
                 TextField("Ville", text: $settings.city)
                     .font(.brico(16)).padding(12).background(Color.white, in: RoundedRectangle(cornerRadius: 14))
                 Text("Sert à caler les saisons et à contextualiser les fiches.").font(.brico(12)).foregroundStyle(Color.muted).padding(.top, 4)
+
+                SectionTitle(text: "iCloud")
+                HStack(spacing: 10) {
+                    Image(systemName: "icloud.fill").font(.system(size: 20)).foregroundStyle(Color.cobalt)
+                    Text(cloudStatus?.label ?? "Vérification…").font(.brico(14))
+                }
+                .card()
 
                 SectionTitle(text: "Notifications")
                 Toggle(isOn: Binding(get: { settings.safetyNet }, set: { toggleSafetyNet($0) })) {
@@ -106,11 +114,13 @@ struct SettingsView: View {
                     .padding(.top, 30)
             }
             .padding(.horizontal, 16)
+            .readable(720)
             .padding(.bottom, 30)
         }
         .frame(maxWidth: .infinity)
         .scrollIndicators(.hidden)
         .background(Color.cream.ignoresSafeArea())
+        .task { cloudStatus = await CloudSync.status() }
         .onAppear {
             keyDraft = settings.apiKey
             if settings.hasAPIKey && models.isEmpty { Task { await loadModels() } }

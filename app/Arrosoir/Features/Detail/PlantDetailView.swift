@@ -69,9 +69,9 @@ struct PlantDetailView: View {
 
                     rhythm(profile)
 
-                    if !plant.diagnoses.isEmpty {
+                    if !plant.diagnosisList.isEmpty {
                         SectionTitle(text: "Chez le docteur")
-                        ForEach(plant.diagnoses.sorted { $0.date > $1.date }) { d in
+                        ForEach(plant.diagnosisList.sorted { $0.date > $1.date }) { d in
                             Button { openedDiagnosis = d } label: { diagnosisRow(d) }
                                 .buttonStyle(.plain)
                         }
@@ -82,6 +82,7 @@ struct PlantDetailView: View {
                         .padding(.top, 20)
                 }
                 .padding(.horizontal, 16)
+                .readable(720)
                 .padding(.bottom, 100)
             }
         }
@@ -144,7 +145,7 @@ struct PlantDetailView: View {
             // La vraie photo en grand, le personnage en vignette.
             Button { showPhoto = true } label: {
                 Color.clear
-                    .frame(height: 300)
+                    .frame(height: UIDevice.current.userInterfaceIdiom == .pad ? 440 : 300)
                     .overlay { Image(uiImage: img).resizable().scaledToFill() }
                     .clipShape(RoundedRectangle(cornerRadius: 28, style: .continuous))
             }

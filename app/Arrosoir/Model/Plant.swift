@@ -27,11 +27,15 @@ final class Plant {
     var archiveReasonRaw: String?
     var epitaph: String?
 
+    // Relations optionnelles : exigé par la synchronisation iCloud (CloudKit).
     @Relationship(deleteRule: .cascade, inverse: \CareEvent.plant)
-    var events: [CareEvent] = []
+    var events: [CareEvent]? = []
 
     @Relationship(deleteRule: .cascade, inverse: \Diagnosis.plant)
-    var diagnoses: [Diagnosis] = []
+    var diagnoses: [Diagnosis]? = []
+
+    var careEvents: [CareEvent] { events ?? [] }
+    var diagnosisList: [Diagnosis] { diagnoses ?? [] }
 
     init(profile: CareProfile, photo: Data?, room: String?, light: LightLevel?, potStyleIndex: Int, lastWateredAt: Date?, now: Date = Date()) {
         self.id = UUID()
@@ -68,13 +72,13 @@ final class Plant {
     var isArchived: Bool { archivedAt != nil }
 
     func lastDone(_ kind: CareKind) -> Date? {
-        events.filter { $0.kind == kind }.map(\.date).max()
+        careEvents.filter { $0.kind == kind }.map(\.date).max()
     }
 
     func snapshot() -> PlantSnapshot? {
         guard let profile else { return nil }
         var last: [CareKind: Date] = [:]
-        for e in events {
+        for e in careEvents {
             if let d = last[e.kind], d >= e.date { continue }
             last[e.kind] = e.date
         }

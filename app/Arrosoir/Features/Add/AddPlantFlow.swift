@@ -142,6 +142,7 @@ struct AddPlantFlow: View {
             .opacity(settings.hasAPIKey ? 1 : 0.4)
         }
         .padding(.horizontal, 20)
+        .readable(560)
         .padding(.bottom, 20)
     }
 
@@ -159,6 +160,7 @@ struct AddPlantFlow: View {
             Spacer()
         }
         .padding(.horizontal, 20)
+        .readable(560)
         .padding(.top, 10)
     }
 
@@ -200,6 +202,7 @@ struct AddPlantFlow: View {
                     .font(.brico(14)).foregroundStyle(Color.muted).frame(maxWidth: .infinity)
             }
             .padding(.horizontal, 20)
+            .readable(560)
         }
         .scrollIndicators(.hidden)
     }
@@ -235,6 +238,7 @@ struct AddPlantFlow: View {
                     .padding(.top, 24)
             }
             .padding(.horizontal, 20)
+            .readable(560)
             .padding(.bottom, 30)
         }
         .scrollIndicators(.hidden)
@@ -264,11 +268,13 @@ struct AddPlantFlow: View {
                         }
                     }
                     .padding(.horizontal, 20)
+                    .readable(560)
                 }
                 .scrollIndicators(.hidden)
                 Button("Bienvenue à la maison") { dismiss() }
                     .buttonStyle(PillButtonStyle(kind: .dark))
                     .padding(.horizontal, 20)
+                    .readable(560)
                     .padding(.bottom, 16)
             }
         }

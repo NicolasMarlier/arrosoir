@@ -80,6 +80,11 @@ struct CardBackground: ViewModifier {
 }
 
 extension View {
+    /// Largeur de lecture confortable, centrée (iPad).
+    func readable(_ maxWidth: CGFloat = 720) -> some View {
+        frame(maxWidth: maxWidth).frame(maxWidth: .infinity)
+    }
+
     func card(_ color: Color = .white) -> some View { modifier(CardBackground(color: color)) }
 }
 

@@ -28,6 +28,7 @@ struct LogCareSheet: View {
             .buttonStyle(PillButtonStyle(kind: .dark))
         }
         .padding(.horizontal, 20)
+        .readable(600)
         .padding(.bottom, 16)
         .background(Color.cream.ignoresSafeArea())
     }
@@ -72,6 +73,7 @@ struct EditPlantSheet: View {
                 .padding(.top, 24)
             }
             .padding(.horizontal, 20)
+            .readable(600)
         }
         .background(Color.cream.ignoresSafeArea())
         .onAppear {
@@ -115,6 +117,7 @@ struct GraveyardView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 16)
+            .readable(720)
             .padding(.top, 8)
         }
         .background(Color.cream.ignoresSafeArea())

@@ -105,13 +105,13 @@ extension Plant {
         }
         lines.append("Dernier arrosage : \(lastWateredAt.map { Fmt.ago($0, now: now) } ?? "inconnu").")
         let cutoff = Calendar.current.date(byAdding: .day, value: -60, to: now) ?? now
-        let recent = events.filter { $0.date >= cutoff }
+        let recent = careEvents.filter { $0.date >= cutoff }
         let waterings = recent.filter { $0.kind == .watering }.count
         let wet = recent.filter { $0.kind == .stillWet }.count
         lines.append("Sur les 60 derniers jours : \(waterings) arrosage(s), \(wet) fois « terre encore humide » au moment de vérifier.")
         if let r = lastDone(.repotting) { lines.append("Dernier rempotage : \(Fmt.ago(r, now: now)).") }
         if let f = lastDone(.fertilizing) { lines.append("Dernier engrais : \(Fmt.ago(f, now: now)).") }
-        if let last = diagnoses.max(by: { $0.date < $1.date }), let r = last.result {
+        if let last = diagnosisList.max(by: { $0.date < $1.date }), let r = last.result {
             lines.append("Diagnostic précédent (\(Fmt.ago(last.date, now: now))) : \(r.title). \(r.summary)")
         }
         return lines.joined(separator: "\n")

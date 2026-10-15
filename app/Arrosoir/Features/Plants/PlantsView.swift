@@ -17,7 +17,7 @@ struct PlantsView: View {
         }.map { ($0, dict[$0]!) }
     }
 
-    private let columns = Array(repeating: GridItem(.flexible(), spacing: 10), count: 3)
+    private let columns = [GridItem(.adaptive(minimum: 104, maximum: 190), spacing: 10, alignment: .top)]
 
     var body: some View {
         ScrollView {
@@ -67,6 +67,7 @@ struct PlantsView: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, 16)
+            .readable(1100)
             .padding(.bottom, 24)
         }
         .frame(maxWidth: .infinity)

@@ -126,7 +126,12 @@ extension CareProfile {
         var flat = SeasonalDays(spring: j.find("water_spring_days").double, summer: j.find("water_summer_days").double,
                                 autumn: j.find("water_autumn_days").double, winter: j.find("water_winter_days").double)
         if [flat.spring, flat.summer, flat.autumn, flat.winter].allSatisfy({ $0 == nil }) {
-            flat = SeasonalDays(lenient: j.find("interval_days", "watering_interval_days", "intervals", "watering_days")) ?? flat
+            // D'abord dans « watering », puis au premier niveau : surtout pas l'interval_days de l'engrais.
+            let keys = ["interval_days", "watering_interval_days", "intervals", "watering_days"]
+            flat = SeasonalDays(lenient: j.find("watering").child(keys))
+                ?? SeasonalDays(lenient: j.child(keys))
+                ?? SeasonalDays(lenient: j.child(["care_profile", "profile"]).child(["watering"]).child(keys))
+                ?? flat
         }
         guard let intervals = flat.filled() else { return nil }
 

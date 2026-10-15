@@ -204,6 +204,7 @@ struct DoctorSheet: View {
             }
         }
         .padding(.horizontal, 18)
+        .readable(640)
         .padding(.bottom, 12)
     }
 

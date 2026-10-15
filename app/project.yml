@@ -39,7 +39,7 @@ targets:
           [ -z "$SENTRY_ORG" ] && exit 0
           [ "$PLATFORM_NAME" = "iphonesimulator" ] && exit 0
           command -v sentry-cli >/dev/null || { echo "warning: sentry-cli absent, dSYM non envoyés"; exit 0; }
-          sentry-cli --org "$SENTRY_ORG" debug-files upload --include-sources --project "$SENTRY_PROJECT" "$DWARF_DSYM_FOLDER_PATH" || echo "warning: envoi des dSYM raté"
+          sentry-cli debug-files upload --org "$SENTRY_ORG" --project "$SENTRY_PROJECT" --include-sources "$DWARF_DSYM_FOLDER_PATH" || echo "warning: envoi des dSYM raté"
     info:
       path: Arrosoir/Info.plist
       properties:
@@ -48,7 +48,18 @@ targets:
           - BricolageGrotesque-SemiBold.ttf
           - BricolageGrotesque-Bold.ttf
           - BricolageGrotesque-ExtraBold.ttf
+        UIBackgroundModes:
+          - remote-notification
         SentryDSN: $(SENTRY_DSN)
+    entitlements:
+      path: Arrosoir/Arrosoir.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.nicolasmarlier.arrosoir
+        com.apple.developer.icloud-services:
+          - CloudKit
+        com.apple.developer.ubiquity-kvstore-identifier: $(TeamIdentifierPrefix)$(CFBundleIdentifier)
+        aps-environment: development
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.nicolasmarlier.arrosoir
@@ -57,11 +68,12 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         DEBUG_INFORMATION_FORMAT: dwarf-with-dsym
         ENABLE_USER_SCRIPT_SANDBOXING: NO
-        TARGETED_DEVICE_FAMILY: "1"
+        TARGETED_DEVICE_FAMILY: "1,2"
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         INFOPLIST_KEY_CFBundleDisplayName: Arrosoir
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: UIInterfaceOrientationPortrait
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UIUserInterfaceStyle: Light
         INFOPLIST_KEY_NSCameraUsageDescription: "Pour photographier tes plantes et les reconnaître."
         INFOPLIST_KEY_NSMicrophoneUsageDescription: "Pour décrire ta plante à voix haute lors d'un diagnostic."

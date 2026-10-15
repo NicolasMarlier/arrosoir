@@ -34,6 +34,9 @@ App iOS perso (SwiftUI) pour savoir quand arroser / soigner ses plantes d'intér
 - « À faire » : plus de liste « Prochainement ».
 - **Diagnostic** depuis la fiche : jusqu'à 4 photos + note vocale (transcrite sur l'iPhone) ou texte → Claude (avec l'historique de soins) → verdict, causes, actions, ajustement du rythme en un tap. Historique des diagnostics sur la fiche.
 
+- **Synchronisation iCloud** (SwiftData + CloudKit, base privée) entre les appareils du même compte Apple ; clé API dans le trousseau iCloud ; ville et modèle via iCloud clé-valeur. Repli en local si iCloud indisponible.
+- **App universelle iPhone + iPad** : largeurs de lecture centrées, cartes « À faire » sur plusieurs colonnes, grille de plantes adaptative.
+
 ## V2
 - Photos de suivi analysées par Claude (lumière, santé, conseils), historique photo.
 - Mode vacances.

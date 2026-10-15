@@ -125,6 +125,7 @@ struct DiagnosisResultView: View {
                     }
                 }
                 .padding(.horizontal, 16)
+                .readable(640)
                 .padding(.bottom, 30)
             }
         }
