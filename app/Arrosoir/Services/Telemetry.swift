@@ -28,11 +28,18 @@ nonisolated enum Telemetry {
             o.enableAppHangTracking = true
             o.tracesSampleRate = 0.2
             o.maxBreadcrumbs = 150
+            o.debug = args.contains("-sentryDebug")
             o.beforeSend = { event in
                 // Pas d'envoi depuis les tests / les lancements de démo éphémères.
                 if args.contains("-inMemory") || NSClassFromString("XCTestCase") != nil { return nil }
                 return event
             }
+        }
+        // Lancement avec -sentryTest : envoie un événement de test pour valider la chaîne.
+        if args.contains("-sentryTest") {
+            capture(AIError.decoding("test"), feature: "sentry_test", extra: ["model": "test"],
+                    attachments: [.init(name: "claude-response.json", text: #"{"test": "réponse brute de démo"}"#)])
+            SentrySDK.flush(timeout: 5)
         }
     }
 
